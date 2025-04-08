@@ -1,0 +1,1 @@
+This repository contains a Java implementations of Dungeons & Dragons like game, developed as part of the Advanced Project Oriented Programming course at [SCE - Shamoon College of Engineering](https://www.sce.ac.il/).
