@@ -20,4 +20,6 @@ public class RandomUtil {
     public static int getRandomInt(int origin, int bound) {
         return random.nextInt(origin, bound);
     }
+
+    public static double getRandomDouble() {return random.nextDouble();}
 }

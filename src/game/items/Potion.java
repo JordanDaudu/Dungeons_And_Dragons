@@ -16,8 +16,12 @@ public class Potion extends GameItem implements Interactable {
         isUsed = false;
     }
 
-    protected int initializeIncreaseAmount() {
-        return RandomUtil.getRandomInt(10, 51);
+    public int getIncreaseAmount() {
+        return increaseAmount;
+    }
+
+    public void setIsUsed(boolean isUsed) {
+        this.isUsed = isUsed;
     }
 
     @Override
@@ -26,6 +30,9 @@ public class Potion extends GameItem implements Interactable {
             c.heal(increaseAmount);
             isUsed = true;
         }
+    }
 
+    protected int initializeIncreaseAmount() {
+        return RandomUtil.getRandomInt(10, 51);
     }
 }

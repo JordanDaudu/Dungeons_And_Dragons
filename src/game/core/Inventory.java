@@ -3,10 +3,11 @@ package game.core;
 import game.items.GameItem;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Inventory {
 
-    private ArrayList<GameItem> items;
+    private List<GameItem> items;
 
     public Inventory() {
 
@@ -21,5 +22,9 @@ public class Inventory {
     public boolean removeItem(GameItem item) {
 
         return items.remove(item);
+    }
+
+    public List<GameItem> getItems() {
+        return items;
     }
 }

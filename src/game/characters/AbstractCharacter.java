@@ -6,42 +6,59 @@ import game.map.Position;
 
 import game.engine.RandomUtil;
 
-public abstract class AbstractCharacter implements Combatant,GameEntity {
+public abstract class AbstractCharacter implements Combatant, GameEntity {
 
     // Data Members
     private Position position;
     private int health;
     private int power;
     private double evasionChance = 0.25;
+    private boolean visible;
 
     // Methods
-    public AbstractCharacter(Position position, double evasionChance){
+    public AbstractCharacter(Position position){
         this.position = position;
         this.health = 100;
         this.power = RandomUtil.getRandomInt(4, 15);
-        this.evasionChance = evasionChance;
+        visible = true;
     }
 
     public Position getPosition(){
         return position;
     }
 
-    public void setPosition(Position pos){
-        this.position = pos;
+    @Override
+    public int getHealth() {
+        return health;
     }
 
-    public boolean tryEvade(){
-        return RandomUtil.getRandomInt(4) == 0;
+    @Override
+    public boolean setHealth(int health) {
+        this.health = health;
+        return true;
     }
-    /*
-    public void receiveDamage(int amount, Combatant source){
-        if (this.tryEvade())
+
+    @Override
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+    }
+
+    public void setPosition(Position pos) { this.position = new Position(pos); }
+
+    public boolean tryEvade() { return RandomUtil.getRandomDouble() < evasionChance; }
+
+    public void receiveDamage(int amount, Combatant source) {
+        if (this.tryEvade()) {
+            System.out.println("Attack evaded!");
             return;
+        }
         health -= amount;
+        if(this.health < 0)
+            this.health = 0;
     }
-*/
+
     public boolean isDead(){
-        return (health == 0);
+        return (health <= 0);
     }
 
     public void heal(int amount){
@@ -50,6 +67,10 @@ public abstract class AbstractCharacter implements Combatant,GameEntity {
         health += amount;
         if(health > 100)
             health = 100;
+    }
+
+    public void addPower(int power) {
+        this.power += power;
     }
 
     public int getPower(){
