@@ -1,5 +1,6 @@
 package game.items;
 
+import game.characters.PlayerCharacter;
 import game.core.GameEntity;
 import game.map.Position;
 
@@ -18,6 +19,31 @@ public abstract class GameItem implements GameEntity {
     }
 
     @Override
+    public String toString() {
+        return getClass().getSimpleName() + "{" +
+                "position=" + position +
+                ", blocksMovement=" + blocksMovement +
+                ", description='" + description + '\'' +
+                ", visible=" + visible +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        GameItem that = (GameItem) obj;
+        return blocksMovement == that.blocksMovement &&
+                visible == that.visible &&
+                position.equals(that.position) &&
+                description.equals(that.description);
+    }
+
+    @Override
     public Position getPosition() {
         return position;
     }
@@ -25,11 +51,6 @@ public abstract class GameItem implements GameEntity {
     @Override
     public void setPosition(Position newPos) {
         this.position = new Position(newPos);
-    }
-
-    @Override
-    public String getDisplaySymbol() {
-        return "SYMBOL TO BE ADDED";
     }
 
     @Override

@@ -1,5 +1,12 @@
 package game.engine;
 
+import game.characters.Dragon;
+import game.characters.Enemy;
+import game.characters.Goblin;
+import game.characters.Orc;
+import game.combat.MagicElement;
+import game.map.Position;
+
 import java.util.Random;
 
 // Singleton Style
@@ -22,4 +29,26 @@ public class RandomUtil {
     }
 
     public static double getRandomDouble() {return random.nextDouble();}
+
+    public static Enemy randomEnemy(Position pos) {
+        int roll = getRandomInt(3);
+        Enemy enemy;
+        switch(roll) {
+            case 0 -> {
+                enemy = new Goblin();
+                enemy.setPosition(pos);
+                return enemy;
+            }
+            case 1 -> {
+                enemy = new Orc();
+                enemy.setPosition(pos);
+                return enemy;
+            }
+            default -> {
+                enemy = new Dragon();
+                enemy.setPosition(pos);
+                return enemy;
+            }
+        }
+    }
 }

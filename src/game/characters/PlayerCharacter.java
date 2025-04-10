@@ -1,11 +1,10 @@
 package game.characters;
 
-import game.combat.Combatant;
 import game.core.Inventory;
 import game.items.GameItem;
+import game.items.Interactable;
 import game.items.Potion;
 import game.items.PowerPotion;
-import game.map.Position;
 
 public class PlayerCharacter extends AbstractCharacter {
 
@@ -13,12 +12,43 @@ public class PlayerCharacter extends AbstractCharacter {
     private Inventory inventory;
     private int treasurePoints;
 
-    public PlayerCharacter(Position position, String name) {
+    public PlayerCharacter(String name) {
 
-        super(position);
+        super();
         this.name = name;
         inventory = new Inventory();
         treasurePoints = 0;
+    }
+
+    @Override
+    public String toString() {
+        // Getting super.toString() in a clean way to append
+        String parentString = super.toString();
+        String cleanedParentString = parentString.substring(parentString.indexOf("{") + 1, parentString.lastIndexOf("}"));
+
+        return getClass().getSimpleName() + "{" +
+                cleanedParentString +  // Remove the initial class name and '{' from the super.toString()
+                ", name = \"" + name + "\"" +
+                ", treasurePoints = " + treasurePoints +
+                ", inventory = " + inventory +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        if (!super.equals(obj)) {  // Call the equals method of AbstractCharacter
+            return false;
+        }
+        PlayerCharacter that = (PlayerCharacter) obj;
+        return treasurePoints == that.treasurePoints &&
+                name.equals(that.name) &&
+                inventory.equals(that.inventory);
     }
 
     public String getName() {
@@ -32,8 +62,7 @@ public class PlayerCharacter extends AbstractCharacter {
     public boolean usePotion() {
         for(GameItem item : inventory.getItems()) {
             if(item instanceof Potion) {
-                heal(((Potion) item).getIncreaseAmount());
-                ((Potion) item).setIsUsed(true);
+                ((Interactable) item).interact(this);
                 inventory.removeItem(item);
                 return true;
             }
@@ -44,8 +73,7 @@ public class PlayerCharacter extends AbstractCharacter {
     public boolean usePowerPotion() {
         for(GameItem item : inventory.getItems()) {
             if(item instanceof PowerPotion) {
-                addPower(((PowerPotion) item).getIncreaseAmount());
-                ((PowerPotion) item).setIsUsed(true);
+                ((Interactable) item).interact(this);
                 inventory.removeItem(item);
                 return true;
             }
@@ -63,15 +91,7 @@ public class PlayerCharacter extends AbstractCharacter {
     }
 
     @Override
-    public void receiveDamage(int amount, Combatant source) {
-        // NEEDS TO BE IMPLEMENTED
-        //
-        //
-        //
-    }
-
-    @Override
     public String getDisplaySymbol() {
-        return "Character";
+        return "C";
     }
 }

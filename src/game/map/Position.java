@@ -19,8 +19,21 @@ public class Position {
         return Math.abs(this.row - other.row) + Math.abs(this.col - other.col);
     }
 
-    public boolean equals(Position other) {
-        return row == other.row && col == other.col;
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if(obj instanceof Position) {
+            Position other = (Position) obj;
+            return row == other.row && col == other.col;
+        }
+        return false;
+    }
+
+    public int hashCode() {
+        return 31 * row + col;
+    }
+
+    public String toString() {
+        return "(" + row + "," + col + ")";
     }
 
     public int getRow() {

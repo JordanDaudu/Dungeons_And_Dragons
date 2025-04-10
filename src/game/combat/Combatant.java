@@ -1,6 +1,8 @@
 package game.combat;
 
-public interface Combatant {
+import game.core.GameEntity;
+
+public interface Combatant extends GameEntity {
 
     int getHealth();
     boolean setHealth(int health);
