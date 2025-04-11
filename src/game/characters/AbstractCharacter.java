@@ -59,8 +59,14 @@ public abstract class AbstractCharacter implements Combatant, GameEntity {
     }
 
     @Override
-    public void setVisible(boolean visible) {
+    public boolean setVisible(boolean visible) {
         this.visible = visible;
+        return true;
+    }
+
+    @Override
+    public boolean isVisible() {
+        return this.visible;
     }
 
     @Override
@@ -94,6 +100,7 @@ public abstract class AbstractCharacter implements Combatant, GameEntity {
             return;
         }
         setHealth(getHealth() - amount);
+        System.out.println(getClass().getSimpleName() + " received " + amount + " damage!");
     }
 
     @Override

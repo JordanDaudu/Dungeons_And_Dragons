@@ -54,15 +54,17 @@ public class Orc extends Enemy implements MeleeFighter, PhysicalAttacker {
                 return;
             }
         }
-        else if(source instanceof MagicAttacker) {
-            setHealth(((int) Math.round(getHealth() - (amount * (1 - resistance)))));
-            return;
-        }
         else if(this.tryEvade()) {
             System.out.println("Attack evaded!");
             return;
         }
+        else if(source instanceof MagicAttacker) {
+            setHealth(((int) Math.round(getHealth() - (amount * (1 - resistance)))));
+            System.out.println(getClass().getSimpleName() +" received " + amount + " damage!");
+            return;
+        }
         setHealth(getHealth() - amount);
+        System.out.println(getClass().getSimpleName() +" received " + amount + " damage!");
     }
 
     @Override

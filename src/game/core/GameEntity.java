@@ -7,5 +7,6 @@ public interface GameEntity {
     Position getPosition(); // Return position
     void setPosition(Position newPos); // Set Position
     String getDisplaySymbol(); // Graphic representation
-    void setVisible(boolean visible); // Visibility
+    boolean setVisible(boolean visible); // Visibility
+    boolean isVisible();
 }

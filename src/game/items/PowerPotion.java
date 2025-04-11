@@ -39,6 +39,7 @@ public class PowerPotion extends Potion {
     public void interact(PlayerCharacter c) {
         if(c.getPosition().distanceTo(getPosition()) == 1) {
             if(!getIsUsed()) {
+                System.out.println(c.getName() + " was powered up " + getIncreaseAmount() + "PP");
                 c.addPower(getIncreaseAmount());
                 setIsUsed(true);
             }

@@ -1,12 +1,14 @@
 package game.characters;
 
 import game.core.Inventory;
+import game.core.PlayerMovement;
 import game.items.GameItem;
 import game.items.Interactable;
 import game.items.Potion;
 import game.items.PowerPotion;
+import game.map.Position;
 
-public class PlayerCharacter extends AbstractCharacter {
+public class PlayerCharacter extends AbstractCharacter implements PlayerMovement {
 
     private String name;
     private Inventory inventory;
@@ -61,7 +63,7 @@ public class PlayerCharacter extends AbstractCharacter {
 
     public boolean usePotion() {
         for(GameItem item : inventory.getItems()) {
-            if(item instanceof Potion) {
+            if(item.getClass() == Potion.class) {
                 ((Interactable) item).interact(this);
                 inventory.removeItem(item);
                 return true;
@@ -94,4 +96,26 @@ public class PlayerCharacter extends AbstractCharacter {
     public String getDisplaySymbol() {
         return "C";
     }
+
+    @Override
+    public Position MoveRight(PlayerCharacter player){
+        Position currentPosition = player.getPosition();
+        return new Position(currentPosition.getRow(),currentPosition.getCol() + 1);
+    }
+    @Override
+    public Position MoveLeft(PlayerCharacter player){
+        Position currentPosition = player.getPosition();
+        return new Position(currentPosition.getRow(), currentPosition.getCol() - 1);
+    }
+    @Override
+    public Position MoveUp(PlayerCharacter player){
+        Position currentPosition = player.getPosition();
+        return new Position(currentPosition.getRow() - 1, currentPosition.getCol());
+    }
+    @Override
+    public Position MoveDown(PlayerCharacter player){
+        Position currentPosition = player.getPosition();
+         return new Position(currentPosition.getRow() + 1, currentPosition.getCol());
+    }
+
 }

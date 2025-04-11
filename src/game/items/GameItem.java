@@ -18,6 +18,14 @@ public abstract class GameItem implements GameEntity {
         this.description = description;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public boolean getBlockMovement() {
+        return blocksMovement;
+    }
+
     @Override
     public String toString() {
         return getClass().getSimpleName() + "{" +
@@ -54,7 +62,13 @@ public abstract class GameItem implements GameEntity {
     }
 
     @Override
-    public void setVisible(boolean visible) {
+    public boolean setVisible(boolean visible) {
         this.visible = visible;
+        return true;
+    }
+
+    @Override
+    public boolean isVisible() {
+        return this.visible;
     }
 }

@@ -87,7 +87,7 @@ public class Archer extends PlayerCharacter implements PhysicalAttacker, RangedF
     @Override
     public boolean isInRange(Position self, Position target){
             int distance = self.distanceTo(target);
-            return distance == getRange();
+            return distance <= getRange();
     }
 
     @Override

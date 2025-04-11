@@ -5,6 +5,8 @@ import game.characters.PlayerCharacter;
 
 public class CombatSystem {
 
+    public CombatSystem() {}
+
     public void resolveCombat(Combatant attacker, Combatant defender) {
 
         if(attacker instanceof MeleeFighter)

@@ -1,5 +1,6 @@
 package game.items;
 
+import game.characters.PlayerCharacter;
 import game.map.Position;
 
 public class Wall extends GameItem {
@@ -29,5 +30,5 @@ public class Wall extends GameItem {
     }
 
     @Override
-    public String getDisplaySymbol() { return "W"; }
+    public String getDisplaySymbol() { return "W";}
 }

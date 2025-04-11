@@ -58,7 +58,7 @@ public class Enemy extends AbstractCharacter{
 
     public void defeat() {
         GameMap map = GameMap.getInstance();
-        //     public void addEntity(GameEntity entity) {
+        System.out.println("ADDING TREASURE!");
         map.addEntity(new Treasure(getPosition(), true, "Loot", getLoot()));
     }
 

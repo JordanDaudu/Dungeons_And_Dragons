@@ -60,6 +60,7 @@ public class Potion extends GameItem implements Interactable {
     public void interact(PlayerCharacter c) {
         if(c.getPosition().distanceTo(getPosition()) == 1) {
             if(!isUsed) {
+                System.out.println(c.getName() + " was healed " + getIncreaseAmount() + "HP");
                 c.heal(increaseAmount);
                 isUsed = true;
             }
