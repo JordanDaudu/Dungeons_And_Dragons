@@ -2,18 +2,32 @@ package game.characters;
 
 import game.items.Treasure;
 import game.map.GameMap;
-import game.map.Position;
 
-public class Enemy extends AbstractCharacter{
+/**
+ * Represents an enemy character in the game.
+ * An Enemy has limited health and can drop loot (as a Treasure) when defeated.
+ */
+public class Enemy extends AbstractCharacter {
 
+    // Data Members
+    /** The amount of loot the enemy carries. */
     private int loot;
 
+    // Methods
+    /**
+     * Constructs a default Enemy with 50 health and no loot.
+     */
     public Enemy() {
         super();
         setHealth(50);
         loot = 0;
     }
 
+    /**
+     * Returns a string representation of the Enemy, including health and loot.
+     *
+     * @return a string describing the enemy
+     */
     @Override
     public String toString() {
         // Getting super.toString() in a clean way to append
@@ -26,7 +40,12 @@ public class Enemy extends AbstractCharacter{
                 '}';
     }
 
-    // equals method to compare enemy objects
+    /**
+     * Compares this Enemy with another object for logical equality.
+     *
+     * @param obj the object to compare
+     * @return true if the objects are logically equal
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -42,11 +61,22 @@ public class Enemy extends AbstractCharacter{
         return loot == that.loot;
     }
 
+    /**
+     * Returns the symbol used to display this enemy on the game map.
+     *
+     * @return the character "E"
+     */
     @Override
     public String getDisplaySymbol() {
         return "E";
     }
 
+    /**
+     * Heals the enemy by a certain amount, not exceeding the maximum of 50.
+     * Does nothing if the enemy is already dead.
+     *
+     * @param amount the amount to heal
+     */
     @Override
     public void heal(int amount){
         if (isDead())
@@ -56,12 +86,20 @@ public class Enemy extends AbstractCharacter{
             setHealth(50);
     }
 
+    /**
+     * Handles logic when the enemy is defeated, such as dropping loot on the game map.
+     */
     public void defeat() {
         GameMap map = GameMap.getInstance();
         System.out.println("ADDING TREASURE!");
         map.addEntity(new Treasure(getPosition(), true, "Loot", getLoot()));
     }
 
+    /**
+     * Gets the amount of loot the enemy holds.
+     *
+     * @return the loot value
+     */
     private int getLoot() {
         return loot;
     }

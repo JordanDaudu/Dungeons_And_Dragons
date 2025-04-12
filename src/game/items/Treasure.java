@@ -4,23 +4,53 @@ import game.characters.PlayerCharacter;
 import game.engine.RandomUtil;
 import game.map.Position;
 
+/**
+ * Represents a collectible treasure item in the game world.
+ * A treasure can either grant treasure points or provide a random item (Potion or PowerPotion) upon interaction.
+ */
 public class Treasure extends GameItem implements Interactable {
 
+    // Data Members
+    /** The value of the treasure, determining how many treasure points it gives. */
     private int value;
+
+    /** Indicates whether the treasure has already been collected. */
     boolean collected;
 
+    // Methods
+    /**
+     * Constructs a Treasure with a random value between 100 and 300.
+     *
+     * @param position        the position of the treasure
+     * @param blocksMovement  whether the treasure blocks movement on the map
+     * @param description     a short description of the treasure
+     */
     public Treasure(Position position, boolean blocksMovement, String description) {
         super(position, blocksMovement, description);
         this.value = RandomUtil.getRandomInt(100, 301);
         collected = false;
     }
 
+    /**
+     * Constructs a Treasure with a fixed loot value.
+     *
+     * @param position        the position of the treasure
+     * @param blocksMovement  whether the treasure blocks movement on the map
+     * @param description     a short description of the treasure
+     * @param loot            the specific value of the treasure
+     */
     public Treasure(Position position, boolean blocksMovement, String description, int loot) {
         super(position, blocksMovement, description);
         this.value = loot;
         collected = false;
     }
 
+    /**
+     * Returns a string representation of this Treasure, including its position, description,
+     * value, and collected state.
+     *
+     * @return a formatted string representation
+     */
     @Override
     public String toString() {
         // Getting super.toString() in a clean way to append
@@ -34,6 +64,12 @@ public class Treasure extends GameItem implements Interactable {
                 '}';
     }
 
+    /**
+     * Checks equality with another object based on treasure properties and superclass comparison.
+     *
+     * @param obj the object to compare to
+     * @return true if equal, false otherwise
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -50,6 +86,12 @@ public class Treasure extends GameItem implements Interactable {
                 collected == treasure.collected;
     }
 
+    /**
+     * Allows a {@link PlayerCharacter} to interact with the treasure.
+     * If adjacent and not already collected, it gives treasure points or items randomly.
+     *
+     * @param c the player character interacting with the treasure
+     */
     @Override
     public void interact(PlayerCharacter c) {
         if(c.getPosition().distanceTo(getPosition()) == 1) {
@@ -75,9 +117,20 @@ public class Treasure extends GameItem implements Interactable {
             }
         }
     }
+
+    /**
+     * Returns the symbol used to represent treasure on the game map.
+     *
+     * @return the character symbol "T"
+     */
     @Override
     public String getDisplaySymbol() { return "T"; }
 
+    /**
+     * Returns the value of this treasure.
+     *
+     * @return the treasure value
+     */
     private int getValue() {
         return value;
     }

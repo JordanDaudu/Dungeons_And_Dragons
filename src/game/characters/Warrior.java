@@ -6,15 +6,34 @@ import game.combat.PhysicalAttacker;
 import game.engine.RandomUtil;
 import game.map.Position;
 
+/**
+ * Represents a Warrior character that specializes in close-range combat.
+ * Inherits from PlayerCharacter and implements melee fighting and physical attacking behavior.
+ */
 public class Warrior extends PlayerCharacter implements MeleeFighter, PhysicalAttacker {
 
+    // Data Members
+    /** Defensive value that reduces incoming damage */
     private int defence;
 
+    // Methods
+    /**
+     * Constructs a Warrior with the given name.
+     * Randomly initializes the defense stat between 0 and 120.
+     *
+     * @param name the name of the warrior
+     */
     public Warrior(String name) {
         super(name);
         defence = RandomUtil.getRandomInt(0, 121);
     }
 
+    /**
+     * Returns a string representation of the Warrior including inherited
+     * fields and the defense stat.
+     *
+     * @return string describing the warrior
+     */
     @Override
     public String toString() {
         // Getting super.toString() in a clean way to append
@@ -27,6 +46,13 @@ public class Warrior extends PlayerCharacter implements MeleeFighter, PhysicalAt
                 '}';
     }
 
+    /**
+     * Checks if two Warrior objects are equal.
+     * Compares all inherited fields as well as the defense stat.
+     *
+     * @param obj the object to compare with
+     * @return true if they are equal in state
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -42,13 +68,24 @@ public class Warrior extends PlayerCharacter implements MeleeFighter, PhysicalAt
         return defence == warrior.defence;
     }
 
-
+    /**
+     * Handles receiving damage from an attacker.
+     * Damage is reduced based on the warrior's defense.
+     *
+     * @param amount the base amount of incoming damage
+     * @param source the combatant causing the damage
+     */
     @Override
     public void receiveDamage(int amount, Combatant source) {
         int damage = (int) (source.getPower() * (1 - Math.min(0.6, defence / 200.0)));
         setHealth(getHealth() - damage);
     }
 
+    /**
+     * Performs a melee attack on a target if in melee range.
+     *
+     * @param target the target to attack
+     */
     @Override
     public void fightClose(Combatant target) {
         if(isInMeleeRange(getPosition(), target.getPosition()))
@@ -57,12 +94,26 @@ public class Warrior extends PlayerCharacter implements MeleeFighter, PhysicalAt
             System.out.println("Out of range!");
     }
 
+    /**
+     * Determines if the target is in melee range (Manhattan distance of 1).
+     *
+     * @param self   the warrior's current position
+     * @param target the target's position
+     * @return true if within melee range
+     */
     @Override
     public boolean isInMeleeRange(Position self, Position target) {
         int distance = self.distanceTo(target);
         return distance == 1;
     }
 
+    /**
+     * Calculates the amount of damage to deal to a target.
+     * May double the damage if a critical hit occurs.
+     *
+     * @param target the combatant being attacked
+     * @return the damage amount
+     */
     @Override
     public int calculateDamage(Combatant target) {
         if(isCriticalHit())
@@ -71,16 +122,32 @@ public class Warrior extends PlayerCharacter implements MeleeFighter, PhysicalAt
             return getPower();
     }
 
+    /**
+     * Attacks the target using the melee fighting method.
+     *
+     * @param target the combatant to attack
+     */
     @Override
     public void attack(Combatant target) {
         fightClose(target);
     }
 
+    /**
+     * Determines whether a critical hit occurs.
+     * A critical hit occurs with 10% probability.
+     *
+     * @return true if it's a critical hit
+     */
     @Override
     public boolean isCriticalHit() {
         return RandomUtil.getRandomInt(10) == 0;
     }
 
+    /**
+     * Gets the symbol used to represent a warrior on the map.
+     *
+     * @return "WARRIOR"
+     */
     @Override
     public String getDisplaySymbol() {
         return "WARRIOR";

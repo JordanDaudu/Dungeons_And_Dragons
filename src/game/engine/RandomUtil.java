@@ -10,26 +10,65 @@ import game.map.Position;
 import java.util.Random;
 
 // Singleton Style
+/**
+ * Utility class for generating random numbers and randomized game entities.
+ * This class follows the Singleton style with a single shared {@link Random} instance.
+ */
 public class RandomUtil {
 
+    /**
+     * The single shared instance of the {@link Random} generator.
+     */
     private static final Random random = new Random();
 
+    /**
+     * Private constructor to prevent instantiation of this utility class.
+     */
     private RandomUtil() {}
 
+    /**
+     * Returns the shared {@link Random} instance.
+     *
+     * @return the shared random number generator.
+     */
     public static Random getRandomInstance() {
         return random;
     }
 
+    /**
+     * Returns a random integer between 0 (inclusive) and the specified bound (exclusive).
+     *
+     * @param bound the upper bound (exclusive). Must be positive.
+     * @return a random integer between 0 (inclusive) and {@code bound} (exclusive).
+     */
     public static int getRandomInt(int bound) {
         return random.nextInt(bound);
     }
 
+    /**
+     * Returns a random integer between the specified origin (inclusive) and bound (exclusive).
+     *
+     * @param origin the lower bound (inclusive).
+     * @param bound the upper bound (exclusive).
+     * @return a random integer between {@code origin} (inclusive) and {@code bound} (exclusive).
+     */
     public static int getRandomInt(int origin, int bound) {
         return random.nextInt(origin, bound);
     }
 
+    /**
+     * Returns a random double between 0.0 (inclusive) and 1.0 (exclusive).
+     *
+     * @return a random double between 0.0 and 1.0.
+     */
     public static double getRandomDouble() {return random.nextDouble();}
 
+    /**
+     * Generates a random enemy (Goblin, Orc, or Dragon) and assigns it the given position.
+     *
+     * @param pos the position to assign to the generated enemy.
+     * @return a randomly chosen enemy instance with its position set.
+     */
     public static Enemy randomEnemy(Position pos) {
         int roll = getRandomInt(3);
         Enemy enemy;

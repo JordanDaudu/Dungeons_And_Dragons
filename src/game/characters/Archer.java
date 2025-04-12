@@ -6,13 +6,26 @@ import game.combat.RangedFighter;
 import game.engine.RandomUtil;
 import game.map.Position;
 
+/**
+ * Represents an Archer character that specializes in ranged attacks.
+ * Inherits from PlayerCharacter and implements ranged and physical combat behavior.
+ */
 public class Archer extends PlayerCharacter implements PhysicalAttacker, RangedFighter {
 
-    // data members
+    // Data Members
+    /** The accuracy modifier for ranged attacks (maximum 0.80) */
     private double accuracy;
+
+    /** The maximum attack range (Manhattan distance) for the archer */
     private int range;
 
     // methods
+    /**
+     * Constructs an Archer with a given name.
+     * The accuracy is randomly generated but constrained to be ≤ 0.80.
+     *
+     * @param name the name of the archer
+     */
     public Archer(String name){
         super(name);
         do {
@@ -22,6 +35,11 @@ public class Archer extends PlayerCharacter implements PhysicalAttacker, RangedF
         range = 2;
     }
 
+    /**
+     * Returns a string representation of the Archer, including inherited and unique fields.
+     *
+     * @return a string describing the Archer
+     */
     @Override
     public String toString() {
         // Getting super.toString() in a clean way to append
@@ -35,6 +53,13 @@ public class Archer extends PlayerCharacter implements PhysicalAttacker, RangedF
                 '}';
     }
 
+    /**
+     * Compares this Archer with another object for equality.
+     * Includes all inherited and class-specific fields.
+     *
+     * @param obj the object to compare
+     * @return true if the objects are logically equal
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -50,14 +75,22 @@ public class Archer extends PlayerCharacter implements PhysicalAttacker, RangedF
         return Double.compare(archer.accuracy, accuracy) == 0 && range == archer.range;
     }
 
+    /**
+     * Attacks a target using the Archer's ranged attack method.
+     *
+     * @param target the target to attack
+     */
     public void attack(Combatant target){
         fightRanged(target);
     }
 
-    public double getAccuracy() {
-        return accuracy;
-    }
-
+    /**
+     * Calculates the damage dealt to a target.
+     * May be doubled if a critical hit occurs.
+     *
+     * @param target the target combatant
+     * @return the damage value
+     */
     @Override
     public int calculateDamage(Combatant target) {
         if(isCriticalHit())
@@ -66,11 +99,23 @@ public class Archer extends PlayerCharacter implements PhysicalAttacker, RangedF
              return getPower();
     }
 
+    /**
+     * Determines whether a critical hit occurs.
+     * Critical hit has a 10% chance.
+     *
+     * @return true if it's a critical hit
+     */
     @Override
     public boolean isCriticalHit(){
         return RandomUtil.getRandomInt(10) == 0;
     }
 
+    /**
+     * Performs a ranged attack if the target is within range.
+     * Prints a message if the target is out of range.
+     *
+     * @param target the combatant being attacked
+     */
     @Override
     public void fightRanged(Combatant target) {
         if(isInRange(getPosition(), target.getPosition()))
@@ -79,17 +124,44 @@ public class Archer extends PlayerCharacter implements PhysicalAttacker, RangedF
             System.out.println("Out of Range!");
     }
 
+    /**
+     * Returns the Archer's attack range.
+     *
+     * @return the range in tiles
+     */
     @Override
     public int getRange() {
         return range;
     }
 
+    /**
+     * Determines whether the target is within attack range.
+     *
+     * @param self   the Archer's current position
+     * @param target the target's position
+     * @return true if target is within range
+     */
     @Override
     public boolean isInRange(Position self, Position target){
             int distance = self.distanceTo(target);
             return distance <= getRange();
     }
 
+    /**
+     * Gets the accuracy modifier used when calculating evasion chances against this Archer.
+     *
+     * @return the accuracy value
+     */
+    @Override
+    public double getAccuracyModifier() {
+        return accuracy;
+    }
+
+    /**
+     * Returns the symbol used to represent an Archer on the game map.
+     *
+     * @return the string "ARCHER"
+     */
     @Override
     public String getDisplaySymbol() {
         return "ARCHER";

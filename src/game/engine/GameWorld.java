@@ -220,9 +220,11 @@ public class GameWorld {
                 return false;
             } else if (choice > 0 && choice <= nearbyInteractables.size()) {
                 GameItem chosen = (GameItem) nearbyInteractables.get(choice - 1);
-                ((Interactable) chosen).interact(player);
-                removeItem(chosen);
-                return true; // After one interaction, exit
+                if(chosen instanceof Interactable) {
+                    ((Interactable) chosen).interact(player);
+                    removeItem(chosen);
+                    return true; // After one interaction, exit
+                }
             } else {
                 System.out.println("Invalid choice. Try again.");
             }

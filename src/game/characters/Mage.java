@@ -7,17 +7,35 @@ import game.combat.RangedFighter;
 import game.engine.RandomUtil;
 import game.map.Position;
 
+/**
+ * Represents a Mage character with magical ranged attack abilities.
+ * A Mage has a magical element and can cast spells from a distance.
+ */
 public class Mage extends PlayerCharacter implements MagicAttacker, RangedFighter {
 
+    // Data Members
+    /** The magical element associated with this Mage */
     private MagicElement element;
+
+    /** The attack range (Manhattan distance) of the Mage */
     private int range;
 
+    /**
+     * Constructs a Mage with a given name and a randomly assigned magic element.
+     *
+     * @param name the name of the Mage
+     */
     public Mage(String name) {
         super(name);
         this.element = MagicElement.values()[RandomUtil.getRandomInt(4)];
         range = 2; // default
     }
 
+    /**
+     * Returns a string representation of the Mage, including inherited and class-specific fields.
+     *
+     * @return a string describing the Mage
+     */
     @Override
     public String toString() {
         // Getting super.toString() in a clean way to append
@@ -31,6 +49,12 @@ public class Mage extends PlayerCharacter implements MagicAttacker, RangedFighte
                 '}';
     }
 
+    /**
+     * Compares this Mage to another object for logical equality.
+     *
+     * @param obj the object to compare
+     * @return true if the objects are logically equal
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -46,12 +70,17 @@ public class Mage extends PlayerCharacter implements MagicAttacker, RangedFighte
         return range == mage.range && element == mage.element;
     }
 
-
-
+    /**
+     * Calculates the magical damage dealt to a target.
+     * Adjusts damage based on element type interactions and power.
+     *
+     * @param target the target combatant
+     * @return the damage dealt as a long
+     */
     @Override
     public long calculateMagicDamage(Combatant target) {
         if(target instanceof MagicAttacker) {
-            if(element.isStrongerThan(((MagicAttacker) target).getElement()))
+            if(element.isStrongerThan(target.getElementType()))
                 return Math.round(1.2 * (getPower() * 1.5));
             else
                 return Math.round(0.8 * (getPower() * 1.5));
@@ -59,37 +88,85 @@ public class Mage extends PlayerCharacter implements MagicAttacker, RangedFighte
         return Math.round(getPower() * 1.5);
     }
 
+    /**
+     * Casts a spell on the target by performing a ranged fight.
+     *
+     * @param target the target combatant
+     */
     @Override
     public void castSpell(Combatant target) {
         fightRanged(target);
     }
 
+    /**
+     * Returns the Mage's elemental type.
+     *
+     * @return the magic element
+     */
     @Override
     public MagicElement getElement() {
         return element;
     }
 
+    /**
+     * Checks if this Mage's element is stronger than another MagicAttacker's element.
+     *
+     * @param other the other MagicAttacker
+     * @return true if this element is stronger
+     */
     @Override
     public boolean isElementStrongerThan(MagicAttacker other) {
         return element.isStrongerThan(other.getElement());
     }
 
+    /**
+     * Gets the element type of this Mage for combat purposes.
+     *
+     * @return the Mage's magic element
+     */
+    @Override
+    public MagicElement getElementType() {
+        return getElement();
+    }
+
+    /**
+     * Performs a ranged attack against a target if it is in range.
+     *
+     * @param target the target to attack
+     */
     @Override
     public void fightRanged(Combatant target) {
         if(isInRange(getPosition(), target.getPosition()))
             target.receiveDamage(((int) calculateMagicDamage(target)), this);
     }
 
+    /**
+     * Returns the attack range of the Mage.
+     *
+     * @return the range in tiles
+     */
     @Override
     public int getRange() {
         return range;
     }
 
+    /**
+     * Determines whether a target is within range for a ranged attack.
+     *
+     * @param self   the position of the Mage
+     * @param target the position of the target
+     * @return true if the target is in range
+     */
     @Override
     public boolean isInRange(Position self, Position target) {
         return self.distanceTo(target) <= getRange();
     }
 
+    /**
+     * Returns the symbol used to display the Mage on the map.
+     *
+     * @return the string "MAGE"
+     */
     @Override
     public String getDisplaySymbol() {
         return "MAGE";

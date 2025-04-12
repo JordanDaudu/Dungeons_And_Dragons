@@ -4,17 +4,34 @@ import game.combat.*;
 import game.engine.RandomUtil;
 import game.map.Position;
 
+/**
+ * Represents a Dragon enemy character.
+ * Dragons are powerful foes capable of both magic and physical attacks,
+ * and can engage enemies at both melee and ranged distances.
+ */
 public class Dragon extends Enemy implements MagicAttacker, RangedFighter, MeleeFighter, PhysicalAttacker {
 
+    //Data Members
+    /** The magic element of the dragon's spells. */
     private MagicElement element;
+
+    /** The range within which the dragon can cast spells. */
     private int range;
 
+    /**
+     * Constructs a Dragon with a random magic element and default range.
+     */
     public Dragon() {
         super();
         this.element = MagicElement.values()[RandomUtil.getRandomInt(4)];
         range = 2;
     }
 
+    /**
+     * Returns a string representation of the Dragon, including base info, element, and range.
+     *
+     * @return a string describing the dragon
+     */
     @Override
     public String toString() {
         // Getting super.toString() in a clean way to append
@@ -28,6 +45,12 @@ public class Dragon extends Enemy implements MagicAttacker, RangedFighter, Melee
                 '}';
     }
 
+    /**
+     * Checks equality between this Dragon and another object.
+     *
+     * @param obj the object to compare
+     * @return true if they are logically equal
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -43,10 +66,17 @@ public class Dragon extends Enemy implements MagicAttacker, RangedFighter, Melee
         return range == that.range && element == that.element;
     }
 
+    /**
+     * Calculates the magic damage dealt to a target.
+     * Elemental strengths and weaknesses are taken into account.
+     *
+     * @param target the target of the spell
+     * @return the magic damage value
+     */
     @Override
     public long calculateMagicDamage(Combatant target) {
         if(target instanceof MagicAttacker) {
-            if(element.isStrongerThan(((MagicAttacker) target).getElement()))
+            if(element.isStrongerThan(target.getElementType()))
                 return Math.round(1.2 * (getPower() * 1.5));
             else
                 return Math.round(0.8 * (getPower() * 1.5));
@@ -54,39 +84,88 @@ public class Dragon extends Enemy implements MagicAttacker, RangedFighter, Melee
         return Math.round(getPower() * 1.5);
     }
 
+    /**
+     * Casts a spell on the target if within range.
+     *
+     * @param target the target to damage
+     */
     @Override
     public void castSpell(Combatant target) {
         if(isInRange(getPosition(), target.getPosition()))
             target.receiveDamage(((int) calculateMagicDamage(target)), this);
     }
 
+    /**
+     * Returns the dragon's magic element.
+     *
+     * @return the element
+     */
     @Override
     public MagicElement getElement() {
         return element;
     }
 
+    /**
+     * Determines if the dragon's element is stronger than another attacker's.
+     *
+     * @param other the other magic attacker
+     * @return true if this dragon's element is stronger
+     */
     @Override
     public boolean isElementStrongerThan(MagicAttacker other) {
         return element.isStrongerThan(other.getElement());
     }
 
+    /**
+     * Returns the dragon's element as its type.
+     *
+     * @return the magic element type
+     */
+    @Override
+    public MagicElement getElementType() {
+        return getElement();
+    }
+
+    /**
+     * Performs a melee attack if the target is adjacent.
+     *
+     * @param target the combatant to attack
+     */
     @Override
     public void fightClose(Combatant target) {
         if(isInMeleeRange(getPosition(), target.getPosition()))
             target.receiveDamage(calculateDamage(target), this);
     }
 
+    /**
+     * Checks if the target is in melee range (distance = 1).
+     *
+     * @param self the position of the dragon
+     * @param target the position of the target
+     * @return true if adjacent
+     */
     @Override
     public boolean isInMeleeRange(Position self, Position target) {
         int distance = self.distanceTo(target);
         return distance == 1;
     }
 
+    /**
+     * Calculates physical damage dealt to a target.
+     *
+     * @param target the combatant to hit
+     * @return the damage amount
+     */
     @Override
     public int calculateDamage(Combatant target) {
         return getPower();
     }
 
+    /**
+     * Attacks a target using melee or ranged combat depending on distance.
+     *
+     * @param target the target to attack
+     */
     @Override
     public void attack(Combatant target) {
         if(isInMeleeRange(getPosition(), target.getPosition()))
@@ -95,21 +174,43 @@ public class Dragon extends Enemy implements MagicAttacker, RangedFighter, Melee
             fightRanged(target);
     }
 
+    /**
+     * Determines whether the dragon performs a critical hit.
+     *
+     * @return true if a critical hit occurred
+     */
     @Override
     public boolean isCriticalHit() {
         return RandomUtil.getRandomInt(10) == 0;
     }
 
+    /**
+     * Performs a ranged magic attack on a target.
+     *
+     * @param target the target to attack
+     */
     @Override
     public void fightRanged(Combatant target) {
         castSpell(target);
     }
 
+    /**
+     * Returns the spellcasting range of the dragon.
+     *
+     * @return the range value
+     */
     @Override
     public int getRange() {
         return range;
     }
 
+    /**
+     * Determines if the target is within ranged spellcasting distance.
+     *
+     * @param self the dragon's position
+     * @param target the target's position
+     * @return true if target is in range
+     */
     @Override
     public boolean isInRange(Position self, Position target) {
         if(self.distanceTo(target) <= getRange())
@@ -117,6 +218,11 @@ public class Dragon extends Enemy implements MagicAttacker, RangedFighter, Melee
         return false;
     }
 
+    /**
+     * Returns the symbol used to represent the dragon on the map.
+     *
+     * @return the character "D"
+     */
     @Override
     public String getDisplaySymbol() {
         return "D";

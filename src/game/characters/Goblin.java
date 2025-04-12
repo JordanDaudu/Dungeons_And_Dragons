@@ -6,17 +6,31 @@ import game.combat.PhysicalAttacker;
 import game.engine.RandomUtil;
 import game.map.Position;
 
+/**
+ * Represents a Goblin enemy in the game.
+ * Goblins are melee fighters with a chance to evade attacks based on agility.
+ */
 public class Goblin extends Enemy implements PhysicalAttacker, MeleeFighter {
 
     // data members
+    /** The agility of the Goblin, affecting its chance to evade attacks. */
     private int agility;
 
     //methods
+    /**
+     * Constructs a Goblin with randomized agility.
+     * Agility is a value between 0 and 80 (inclusive).
+     */
     public Goblin() {
         super();
         this.agility = RandomUtil.getRandomInt(0, 81);
     }
 
+    /**
+     * Returns a string representation of the Goblin, including inherited data and agility.
+     *
+     * @return a string describing the goblin
+     */
     @Override
     public String toString() {
         // Getting super.toString() in a clean way to append
@@ -29,6 +43,12 @@ public class Goblin extends Enemy implements PhysicalAttacker, MeleeFighter {
                 '}';
     }
 
+    /**
+     * Compares this Goblin to another object for logical equality.
+     *
+     * @param obj the object to compare
+     * @return true if the objects are logically equal
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -44,17 +64,48 @@ public class Goblin extends Enemy implements PhysicalAttacker, MeleeFighter {
         return agility == that.agility;
     }
 
+    /**
+     * Attempts to evade an attack using the goblin's agility.
+     * Goblins can evade with a probability based on their agility (max 80%).
+     *
+     * @return true if the goblin successfully evades the attack
+     */
     @Override
     public boolean tryEvade() {
         double goblin_evasion = Math.min(0.8, agility / 100.0);
         return RandomUtil.getRandomDouble() < goblin_evasion;
     }
 
+    /**
+     * Attempts to evade an attack using a multiplier to the base agility-based evasion.
+     *
+     * @param multiplier evasion penalty or bonus (lower = better evasion)
+     * @return true if the goblin successfully evades the attack
+     */
+    @Override
+    public boolean tryEvade(double multiplier) {
+        double goblin_evasion = Math.min(0.8, agility / 100.0);
+        return RandomUtil.getRandomDouble() < (goblin_evasion * (1 - multiplier));
+    }
+
+    /**
+     * Determines if a critical hit occurs.
+     * 10% chance for a critical hit (2x damage).
+     *
+     * @return true if a critical hit occurs
+     */
     @Override
     public boolean isCriticalHit() {
         return RandomUtil.getRandomInt(10) == 0;
     }
 
+    /**
+     * Calculates the damage dealt to a target.
+     * Damage is doubled on a critical hit.
+     *
+     * @param target the target of the attack
+     * @return the amount of damage to be dealt
+     */
     @Override
     public int calculateDamage(Combatant target) {
         if (isCriticalHit())
@@ -63,23 +114,45 @@ public class Goblin extends Enemy implements PhysicalAttacker, MeleeFighter {
             return getPower();
     }
 
+    /**
+     * Performs an attack on the target using melee combat.
+     *
+     * @param target the target to attack
+     */
     @Override
     public void attack(Combatant target){
         fightClose(target);
     }
 
+    /**
+     * Executes a melee attack if the target is within range.
+     *
+     * @param target the combatant to fight
+     */
     @Override
     public void fightClose(Combatant target) {
         if(isInMeleeRange(getPosition(), target.getPosition()))
             target.receiveDamage(calculateDamage(target), this);
     }
 
+    /**
+     * Checks if the target is in melee range (adjacent).
+     *
+     * @param self the goblin's position
+     * @param target the target's position
+     * @return true if distance is exactly 1
+     */
     @Override
     public boolean isInMeleeRange(Position self, Position target) {
         int distance = self.distanceTo(target);
         return distance == 1;
     }
 
+    /**
+     * Returns the symbol used to represent the goblin on the game map.
+     *
+     * @return the character "G"
+     */
     @Override
     public String getDisplaySymbol() {
         return "G";

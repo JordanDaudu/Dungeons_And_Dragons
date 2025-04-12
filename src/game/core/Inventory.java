@@ -1,19 +1,36 @@
 package game.core;
 
 import game.items.GameItem;
-
+import game.items.Potion;
+import game.items.PowerPotion;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represents the inventory of a player character, containing various game items.
+ */
 public class Inventory {
 
+    // Data Members
+    /**
+     * A list storing all the items in the inventory.
+     */
     private List<GameItem> items;
 
+    // Methods
+    /**
+     * Constructs an empty inventory.
+     */
     public Inventory() {
 
         items = new ArrayList<>();
     }
 
+    /**
+     * Returns a string representation of the inventory, including all items.
+     *
+     * @return a formatted string of the inventory's contents.
+     */
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
@@ -36,8 +53,12 @@ public class Inventory {
         return result.toString();
     }
 
-
-
+    /**
+     * Checks whether this inventory is equal to another object based on the items list.
+     *
+     * @param obj the object to compare to.
+     * @return true if the inventories contain the same items; false otherwise.
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -50,17 +71,58 @@ public class Inventory {
         return items.equals(inventory.items);
     }
 
+    /**
+     * Adds an item to the inventory.
+     *
+     * @param item the item to be added.
+     * @return true if the item was successfully added.
+     */
     public boolean addItem(GameItem item) {
 
         return items.add(item);
     }
 
+    /**
+     * Removes an item from the inventory.
+     *
+     * @param item the item to be removed.
+     * @return true if the item was successfully removed.
+     */
     public boolean removeItem(GameItem item) {
 
         return items.remove(item);
     }
 
+    /**
+     * Gets the list of items currently in the inventory.
+     *
+     * @return a list of items in the inventory.
+     */
     public List<GameItem> getItems() {
         return items;
     }
+
+    /*
+    public boolean usePotion(PlayerCharacter c) {
+        for (GameItem item : items) {
+            if (item.getClass() == Potion.class && item.use(c)) {
+                items.remove(item);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean usePowerPotion(PlayerCharacter c) {
+        for (GameItem item : items) {
+            if (item.getClass() == PowerPotion.class && item.use(c)) {
+                items.remove(item);
+                return true;
+            }
+        }
+        return false;
+    }
+
+     */
+
 }

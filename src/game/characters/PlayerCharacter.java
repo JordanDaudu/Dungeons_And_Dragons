@@ -8,12 +8,29 @@ import game.items.Potion;
 import game.items.PowerPotion;
 import game.map.Position;
 
+/**
+ * Represents a player-controlled character in the game.
+ * Inherits combat and position logic from AbstractCharacter,
+ * and adds inventory management, treasure tracking, and movement.
+ */
 public class PlayerCharacter extends AbstractCharacter implements PlayerMovement {
 
+    // Data Members
+    /** The name of the player character */
     private String name;
+
+    /** The inventory holding items for the character */
     private Inventory inventory;
+
+    /** Points gained by collecting treasure */
     private int treasurePoints;
 
+    /**
+     * Constructs a PlayerCharacter with the specified name.
+     * Initializes inventory and treasure points.
+     *
+     * @param name the name of the character
+     */
     public PlayerCharacter(String name) {
 
         super();
@@ -22,6 +39,12 @@ public class PlayerCharacter extends AbstractCharacter implements PlayerMovement
         treasurePoints = 0;
     }
 
+    /**
+     * Returns a string representing the state of the player.
+     * Includes inherited fields, name, treasure, and inventory.
+     *
+     * @return a string describing the player character
+     */
     @Override
     public String toString() {
         // Getting super.toString() in a clean way to append
@@ -36,6 +59,12 @@ public class PlayerCharacter extends AbstractCharacter implements PlayerMovement
                 '}';
     }
 
+    /**
+     * Compares this player character to another object for equality.
+     *
+     * @param obj the object to compare
+     * @return true if both objects represent the same player state
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -53,16 +82,34 @@ public class PlayerCharacter extends AbstractCharacter implements PlayerMovement
                 inventory.equals(that.inventory);
     }
 
+    /**
+     * Gets the player's name.
+     *
+     * @return the character's name
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Adds a game item to the player's inventory.
+     *
+     * @param item the item to add
+     * @return true if added successfully
+     */
     public boolean addToInventory(GameItem item) {
         return inventory.addItem(item);
     }
 
+    /**
+     * Uses the first available Potion in the inventory, if any.
+     * Triggers interaction and removes the item from inventory.
+     *
+     * @return true if a potion was used
+     */
     public boolean usePotion() {
         for(GameItem item : inventory.getItems()) {
+
             if(item.getClass() == Potion.class) {
                 ((Interactable) item).interact(this);
                 inventory.removeItem(item);
@@ -72,6 +119,12 @@ public class PlayerCharacter extends AbstractCharacter implements PlayerMovement
         return false;
     }
 
+    /**
+     * Uses the first available PowerPotion in the inventory, if any.
+     * Triggers interaction and removes the item from inventory.
+     *
+     * @return true if a power potion was used
+     */
     public boolean usePowerPotion() {
         for(GameItem item : inventory.getItems()) {
             if(item instanceof PowerPotion) {
@@ -83,35 +136,80 @@ public class PlayerCharacter extends AbstractCharacter implements PlayerMovement
         return false;
     }
 
+    /**
+     * Increases the player's treasure points.
+     *
+     * @param amount amount to add
+     * @return true always
+     */
     public boolean updateTreasurePoint(int amount) {
+        System.out.println("You received " + amount + " treasure points!");
         treasurePoints += amount;
+        System.out.println("Your total now is: " + getTreasurePoints());
         return true;
     }
 
+    /**
+     * Gets the total treasure points collected by the player.
+     *
+     * @return the treasure points
+     */
     public int getTreasurePoints() {
         return treasurePoints;
     }
 
+    /**
+     * Gets the symbol used to represent the player on the map.
+     *
+     * @return the display symbol ("C")
+     */
     @Override
     public String getDisplaySymbol() {
         return "C";
     }
 
+    /**
+     * Calculates the new position if the player moves right.
+     *
+     * @param player the current player
+     * @return the new position
+     */
     @Override
     public Position MoveRight(PlayerCharacter player){
         Position currentPosition = player.getPosition();
         return new Position(currentPosition.getRow(),currentPosition.getCol() + 1);
     }
+
+    /**
+     * Calculates the new position if the player moves left.
+     *
+     * @param player the current player
+     * @return the new position
+     */
     @Override
     public Position MoveLeft(PlayerCharacter player){
         Position currentPosition = player.getPosition();
         return new Position(currentPosition.getRow(), currentPosition.getCol() - 1);
     }
+
+    /**
+     * Calculates the new position if the player moves up.
+     *
+     * @param player the current player
+     * @return the new position
+     */
     @Override
     public Position MoveUp(PlayerCharacter player){
         Position currentPosition = player.getPosition();
         return new Position(currentPosition.getRow() - 1, currentPosition.getCol());
     }
+
+    /**
+     * Calculates the new position if the player moves down.
+     *
+     * @param player the current player
+     * @return the new position
+     */
     @Override
     public Position MoveDown(PlayerCharacter player){
         Position currentPosition = player.getPosition();
