@@ -14,6 +14,7 @@ import java.util.List;
 public class GameWorld {
 
     public static void main(String[] args) {
+        SoundManager.loadMusic();
         gameLoop();
     }
 
@@ -50,6 +51,7 @@ public class GameWorld {
     }
 
     public static void gameLoop() {
+        SoundManager.playMusic("preparations", true);
         GameWorld game = new GameWorld(10, 10);
         game.getPlayers().add(game.createCharacter());
         game.getMap().placePlayerRandomly(game.getPlayers().getFirst());
@@ -58,6 +60,7 @@ public class GameWorld {
         game.collectEnemiesFromMap();
         game.collectItemsFromMap();
 
+        SoundManager.crossfadeTo("battle1", true);
         do {
             // game.map.printDebugGrid();
             System.out.println("--------------------------------------------------------\n");
