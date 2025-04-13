@@ -104,6 +104,10 @@ public class Inventory {
         return items;
     }
 
+    /**
+     * Prints a summarized view of the inventory,
+     * showing the count of each type of item.
+     */
     public void printInventory() {
         if (items.isEmpty()) {
             System.out.println("Inventory is empty.");
