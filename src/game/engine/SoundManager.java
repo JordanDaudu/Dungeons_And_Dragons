@@ -15,6 +15,8 @@ public class SoundManager {
     public static void loadMusic() {
         loadTrack("preparations", "sounds/Preparations.wav");
         loadTrack("battle1", "sounds/battle1.wav");
+        loadTrack("battle2", "sounds/battle2.wav");
+        loadTrack("battle3", "sounds/battle3.wav");
     }
 
     private static void loadTrack(String name, String filePath) {
@@ -82,10 +84,33 @@ public class SoundManager {
         gainControl.setValue(gain);
     }
 
+    public static void playRandomBattleTrack(boolean loop) {
+        // Filter for battle tracks
+        var battleTracks = tracks.keySet().stream()
+                .filter(name -> name.startsWith("battle"))
+                .toList();
+
+        if (battleTracks.isEmpty()) {
+            System.err.println("No battle tracks loaded!");
+            return;
+        }
+
+        // Pick a random battle track
+        int index = RandomUtil.getRandomInt(battleTracks.size());
+        String selectedTrack = battleTracks.get(index);
+
+        // Crossfade to it
+        crossfadeTo(selectedTrack, loop);
+    }
+
     public static void crossfadeTo(String name, boolean loop) {
         Clip newClip = tracks.get(name);
-        if (newClip == null || newClip == currentClip) {
-            return; // No need to switch or clip not found
+        if (newClip == null) {
+            System.err.println("No music track named: " + name);
+            return; // clip not found
+        }
+        else if(newClip == currentClip) {
+            return; // No need to switch, same track
         }
 
         final Clip oldClip = currentClip;

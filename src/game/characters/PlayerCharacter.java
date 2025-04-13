@@ -158,6 +158,15 @@ public class PlayerCharacter extends AbstractCharacter implements PlayerMovement
         return treasurePoints;
     }
 
+    public boolean haveInteractableInInventory() {
+        for(GameItem item : inventory.getItems()) {
+            if(item instanceof Interactable) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * Gets the symbol used to represent the player on the map.
      *
@@ -215,5 +224,14 @@ public class PlayerCharacter extends AbstractCharacter implements PlayerMovement
         Position currentPosition = player.getPosition();
          return new Position(currentPosition.getRow() + 1, currentPosition.getCol());
     }
+
+    public void printInventoryOfPlayer(){
+        if (!this.haveInteractableInInventory())
+            System.out.println("You don't have any interactable in your inventory!");
+        else {
+            this.inventory.printInventory();
+        }
+    }
+
 
 }

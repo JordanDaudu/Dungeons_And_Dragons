@@ -173,13 +173,27 @@ public class GameMap {
     }
 
     public void printPlayerView(Position playerPos) {
+        // Reset visibility for all entities
+        for (List<GameEntity> entities : grid.values()) {
+            for (GameEntity entity : entities) {
+                entity.setVisible(false);
+            }
+        }
+
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < cols; col++) {
                 Position pos = new Position(row, col);
+                List<GameEntity> entities = grid.get(pos);
 
                 // Check visibility range
                 if (playerPos.distanceTo(pos) <= 2) {
-                    List<GameEntity> entities = grid.get(pos);
+                    // Within view range → reveal and print
+                    if (entities != null) {
+                        for (GameEntity entity : entities) {
+                            entity.setVisible(true);
+                        }
+                    }
+                    // getting top item in list to show
                     if (entities != null && !entities.isEmpty()) {
                         GameEntity top = entities.getLast();
                         System.out.print(top.getDisplaySymbol());
@@ -226,7 +240,7 @@ public class GameMap {
                 if (entities != null && !entities.isEmpty()) {
                     System.out.print("[" + pos + "]: ");
                     for (GameEntity entity : entities) {
-                        System.out.print(entity.getClass().getSimpleName() + "(" + entity.getDisplaySymbol() + ") ");
+                        System.out.print(entity.getClass().getSimpleName() + "(" + entity.getDisplaySymbol() + ": " + entity + ") ");
                     }
                     System.out.println();
                 }

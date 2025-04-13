@@ -4,7 +4,9 @@ import game.items.GameItem;
 import game.items.Potion;
 import game.items.PowerPotion;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Represents the inventory of a player character, containing various game items.
@@ -102,6 +104,24 @@ public class Inventory {
         return items;
     }
 
+    public void printInventory() {
+        if (items.isEmpty()) {
+            System.out.println("Inventory is empty.");
+            return;
+        }
+
+        Map<String, Integer> itemCounts = new HashMap<>();
+
+        for (GameItem item : items) {
+            String itemName = item.getClass().getSimpleName();
+            itemCounts.put(itemName, itemCounts.getOrDefault(itemName, 0) + 1);
+        }
+
+        System.out.println("Inventory:");
+        for (Map.Entry<String, Integer> entry : itemCounts.entrySet())
+            System.out.println("- " + entry.getKey() + " x" + entry.getValue());
+    }
+
     /*
     public boolean usePotion(PlayerCharacter c) {
         for (GameItem item : items) {
@@ -124,5 +144,4 @@ public class Inventory {
     }
 
      */
-
 }

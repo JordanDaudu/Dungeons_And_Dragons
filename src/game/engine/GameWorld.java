@@ -62,7 +62,8 @@ public class GameWorld {
 
         SoundManager.crossfadeTo("battle1", true);
         do {
-            // game.map.printDebugGrid();
+            game.map.printEntitiesPerTile();
+
             System.out.println("--------------------------------------------------------\n");
             for (PlayerCharacter player : game.getPlayers()) {
                 game.map.printPlayerView(player.getPosition());
@@ -103,7 +104,7 @@ public class GameWorld {
             System.out.println("1. Move");
             System.out.println("2. Interact");
             System.out.println("3. Attack");
-            System.out.println("4. Item");
+            System.out.println("4. Use Item");
             System.out.println("5. End Turn");
 
             String input = scanner.nextLine();
@@ -340,6 +341,13 @@ public class GameWorld {
     }
 
     public boolean playerUseItem(PlayerCharacter player) {
+        if(!player.haveInteractableInInventory()) {
+            System.out.println(player.getName() + " you don't have a interactable item.");
+            return false;
+        }
+        else {
+            player.printInventoryOfPlayer();
+        }
         int choice = getIntInput("\n--- Use Item ---\n0. Cancel\n1. Use Potion\n2. Use Power Potion", 0, 2);
 
         switch (choice) {
@@ -371,6 +379,5 @@ public class GameWorld {
             }
         }
     }
-
 }
 

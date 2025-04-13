@@ -3,6 +3,7 @@ package game.combat;
 import game.characters.Archer;
 import game.characters.Enemy;
 import game.characters.PlayerCharacter;
+import game.engine.SoundManager;
 
 /**
  * The CombatSystem class handles combat resolution between two Combatants.
@@ -35,10 +36,12 @@ public class CombatSystem {
             ((RangedFighter) attacker).fightRanged(defender);
         if(defender.isDead()) {
             if(defender instanceof PlayerCharacter) {
+                defender.setVisible(false);
                 System.out.println("\n||GAME OVER!||\n");
             }
             else if(defender instanceof Enemy) {
                 ((Enemy) defender).defeat();
+                SoundManager.playRandomBattleTrack(true);
             }
         }
     }
