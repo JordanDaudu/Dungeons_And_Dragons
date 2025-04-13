@@ -34,8 +34,6 @@ public class GameMap {
         this.rows = rows;
         this.cols = cols;
         grid.clear(); // clear existing grid if re-initialized
-
-        populateRandomEntities();
     }
 
     public static GameMap getInstance() {
@@ -125,7 +123,7 @@ public class GameMap {
         return all;
     }
 
-    private void populateRandomEntities() {
+    public void populateRandomEntities() {
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < cols; col++) {
                 double roll = RandomUtil.getRandomDouble(); // Between 0.0 and 1.0
@@ -157,17 +155,6 @@ public class GameMap {
                     System.out.println("Placing Power Potion at: " + pos);
                 }
                 // Else: 40% chance to place nothing — do nothing
-            }
-        }
-    }
-
-    public void revealNearby(Position center) {
-        for (Map.Entry<Position, List<GameEntity>> entry : grid.entrySet()) {
-            Position pos = entry.getKey();
-            if (center.distanceTo(pos) <= 2) {
-                for (GameEntity e : entry.getValue()) {
-                    e.setVisible(true);
-                }
             }
         }
     }

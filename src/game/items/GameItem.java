@@ -36,7 +36,7 @@ public abstract class GameItem implements GameEntity {
      * Constructs a GameItem with the specified position, movement blocking state, and description.
      *
      * @param position the position of the item on the map.
-     * @param blocksMovement whether the item blocks movement.
+     * @param blocksMovement whether the item blocks' movement.
      * @param description a short description of the item.
      */
     public GameItem(Position position, boolean blocksMovement, String description) {
@@ -142,6 +142,12 @@ public abstract class GameItem implements GameEntity {
     public boolean isVisible() {
         return this.visible;
     }
+
+    /**
+     *
+     * @param c the {@link PlayerCharacter} interacting.
+     */
+    public abstract void interact(PlayerCharacter c);
 
     /**
      * Applies the effect of using the item on a player character.

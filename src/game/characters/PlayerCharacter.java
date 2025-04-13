@@ -85,10 +85,19 @@ public class PlayerCharacter extends AbstractCharacter implements PlayerMovement
     /**
      * Gets the player's name.
      *
-     * @return the character's name
+     * @return the player's name
      */
     public String getName() {
         return name;
+    }
+
+    /**
+     * Gets the player's inventory.
+     *
+     * @return the player's inventory
+     */
+    public Inventory getInventory() {
+        return inventory;
     }
 
     /**
@@ -111,7 +120,7 @@ public class PlayerCharacter extends AbstractCharacter implements PlayerMovement
         for(GameItem item : inventory.getItems()) {
 
             if(item.getClass() == Potion.class) {
-                ((Interactable) item).interact(this);
+                item.interact(this);
                 inventory.removeItem(item);
                 return true;
             }
@@ -128,7 +137,7 @@ public class PlayerCharacter extends AbstractCharacter implements PlayerMovement
     public boolean usePowerPotion() {
         for(GameItem item : inventory.getItems()) {
             if(item instanceof PowerPotion) {
-                ((Interactable) item).interact(this);
+                item.interact(this);
                 inventory.removeItem(item);
                 return true;
             }

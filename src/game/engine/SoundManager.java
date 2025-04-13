@@ -17,6 +17,7 @@ public class SoundManager {
         loadTrack("battle1", "sounds/battle1.wav");
         loadTrack("battle2", "sounds/battle2.wav");
         loadTrack("battle3", "sounds/battle3.wav");
+        loadTrack("dragon1", "sounds/dragon1.wav");
     }
 
     private static void loadTrack(String name, String filePath) {

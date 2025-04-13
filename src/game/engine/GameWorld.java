@@ -10,6 +10,7 @@ import game.map.GameMap;
 import game.map.Position;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class GameWorld {
 
@@ -24,7 +25,7 @@ public class GameWorld {
     private GameMap map;
 
     private CombatSystem combatSystem = new CombatSystem();
-    private final java.util.Scanner scanner = new java.util.Scanner(System.in);
+    private static final Scanner scanner = new Scanner(System.in);
 
     public GameWorld(int row, int col) {
         this.players = new ArrayList<>();
@@ -52,9 +53,15 @@ public class GameWorld {
 
     public static void gameLoop() {
         SoundManager.playMusic("preparations", true);
-        GameWorld game = new GameWorld(10, 10);
+        System.out.println("||Dungeons & Dragons like game||");
+        System.out.println("Lets determine the grid size (min: 10x10).");
+        int rows = getIntInput("How many rows?: ", 10, Integer.MAX_VALUE);
+        int cols = getIntInput("How many cols?: ", 10, Integer.MAX_VALUE);
+        GameWorld game = new GameWorld(rows, cols);
         game.getPlayers().add(game.createCharacter());
-        game.getMap().placePlayerRandomly(game.getPlayers().getFirst());
+        for(PlayerCharacter player : game.getPlayers())
+            game.getMap().placePlayerRandomly(player);
+        game.getMap().populateRandomEntities();
 
         game.collectPlayersFromMap();
         game.collectEnemiesFromMap();
@@ -66,18 +73,16 @@ public class GameWorld {
 
             System.out.println("--------------------------------------------------------\n");
             for (PlayerCharacter player : game.getPlayers()) {
-                game.map.printPlayerView(player.getPosition());
                 game.playerMenu(player);
-                // game.getMap().printEntitiesPerTile();
             }
         }
         while (!game.getEnemies().isEmpty() && !game.getPlayers().isEmpty());
     }
 
     public PlayerCharacter createCharacter() {
-        System.out.println("What is your name?: ");
+        System.out.print("What is your name?: ");
         String name = scanner.nextLine();
-        int choice = getIntInput("Choose your class:\n1.Warrior\n2.Archer\n3.Mage", 1, 3);
+        int choice = getIntInput("Choose your class:\n1.Warrior\n2.Archer\n3.Mage\n", 1, 3);
         switch (choice) {
             case 1 -> {
                 return new Warrior(name);
@@ -97,6 +102,7 @@ public class GameWorld {
     public void playerMenu(PlayerCharacter player) {
         boolean turnEnded = false;
 
+        System.out.println(player.getName() + ": " + player);
         while (!turnEnded) {
             System.out.println("\n--- " + player.getName() + "'s Turn ---");
             map.printPlayerView(player.getPosition());
@@ -110,7 +116,7 @@ public class GameWorld {
             String input = scanner.nextLine();
 
             switch (input) {
-                case "1" -> turnEnded = PlayerMovements(player);
+                case "1" -> turnEnded = playerMovements(player);
                 case "2" -> turnEnded = playerInteract(player);
                 case "3" -> turnEnded = playerAttack(player);
                 case "4" -> turnEnded = playerUseItem(player);
@@ -123,14 +129,21 @@ public class GameWorld {
         }
     }
 
-    private boolean PlayerMovements(PlayerCharacter player) {
-        int choice = getIntInput("Where to move ? (0.Back 1.Right, 2.Left, 3.Up, 4.Down", 0, 4);
+    private boolean playerMovements(PlayerCharacter player) {
+        System.out.println("\n--- Player Movement ---");
+        System.out.println("Which direction would you like to move?");
+        System.out.println("         3. ↑ Up");
+        System.out.println("1. ← Left       2. → Right");
+        System.out.println("        4. ↓ Down");
+        System.out.println("0. Back");
+
+        int choice = getIntInput("Enter your choice: ", 0, 4);
 
         Position newPosition = null;
 
         switch (choice) {
-            case 1 -> newPosition = player.MoveRight(player); // Move Right
-            case 2 -> newPosition = player.MoveLeft(player); // Move Left
+            case 1 -> newPosition = player.MoveLeft(player); // Move Left
+            case 2 -> newPosition = player.MoveRight(player); // Move Right
             case 3 -> newPosition = player.MoveUp(player); // Move Up
             case 4 -> newPosition = player.MoveDown(player); // Move Down
             default -> {
@@ -151,12 +164,7 @@ public class GameWorld {
             return false;
         }
 
-        /*
-        if (map.isOccupied(newPosition)) {
-            System.out.println("Move failed: position is already occupied.");
-            return false;
-        }
-        */
+        // check if an enemy is blocking
         if (map.isEnemyBlocking(newPosition)) {
             System.out.println("Move failed: an enemy is blocking the path.");
             choice = getIntInput("Do you want to engage in combat?\n1.Yes\n2.No", 1, 2);
@@ -165,7 +173,7 @@ public class GameWorld {
             return false;
         }
 
-            // ✅ Move the player
+        // ✅ Move the player
         map.removeEntity(player);                // Remove from old position
         player.setPosition(newPosition);         // Update player's position
         map.addEntity(player);                   // Add to new position
@@ -186,6 +194,7 @@ public class GameWorld {
                 if (!map.isValidPosition(pos)) continue;
                 if (playerPos.distanceTo(pos) != 1) continue;
 
+                // Check for any Interactable nearby
                 List<GameEntity> entities = map.getEntitiesAt(pos);
                 for (GameEntity entity : entities) {
                     if (entity instanceof GameItem item && item instanceof Interactable) {
@@ -195,11 +204,13 @@ public class GameWorld {
             }
         }
 
+        // Print nothing interactable if there isn't any nearby
         if (nearbyInteractables.isEmpty()) {
             System.out.println("There is nothing to interact with nearby.");
             return false;
         }
 
+        // Get player choice
         while (true) {
             System.out.println("\n--- Interactables Nearby ---");
             for (int i = 0; i < nearbyInteractables.size(); i++) {
@@ -236,11 +247,13 @@ public class GameWorld {
     }
 
     private boolean playerAttack(PlayerCharacter player) {
+        // Getting player position and attack range
         Position playerPos = player.getPosition();
         int range = 1; // default
         if (player instanceof RangedFighter)
             range = ((RangedFighter) player).getRange();
 
+        // Making an array of all enemies that are within range to attack
         List<Enemy> targetsInRange = new ArrayList<>();
         for (Enemy enemy : enemies) {
             if (!enemy.isDead() && playerPos.distanceTo(enemy.getPosition()) <= range) {
@@ -248,11 +261,13 @@ public class GameWorld {
             }
         }
 
+        // Print accordingly if no enemy in range
         if (targetsInRange.isEmpty()) {
             System.out.println("No enemies in range to attack.");
             return false;
         }
 
+        // Getting player input which enemy to attack
         while (true) {
             System.out.println("\n--- Targets in Range ---");
             for (int i = 0; i < targetsInRange.size(); i++) {
@@ -272,14 +287,59 @@ public class GameWorld {
 
             Enemy target = targetsInRange.get(choice - 1);
 
+            if(target instanceof Dragon)
+                SoundManager.crossfadeTo("dragon1", true);
+
             // Combat resolution
             combatSystem.resolveCombat(player, target);
-            // Handle death
+            // Handle death for map entity
             if (target.isDead()) {
                 System.out.println("You defeated the " + target.getClass().getSimpleName() + "!");
                 removeEnemy(target);
             }
             return true; // End turn after successful attack
+        }
+    }
+
+    public boolean playerUseItem(PlayerCharacter player) {
+        // Checking if player has any Interactable item
+        if(!player.haveInteractableInInventory()) {
+            System.out.println(player.getName() + " you don't have a interactable item.");
+            return false;
+        }
+        else {
+            player.printInventoryOfPlayer();
+        }
+
+        int choice = getIntInput("\n--- Use Item ---\n0. Cancel\n1. Use Potion\n2. Use Power Potion", 0, 2);
+
+        switch (choice) {
+            case 1 -> {
+                if (player.usePotion()) {
+                    System.out.println("Potion used successfully.");
+                    return true;
+                } else {
+                    System.out.println("No Potion available.");
+                    return false;
+                }
+            }
+            case 2 -> {
+                if (player.usePowerPotion()) {
+                    System.out.println("Power Potion used successfully.");
+                    return true;
+                } else {
+                    System.out.println("No Power Potion available.");
+                    return false;
+                }
+            }
+            case 0 -> {
+                System.out.println("Cancelled item usage.");
+                return false;
+            }
+            default -> {
+                System.out.println("Invalid choice.");
+                return false;
+            }
         }
     }
 
@@ -322,7 +382,7 @@ public class GameWorld {
         }
     }
 
-    private int getIntInput(String prompt, int min, int max) {
+    private static int getIntInput(String prompt, int min, int max) {
         while (true) {
             System.out.print(prompt + " ");
             String input = scanner.nextLine();
@@ -336,46 +396,6 @@ public class GameWorld {
                 return value;
             } catch (NumberFormatException e) {
                 System.out.println("Invalid input. Please enter a number.");
-            }
-        }
-    }
-
-    public boolean playerUseItem(PlayerCharacter player) {
-        if(!player.haveInteractableInInventory()) {
-            System.out.println(player.getName() + " you don't have a interactable item.");
-            return false;
-        }
-        else {
-            player.printInventoryOfPlayer();
-        }
-        int choice = getIntInput("\n--- Use Item ---\n0. Cancel\n1. Use Potion\n2. Use Power Potion", 0, 2);
-
-        switch (choice) {
-            case 1 -> {
-                if (player.usePotion()) {
-                    System.out.println("Potion used successfully.");
-                    return true;
-                } else {
-                    System.out.println("No Potion available.");
-                    return false;
-                }
-            }
-            case 2 -> {
-                if (player.usePowerPotion()) {
-                    System.out.println("Power Potion used successfully.");
-                    return true;
-                } else {
-                    System.out.println("No Power Potion available.");
-                    return false;
-                }
-            }
-            case 0 -> {
-                System.out.println("Cancelled item usage.");
-                return false;
-            }
-            default -> {
-                System.out.println("Invalid choice.");
-                return false;
             }
         }
     }
