@@ -13,7 +13,6 @@ import game.map.Position;
 public class Goblin extends Enemy implements PhysicalAttacker, MeleeFighter {
 
     // data members
-    /** The agility of the Goblin, affecting its chance to evade attacks. */
     private int agility;
 
     //methods
@@ -156,6 +155,16 @@ public class Goblin extends Enemy implements PhysicalAttacker, MeleeFighter {
     @Override
     public String getDisplaySymbol() {
         return "G";
+    }
+
+    /**
+     * Combatant Interface function, helps delegate the fighting logic to use from Interface
+     *
+     * @param target the combatant to attack
+     */
+    @Override
+    public void fight(Combatant target) {
+        fightClose(target);
     }
 }
 

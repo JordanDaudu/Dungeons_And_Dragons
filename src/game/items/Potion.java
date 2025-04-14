@@ -11,17 +11,10 @@ import game.map.Position;
 public class Potion extends GameItem implements Interactable {
 
     // Data Members
-
-    /**
-     * The amount of HP this potion will restore when used.
-     */
     private final int increaseAmount;
-
-    /**
-     * Indicates whether the potion has been used.
-     */
     private boolean isUsed;
 
+    // Methods
     /**
      * Constructs a new Potion with the specified position, movement blocking behavior, and description.
      * The healing amount is initialized randomly.
@@ -118,14 +111,6 @@ public class Potion extends GameItem implements Interactable {
             }
         }
     }
-
-    /*
-    @Override
-    public boolean use(PlayerCharacter character) {
-        interact(character); // Call your healing logic
-        return true;
-    }
-     */
 
     /**
      * Returns the display symbol used to represent this potion on the game map.

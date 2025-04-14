@@ -14,12 +14,10 @@ import game.map.Position;
 public class Mage extends PlayerCharacter implements MagicAttacker, RangedFighter {
 
     // Data Members
-    /** The magical element associated with this Mage */
     private MagicElement element;
-
-    /** The attack range (Manhattan distance) of the Mage */
     private int range;
 
+    // Methods
     /**
      * Constructs a Mage with a given name and a randomly assigned magic element.
      *
@@ -170,5 +168,15 @@ public class Mage extends PlayerCharacter implements MagicAttacker, RangedFighte
     @Override
     public String getDisplaySymbol() {
         return "MAGE";
+    }
+
+    /**
+     * Combatant Interface function, helps delegate the fighting logic to use from Interface
+     *
+     * @param target the combatant to attack
+     */
+    @Override
+    public void fight(Combatant target) {
+        fightRanged(target);
     }
 }

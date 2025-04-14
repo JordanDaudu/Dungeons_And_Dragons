@@ -1,6 +1,5 @@
 package game.items;
 
-import game.characters.PlayerCharacter;
 import game.map.Position;
 
 /**
@@ -49,15 +48,6 @@ public class Wall extends GameItem {
             return false;
         }
         return super.equals(obj);
-    }
-
-    /**
-     *
-     * @param c the {@link PlayerCharacter} path is blocked by the wall.
-     */
-    @Override
-    public void interact(PlayerCharacter c) {
-        System.out.println("There is wall blocking the path.");
     }
 
     /**

@@ -1,8 +1,6 @@
 package game.core;
 
-import game.items.GameItem;
-import game.items.Potion;
-import game.items.PowerPotion;
+import game.items.Interactable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,7 +15,7 @@ public class Inventory {
     /**
      * A list storing all the items in the inventory.
      */
-    private List<GameItem> items;
+    private List<Interactable> items;
 
     // Methods
     /**
@@ -79,7 +77,7 @@ public class Inventory {
      * @param item the item to be added.
      * @return true if the item was successfully added.
      */
-    public boolean addItem(GameItem item) {
+    public boolean addItem(Interactable item) {
 
         return items.add(item);
     }
@@ -90,7 +88,7 @@ public class Inventory {
      * @param item the item to be removed.
      * @return true if the item was successfully removed.
      */
-    public boolean removeItem(GameItem item) {
+    public boolean removeItem(Interactable item) {
 
         return items.remove(item);
     }
@@ -100,7 +98,7 @@ public class Inventory {
      *
      * @return a list of items in the inventory.
      */
-    public List<GameItem> getItems() {
+    public List<Interactable> getItems() {
         return items;
     }
 
@@ -116,7 +114,7 @@ public class Inventory {
 
         Map<String, Integer> itemCounts = new HashMap<>();
 
-        for (GameItem item : items) {
+        for (Interactable item : items) {
             String itemName = item.getClass().getSimpleName();
             itemCounts.put(itemName, itemCounts.getOrDefault(itemName, 0) + 1);
         }
@@ -125,27 +123,4 @@ public class Inventory {
         for (Map.Entry<String, Integer> entry : itemCounts.entrySet())
             System.out.println("- " + entry.getKey() + " x" + entry.getValue());
     }
-
-    /*
-    public boolean usePotion(PlayerCharacter c) {
-        for (GameItem item : items) {
-            if (item.getClass() == Potion.class && item.use(c)) {
-                items.remove(item);
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public boolean usePowerPotion(PlayerCharacter c) {
-        for (GameItem item : items) {
-            if (item.getClass() == PowerPotion.class && item.use(c)) {
-                items.remove(item);
-                return true;
-            }
-        }
-        return false;
-    }
-
-     */
 }

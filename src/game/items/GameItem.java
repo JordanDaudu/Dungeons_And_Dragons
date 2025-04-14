@@ -11,24 +11,9 @@ import game.map.Position;
 public abstract class GameItem implements GameEntity {
 
     // Data Members
-    /**
-     * The position of the item on the game map.
-     */
     private Position position;
-
-    /**
-     * Whether this item blocks movement on the map.
-     */
     private boolean blocksMovement;
-
-    /**
-     * A textual description of the item.
-     */
     private String description;
-
-    /**
-     * Visibility state of the item on the game map.
-     */
     private boolean visible; // Added myself
 
     // Methods
@@ -107,9 +92,7 @@ public abstract class GameItem implements GameEntity {
      * @return the item's {@link Position}.
      */
     @Override
-    public Position getPosition() {
-        return position;
-    }
+    public Position getPosition() { return position;}
 
     /**
      * Sets the item's position on the map.
@@ -117,9 +100,7 @@ public abstract class GameItem implements GameEntity {
      * @param newPos the new position to assign.
      */
     @Override
-    public void setPosition(Position newPos) {
-        this.position = new Position(newPos);
-    }
+    public void setPosition(Position newPos) { this.position = new Position(newPos);}
 
     /**
      * Sets the visibility state of the item.
@@ -141,22 +122,5 @@ public abstract class GameItem implements GameEntity {
     @Override
     public boolean isVisible() {
         return this.visible;
-    }
-
-    /**
-     *
-     * @param c the {@link PlayerCharacter} interacting.
-     */
-    public abstract void interact(PlayerCharacter c);
-
-    /**
-     * Applies the effect of using the item on a player character.
-     * Default implementation does nothing and returns {@code false}.
-     *
-     * @param character the {@link PlayerCharacter} using the item.
-     * @return {@code true} if the item was used successfully; {@code false} otherwise.
-     */
-    public boolean use(PlayerCharacter character) {
-        return false; // By default, not usable
     }
 }

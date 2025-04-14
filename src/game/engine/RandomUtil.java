@@ -16,14 +16,10 @@ import java.util.Random;
  */
 public class RandomUtil {
 
-    /**
-     * The single shared instance of the {@link Random} generator.
-     */
+    // Data Members
     private static final Random random = new Random();
 
-    /**
-     * Private constructor to prevent instantiation of this utility class.
-     */
+    // Methods
     private RandomUtil() {}
 
     /**

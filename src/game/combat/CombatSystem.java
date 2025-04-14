@@ -25,7 +25,7 @@ public class CombatSystem {
      * @param attacker the combatant initiating the attack
      * @param defender the target of the attack
      */
-    public void resolveCombat(Combatant attacker, Combatant defender) {
+    public void oldResolveCombat(Combatant attacker, Combatant defender) {
 
         System.out.println("Attacker: " + attacker);
         System.out.println("Defender: " + defender);
@@ -47,7 +47,7 @@ public class CombatSystem {
     }
 
     /**
-     * Tests the combat interaction between an attacker and a defender. The attacker will attempt
+     * Resolve combat interaction between an attacker and a defender. The attacker will attempt
      * to attack the defender using either melee or ranged capabilities, considering evasion logic.
      * If the attack is successful and the defender dies, the appropriate outcome (game over or defeat)
      * will be triggered.
@@ -55,38 +55,27 @@ public class CombatSystem {
      * @param attacker the combatant initiating the attack
      * @param defender the target of the attack
      */
-    public void test(Combatant attacker, Combatant defender) {
+    public void resolveCombat(Combatant attacker, Combatant defender) {
 
         System.out.println("Attacker: " + attacker);
         System.out.println("Defender: " + defender);
 
         // Checks the Combatant type and tries to evade, damage calculation is inside attacking functions
-        if(attacker instanceof MeleeFighter) {
-            if(defender.tryEvade()) {
+        if(attacker instanceof Archer) {
+            if(defender.tryEvade(attacker.getAccuracyModifier())) {
                 System.out.println("Attack evaded!");
                 return;
             }
             else {
-                ((MeleeFighter) attacker).fightClose(defender);
+                attacker.fight(defender);
             }
         }
-        else if(attacker instanceof RangedFighter) {
-            if(attacker instanceof Archer) {
-                if(defender.tryEvade(attacker.getAccuracyModifier())) {
-                    System.out.println("Attack evaded!");
-                    return;
-                }
-                else {
-                    ((Archer) attacker).fightRanged(defender);
-                }
-            }
-            else if(defender.tryEvade()) {
-                System.out.println("Attack evaded!");
-                return;
-            }
-            else {
-                ((RangedFighter) attacker).fightRanged(defender);
-            }
+        else if(defender.tryEvade()) {
+            System.out.println("Attack evaded!");
+            return;
+        }
+        else {
+            attacker.fight(defender);
         }
 
         // Handling of dying player or enemy
@@ -96,23 +85,8 @@ public class CombatSystem {
             }
             else if(defender instanceof Enemy) {
                 ((Enemy) defender).defeat();
+                SoundManager.playRandomBattleTrack(true);
             }
         }
     }
-    /*
-    public void receiveDamage(int amount, Combatant source) {
-        if(source instanceof Archer) {
-            if(this.tryEvade(source.getAccuracyModifier())) {
-                System.out.println("Attack evaded!");
-                return;
-            }
-        }
-        else if(this.tryEvade()) {
-            System.out.println("Attack evaded!");
-            return;
-        }
-        setHealth(getHealth() - amount);
-        System.out.println(getClass().getSimpleName() + " received " + amount + " damage!");
-    }
-     */
 }

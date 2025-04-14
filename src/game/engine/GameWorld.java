@@ -14,19 +14,21 @@ import java.util.Scanner;
 
 public class GameWorld {
 
+    // Main
     public static void main(String[] args) {
         SoundManager.loadMusic();
         gameLoop();
     }
 
+    // Data Members
     private List<PlayerCharacter> players;
     private List<Enemy> enemies;
     private List<GameItem> items;
     private GameMap map;
-
     private CombatSystem combatSystem = new CombatSystem();
     private static final Scanner scanner = new Scanner(System.in);
 
+    // Methods
     public GameWorld(int row, int col) {
         this.players = new ArrayList<>();
         this.enemies = new ArrayList<>();
@@ -63,13 +65,12 @@ public class GameWorld {
             game.getMap().placePlayerRandomly(player);
         game.getMap().populateRandomEntities();
 
-        game.collectPlayersFromMap();
         game.collectEnemiesFromMap();
         game.collectItemsFromMap();
 
         SoundManager.crossfadeTo("battle1", true);
         do {
-            game.map.printEntitiesPerTile();
+            // game.map.printEntitiesPerTile(); // FOR DEBUGGING PURPOSES TO SEE EACH TILE
 
             System.out.println("--------------------------------------------------------\n");
             for (PlayerCharacter player : game.getPlayers()) {
@@ -122,11 +123,12 @@ public class GameWorld {
                 case "4" -> turnEnded = playerUseItem(player);
                 case "5" -> {
                     System.out.println("Ending turn.");
-                    turnEnded = true;
+                    return;
                 }
                 default -> System.out.println("Invalid option, try again.");
             }
         }
+        System.out.println("Turn ended.");
     }
 
     private boolean playerMovements(PlayerCharacter player) {
@@ -303,7 +305,7 @@ public class GameWorld {
 
     public boolean playerUseItem(PlayerCharacter player) {
         // Checking if player has any Interactable item
-        if(!player.haveInteractableInInventory()) {
+        if(!player.isEmpty()) {
             System.out.println(player.getName() + " you don't have a interactable item.");
             return false;
         }

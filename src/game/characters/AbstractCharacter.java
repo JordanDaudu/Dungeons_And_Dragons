@@ -13,24 +13,14 @@ import game.engine.RandomUtil;
 public abstract class AbstractCharacter implements Combatant, GameEntity {
 
     // Data Members
-
-    /** The current position of the character on the game map */
     private Position position;
-
-    /** The current health value of the character */
     private int health;
-
-    /** The power level used in combat for attacking */
     private int power;
-
-    /** The chance the character has to evade attacks (0.25 = 25%) */
     private double evasionChance = 0.25;
-
-    /** Whether the character is currently visible on the map */
     private boolean visible;
 
-    // Methods
 
+    // Methods
     /**
      * Default constructor initializing position, health, and power randomly.
      */
@@ -157,19 +147,6 @@ public abstract class AbstractCharacter implements Combatant, GameEntity {
      */
     @Override
     public void receiveDamage(int amount, Combatant source) {
-        /*
-        if(source instanceof Archer) {
-            if(this.tryEvade(source.getAccuracyModifier())) {
-                System.out.println("Attack evaded!");
-                return;
-            }
-        }
-        else if(this.tryEvade()) {
-            System.out.println("Attack evaded!");
-            return;
-        }
-         */
-
         // Moved the evasion logic to CombatSystem for now
         setHealth(getHealth() - amount);
         System.out.println(getClass().getSimpleName() + " received " + amount + " damage!");

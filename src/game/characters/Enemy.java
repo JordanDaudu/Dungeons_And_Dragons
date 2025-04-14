@@ -1,5 +1,6 @@
 package game.characters;
 
+import game.combat.Combatant;
 import game.items.Treasure;
 import game.map.GameMap;
 
@@ -10,7 +11,6 @@ import game.map.GameMap;
 public class Enemy extends AbstractCharacter {
 
     // Data Members
-    /** The amount of loot the enemy carries. */
     private int loot;
 
     // Methods
@@ -103,5 +103,15 @@ public class Enemy extends AbstractCharacter {
      */
     private int getLoot() {
         return loot;
+    }
+
+    /**
+     * Setting up for future enemy type chosen
+     *
+     * @param target the combatant to attack
+     */
+    @Override
+    public void fight(Combatant target) {
+        System.out.println("Choose a enemy type to be able to fight");
     }
 }

@@ -76,15 +76,6 @@ public class PowerPotion extends Potion {
         }
     }
 
-    /*
-    @Override
-    public boolean use(PlayerCharacter character) {
-        interact(character); // Power boost logic
-        return true;
-    }
-
-     */
-
     /**
      * Returns the display symbol used to represent this power potion on the game map.
      *

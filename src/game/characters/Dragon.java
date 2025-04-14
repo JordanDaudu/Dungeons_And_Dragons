@@ -12,12 +12,10 @@ import game.map.Position;
 public class Dragon extends Enemy implements MagicAttacker, RangedFighter, MeleeFighter, PhysicalAttacker {
 
     //Data Members
-    /** The magic element of the dragon's spells. */
     private MagicElement element;
-
-    /** The range within which the dragon can cast spells. */
     private int range;
 
+    // Methods
     /**
      * Constructs a Dragon with a random magic element and default range.
      */
@@ -82,6 +80,17 @@ public class Dragon extends Enemy implements MagicAttacker, RangedFighter, Melee
                 return Math.round(0.8 * (getPower() * 1.5));
         }
         return Math.round(getPower() * 1.5);
+    }
+
+    /**
+     * Calculates physical damage dealt to a target.
+     *
+     * @param target the combatant to hit
+     * @return the damage amount
+     */
+    @Override
+    public int calculateDamage(Combatant target) {
+        return getPower();
     }
 
     /**
@@ -151,17 +160,6 @@ public class Dragon extends Enemy implements MagicAttacker, RangedFighter, Melee
     }
 
     /**
-     * Calculates physical damage dealt to a target.
-     *
-     * @param target the combatant to hit
-     * @return the damage amount
-     */
-    @Override
-    public int calculateDamage(Combatant target) {
-        return getPower();
-    }
-
-    /**
      * Attacks a target using melee or ranged combat depending on distance.
      *
      * @param target the target to attack
@@ -226,5 +224,15 @@ public class Dragon extends Enemy implements MagicAttacker, RangedFighter, Melee
     @Override
     public String getDisplaySymbol() {
         return "D";
+    }
+
+    /**
+     * Combatant Interface function, helps delegate the fighting logic to use from Interface
+     *
+     * @param target the combatant to attack
+     */
+    @Override
+    public void fight(Combatant target) {
+        attack(target);
     }
 }

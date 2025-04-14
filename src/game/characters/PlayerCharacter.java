@@ -1,5 +1,6 @@
 package game.characters;
 
+import game.combat.Combatant;
 import game.core.Inventory;
 import game.core.PlayerMovement;
 import game.items.GameItem;
@@ -16,15 +17,11 @@ import game.map.Position;
 public class PlayerCharacter extends AbstractCharacter implements PlayerMovement {
 
     // Data Members
-    /** The name of the player character */
     private String name;
-
-    /** The inventory holding items for the character */
     private Inventory inventory;
-
-    /** Points gained by collecting treasure */
     private int treasurePoints;
 
+    // Methods
     /**
      * Constructs a PlayerCharacter with the specified name.
      * Initializes inventory and treasure points.
@@ -106,7 +103,7 @@ public class PlayerCharacter extends AbstractCharacter implements PlayerMovement
      * @param item the item to add
      * @return true if added successfully
      */
-    public boolean addToInventory(GameItem item) {
+    public boolean addToInventory(Interactable item) {
         return inventory.addItem(item);
     }
 
@@ -117,8 +114,7 @@ public class PlayerCharacter extends AbstractCharacter implements PlayerMovement
      * @return true if a potion was used
      */
     public boolean usePotion() {
-        for(GameItem item : inventory.getItems()) {
-
+        for(Interactable item : inventory.getItems()) {
             if(item.getClass() == Potion.class) {
                 item.interact(this);
                 inventory.removeItem(item);
@@ -135,8 +131,8 @@ public class PlayerCharacter extends AbstractCharacter implements PlayerMovement
      * @return true if a power potion was used
      */
     public boolean usePowerPotion() {
-        for(GameItem item : inventory.getItems()) {
-            if(item instanceof PowerPotion) {
+        for(Interactable item : inventory.getItems()) {
+            if(item.getClass() == PowerPotion.class) {
                 item.interact(this);
                 inventory.removeItem(item);
                 return true;
@@ -152,7 +148,6 @@ public class PlayerCharacter extends AbstractCharacter implements PlayerMovement
      * @return true always
      */
     public boolean updateTreasurePoint(int amount) {
-        System.out.println("You received " + amount + " treasure points!");
         treasurePoints += amount;
         System.out.println("Your total now is: " + getTreasurePoints());
         return true;
@@ -167,13 +162,12 @@ public class PlayerCharacter extends AbstractCharacter implements PlayerMovement
         return treasurePoints;
     }
 
-    public boolean haveInteractableInInventory() {
-        for(GameItem item : inventory.getItems()) {
-            if(item instanceof Interactable) {
-                return true;
-            }
-        }
-        return false;
+    /**
+     *
+     * @return if the player inventory is empty
+     */
+    public boolean isEmpty() {
+        return inventory.getItems().isEmpty();
     }
 
     /**
@@ -235,12 +229,20 @@ public class PlayerCharacter extends AbstractCharacter implements PlayerMovement
     }
 
     public void printInventoryOfPlayer(){
-        if (!this.haveInteractableInInventory())
-            System.out.println("You don't have any interactable in your inventory!");
+        if (!this.isEmpty())
+            System.out.println("Your inventory is empty.");
         else {
             this.inventory.printInventory();
         }
     }
 
-
+    /**
+     * Setting up for future class chosen
+     *
+     * @param target the combatant to attack
+     */
+    @Override
+    public void fight(Combatant target) {
+        System.out.println("Choose a class to be able to fight");
+    }
 }

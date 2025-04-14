@@ -8,7 +8,6 @@ import game.items.GameItem;
 import game.items.Potion;
 import game.items.PowerPotion;
 import game.items.Wall;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,6 +17,7 @@ public class GameMap {
 
     // Important! GameMap is a singleton (One object exists only)
 
+    // Data Members
     private Map<Position, List<GameEntity>> grid;
     private int rows;
     private int cols;
@@ -91,7 +91,6 @@ public class GameMap {
                 return true;
         return false;
     }
-
 
     public int getRows() {
         return rows;
@@ -191,7 +190,6 @@ public class GameMap {
                     // Outside visible range
                     System.out.print("#");
                 }
-
                 System.out.print(" ");
             }
             System.out.println();

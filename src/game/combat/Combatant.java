@@ -61,6 +61,8 @@ public interface Combatant extends GameEntity {
 
     // FROM HERE THOSE ARE MY OWN-ADDED METHODS
 
+    void fight(Combatant target);
+
     /**
      * Attempts to evade an attack using a custom multiplier to modify the evasion chance.
      * Override this method to support advanced evasion logic.

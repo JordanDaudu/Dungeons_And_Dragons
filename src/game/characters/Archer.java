@@ -13,10 +13,7 @@ import game.map.Position;
 public class Archer extends PlayerCharacter implements PhysicalAttacker, RangedFighter {
 
     // Data Members
-    /** The accuracy modifier for ranged attacks (maximum 0.80) */
     private double accuracy;
-
-    /** The maximum attack range (Manhattan distance) for the archer */
     private int range;
 
     // methods
@@ -165,5 +162,15 @@ public class Archer extends PlayerCharacter implements PhysicalAttacker, RangedF
     @Override
     public String getDisplaySymbol() {
         return "ARCHER";
+    }
+
+    /**
+     * Combatant Interface function, helps delegate the fighting logic to use from Interface
+     *
+     * @param target the combatant to attack
+     */
+    @Override
+    public void fight(Combatant target) {
+        fightRanged(target);
     }
 }

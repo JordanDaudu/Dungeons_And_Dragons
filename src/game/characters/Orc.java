@@ -14,7 +14,6 @@ import game.map.Position;
 public class Orc extends Enemy implements MeleeFighter, PhysicalAttacker {
 
     // Data Members
-    /** The magic resistance of the orc (maximum of 0.5). */
     private double resistance;
 
     // Methods
@@ -76,17 +75,7 @@ public class Orc extends Enemy implements MeleeFighter, PhysicalAttacker {
      */
     @Override
     public void receiveDamage(int amount, Combatant source) {
-        if(source instanceof Archer) {
-            if(this.tryEvade(source.getAccuracyModifier())) {
-                System.out.println("Attack evaded!");
-                return;
-            }
-        }
-        else if(this.tryEvade()) {
-            System.out.println("Attack evaded!");
-            return;
-        }
-        else if(source instanceof MagicAttacker) {
+        if(source instanceof MagicAttacker) {
             setHealth(((int) Math.round(getHealth() - (amount * (1 - resistance)))));
             System.out.println(getClass().getSimpleName() +" received " + amount + " damage!");
             return;
@@ -96,18 +85,14 @@ public class Orc extends Enemy implements MeleeFighter, PhysicalAttacker {
     }
 
     /**
-     * Performs a close-range attack on the target, applying critical hit logic.
+     * Executes a melee attack if the target is within range.
      *
-     * @param target the combatant to attack
+     * @param target the combatant to fight
      */
     @Override
     public void fightClose(Combatant target) {
-        if(isInMeleeRange(getPosition(), target.getPosition())) {
-            if(isCriticalHit())
-                target.receiveDamage(2 * getPower(), this);
-            else
-                target.receiveDamage(getPower(), this);
-        }
+        if(isInMeleeRange(getPosition(), target.getPosition()))
+            target.receiveDamage(calculateDamage(target), this);
     }
 
     /**
@@ -124,14 +109,18 @@ public class Orc extends Enemy implements MeleeFighter, PhysicalAttacker {
     }
 
     /**
-     * Calculates the base damage dealt to a target.
+     * Calculates the damage dealt to a target.
+     * Damage is doubled on a critical hit.
      *
      * @param target the target of the attack
-     * @return the damage amount
+     * @return the amount of damage to be dealt
      */
     @Override
     public int calculateDamage(Combatant target) {
-        return getPower();
+        if (isCriticalHit())
+            return 2 * getPower();
+        else
+            return getPower();
     }
 
     /**
@@ -163,5 +152,15 @@ public class Orc extends Enemy implements MeleeFighter, PhysicalAttacker {
     @Override
     public String getDisplaySymbol() {
         return "O";
+    }
+
+    /**
+     * Combatant Interface function, helps delegate the fighting logic to use from Interface
+     *
+     * @param target the combatant to attack
+     */
+    @Override
+    public void fight(Combatant target) {
+        fightClose(target);
     }
 }

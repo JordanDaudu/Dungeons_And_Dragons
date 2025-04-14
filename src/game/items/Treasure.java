@@ -11,10 +11,7 @@ import game.map.Position;
 public class Treasure extends GameItem implements Interactable {
 
     // Data Members
-    /** The value of the treasure, determining how many treasure points it gives. */
     private int value;
-
-    /** Indicates whether the treasure has already been collected. */
     boolean collected;
 
     // Methods

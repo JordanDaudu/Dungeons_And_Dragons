@@ -13,7 +13,6 @@ import game.map.Position;
 public class Warrior extends PlayerCharacter implements MeleeFighter, PhysicalAttacker {
 
     // Data Members
-    /** Defensive value that reduces incoming damage */
     private int defence;
 
     // Methods
@@ -79,6 +78,7 @@ public class Warrior extends PlayerCharacter implements MeleeFighter, PhysicalAt
     public void receiveDamage(int amount, Combatant source) {
         int damage = (int) (source.getPower() * (1 - Math.min(0.6, defence / 200.0)));
         setHealth(getHealth() - damage);
+        System.out.println(getClass().getSimpleName() + " received " + amount + " damage!");
     }
 
     /**
@@ -151,5 +151,15 @@ public class Warrior extends PlayerCharacter implements MeleeFighter, PhysicalAt
     @Override
     public String getDisplaySymbol() {
         return "WARRIOR";
+    }
+
+    /**
+     * Combatant Interface function, helps delegate the fighting logic to use from Interface
+     *
+     * @param target the combatant to attack
+     */
+    @Override
+    public void fight(Combatant target) {
+        fightClose(target);
     }
 }

@@ -7,10 +7,7 @@ package game.map;
 public class Position {
 
     // Data Members
-    /** The row coordinate of this position. */
     private int row;
-
-    /** The column coordinate of this position. */
     private int col;
 
     /**
