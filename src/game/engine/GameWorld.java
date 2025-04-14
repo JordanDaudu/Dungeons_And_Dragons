@@ -186,7 +186,7 @@ public class GameWorld {
 
     private boolean playerInteract(PlayerCharacter player) {
         Position playerPos = player.getPosition();
-        List<GameEntity> nearbyInteractables = new ArrayList<>();
+        List<Interactable> nearbyInteractables = new ArrayList<>();
 
         for (int row = playerPos.getRow() - 1; row <= playerPos.getRow() + 1; row++) {
             for (int col = playerPos.getCol() - 1; col <= playerPos.getCol() + 1; col++) {
@@ -199,8 +199,8 @@ public class GameWorld {
                 // Check for any Interactable nearby
                 List<GameEntity> entities = map.getEntitiesAt(pos);
                 for (GameEntity entity : entities) {
-                    if (entity instanceof GameItem item && item instanceof Interactable) {
-                        nearbyInteractables.add(item);
+                    if (entity instanceof Interactable interactable) {
+                        nearbyInteractables.add(interactable);
                     }
                 }
             }
