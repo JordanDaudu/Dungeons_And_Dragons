@@ -1,4 +1,4 @@
-<img src="Photos/DD3.png" align="center" alt="logo" width="768" height="512">
+<img src="Photos/DD6.png" align="center" alt="logo" width="768" height="512">
 
 # 🐉 Dungeons & Dragons Inspired - Java Game Project
 
