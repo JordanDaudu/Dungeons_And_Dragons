@@ -103,7 +103,8 @@ public class Potion extends GameItem implements Interactable {
      */
     @Override
     public void interact(PlayerCharacter c) {
-        if(c.getPosition().distanceTo(getPosition()) == 1) {
+        // The second condition is specially for items inside player inventory
+        if(c.getPosition().distanceTo(getPosition()) == 1 || getPosition().equals(new Position(-1, -1))) {
             if(!isUsed) {
                 System.out.println(c.getName() + " was healed " + getIncreaseAmount() + "HP");
                 c.heal(increaseAmount);

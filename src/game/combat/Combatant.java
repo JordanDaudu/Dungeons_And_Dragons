@@ -61,8 +61,18 @@ public interface Combatant extends GameEntity {
 
     // FROM HERE THOSE ARE MY OWN-ADDED METHODS
 
+    /**
+     * Initiates a fight action against the specified target.
+     * This method should define how the combatant attacks   another combatant in battle.
+     *
+     * @param target the combatant to attack
+     */
     void fight(Combatant target);
 
+    /**
+     * Handles logic for when this combatant is defeated.
+     * This can include game over logic, status changes, or triggering events.
+     */
     void defeat();
 
     /**

@@ -10,7 +10,7 @@ import javax.swing.Timer;
 public class SoundManager {
     private static Clip currentClip;
     private static final Map<String, Clip> tracks = new HashMap<>();
-    private static float volume = 0.75f; // Default volume (0.0 to 1.0)
+    private static float volume = 0.65f; // Default volume (0.0 to 1.0)
 
     public static void loadMusic() {
         loadTrack("preparations", "sounds/Preparations.wav");

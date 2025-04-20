@@ -218,8 +218,12 @@ public class PlayerCharacter extends AbstractCharacter implements PlayerMovement
          return new Position(currentPosition.getRow() + 1, currentPosition.getCol());
     }
 
+    /**
+     * Prints the contents of the player's inventory.
+     * If the inventory is empty, a message is displayed to indicate that.
+     */
     public void printInventoryOfPlayer(){
-        if (!this.isEmpty())
+        if (this.isEmpty())
             System.out.println("Your inventory is empty.");
         else {
             this.inventory.printInventory();
@@ -236,6 +240,10 @@ public class PlayerCharacter extends AbstractCharacter implements PlayerMovement
         System.out.println("Choose a class to be able to fight");
     }
 
+    /**
+     * Handles the defeat of the player character.
+     * Prints a game over message along with the player's total treasure points.
+     */
     @Override
     public void defeat() {
         System.out.println("\n||GAME OVER " + getName() + "!||\n");

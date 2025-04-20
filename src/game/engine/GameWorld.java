@@ -309,8 +309,8 @@ public class GameWorld {
 
     public boolean playerUseItem(PlayerCharacter player) {
         // Checking if player has any Interactable item
-        if(!player.isEmpty()) {
-            System.out.println(player.getName() + " you don't have a interactable item.");
+        if(player.isEmpty()) {
+            System.out.println(player.getName() + " you don't have an interactable item.");
             return false;
         }
         else {
