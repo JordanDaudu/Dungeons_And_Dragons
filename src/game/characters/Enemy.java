@@ -1,6 +1,7 @@
 package game.characters;
 
 import game.combat.Combatant;
+import game.engine.RandomUtil;
 import game.items.Treasure;
 import game.map.GameMap;
 
@@ -20,7 +21,7 @@ public class Enemy extends AbstractCharacter {
     public Enemy() {
         super();
         setHealth(50);
-        loot = 0;
+        loot = RandomUtil.getRandomInt(100, 301);
     }
 
     /**

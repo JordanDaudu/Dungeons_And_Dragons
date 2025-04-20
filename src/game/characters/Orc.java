@@ -76,12 +76,25 @@ public class Orc extends Enemy implements MeleeFighter, PhysicalAttacker {
     @Override
     public void receiveDamage(int amount, Combatant source) {
         if(source instanceof MagicAttacker) {
-            setHealth(((int) Math.round(getHealth() - (amount * (1 - resistance)))));
+            amount = ((int) Math.round(amount * (1 - resistance)));
+            setHealth(getHealth() - amount);
             System.out.println(getClass().getSimpleName() +" received " + amount + " damage!");
             return;
         }
         setHealth(getHealth() - amount);
         System.out.println(getClass().getSimpleName() +" received " + amount + " damage!");
+    }
+
+    /**
+     * Calculates the damage dealt to a target.
+     *
+     * @param target the target of the attack
+     * @return the amount of damage to be dealt
+     */
+    @Override
+    public int calculateDamage(Combatant target) {
+        // Enemies do not have a crit multiplier therefore
+        return getPower();
     }
 
     /**
@@ -108,20 +121,6 @@ public class Orc extends Enemy implements MeleeFighter, PhysicalAttacker {
         return distance == 1;
     }
 
-    /**
-     * Calculates the damage dealt to a target.
-     * Damage is doubled on a critical hit.
-     *
-     * @param target the target of the attack
-     * @return the amount of damage to be dealt
-     */
-    @Override
-    public int calculateDamage(Combatant target) {
-        if (isCriticalHit())
-            return 2 * getPower();
-        else
-            return getPower();
-    }
 
     /**
      * Executes an attack action against a target.
@@ -135,13 +134,12 @@ public class Orc extends Enemy implements MeleeFighter, PhysicalAttacker {
 
     /**
      * Determines whether the orc lands a critical hit.
-     * 10% chance to deal double damage.
      *
-     * @return true if a critical hit occurs
+     * @return true if a critical hit occurs (always false as enemies do not crit)
      */
     @Override
     public boolean isCriticalHit() {
-        return RandomUtil.getRandomInt(10) == 0;
+        return false;
     }
 
     /**

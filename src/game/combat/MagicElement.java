@@ -17,4 +17,16 @@ public enum MagicElement {
             default -> false;
         };
     }
+
+    /**
+     * Checks if the current element is weaker than the other element.
+     * This is determined by checking if the other element is stronger than this one.
+     *
+     * @param other The other MagicElement to compare against.
+     * @return true if this element is weaker than the other, false otherwise.
+     */
+    public boolean isWeakerThan(MagicElement other) {
+        return other.isStrongerThan(this);
+    }
+
 }

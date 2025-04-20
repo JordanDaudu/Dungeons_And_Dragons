@@ -80,7 +80,7 @@ public class Mage extends PlayerCharacter implements MagicAttacker, RangedFighte
         if(target instanceof MagicAttacker) {
             if(element.isStrongerThan(target.getElementType()))
                 return Math.round(1.2 * (getPower() * 1.5));
-            else
+            else if(element.isWeakerThan(target.getElementType()))
                 return Math.round(0.8 * (getPower() * 1.5));
         }
         return Math.round(getPower() * 1.5);

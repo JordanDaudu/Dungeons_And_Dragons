@@ -18,35 +18,6 @@ public class CombatSystem {
     public CombatSystem() {}
 
     /**
-     * Resolves combat between two combatants. The attacker will attempt to attack the defender
-     * using either melee or ranged capabilities. If the defender dies, appropriate
-     * consequences are triggered (e.g. game over for a player, loot drop for an enemy).
-     *
-     * @param attacker the combatant initiating the attack
-     * @param defender the target of the attack
-     */
-    public void oldResolveCombat(Combatant attacker, Combatant defender) {
-
-        System.out.println("Attacker: " + attacker);
-        System.out.println("Defender: " + defender);
-
-        if(attacker instanceof MeleeFighter)
-            ((MeleeFighter) attacker).fightClose(defender);
-        else if(attacker instanceof RangedFighter)
-            ((RangedFighter) attacker).fightRanged(defender);
-        if(defender.isDead()) {
-            if(defender instanceof PlayerCharacter) {
-                defender.setVisible(false);
-                System.out.println("\n||GAME OVER!||\n");
-            }
-            else if(defender instanceof Enemy) {
-                ((Enemy) defender).defeat();
-                SoundManager.playRandomBattleTrack(true);
-            }
-        }
-    }
-
-    /**
      * Resolve combat interaction between an attacker and a defender. The attacker will attempt
      * to attack the defender using either melee or ranged capabilities, considering evasion logic.
      * If the attack is successful and the defender dies, the appropriate outcome (game over or defeat)

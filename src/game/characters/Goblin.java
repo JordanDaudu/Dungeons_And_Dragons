@@ -89,28 +89,24 @@ public class Goblin extends Enemy implements PhysicalAttacker, MeleeFighter {
 
     /**
      * Determines if a critical hit occurs.
-     * 10% chance for a critical hit (2x damage).
      *
-     * @return true if a critical hit occurs
+     * @return true if a critical hit occurs (always false as enemies do not crit)
      */
     @Override
     public boolean isCriticalHit() {
-        return RandomUtil.getRandomInt(10) == 0;
+        return false;
     }
 
     /**
      * Calculates the damage dealt to a target.
-     * Damage is doubled on a critical hit.
      *
      * @param target the target of the attack
      * @return the amount of damage to be dealt
      */
     @Override
     public int calculateDamage(Combatant target) {
-        if (isCriticalHit())
-            return 2 * getPower();
-        else
-            return getPower();
+        // Enemies do not have a crit multiplier therefore
+        return getPower();
     }
 
     /**

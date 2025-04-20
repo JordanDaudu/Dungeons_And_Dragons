@@ -76,7 +76,7 @@ public class Dragon extends Enemy implements MagicAttacker, RangedFighter, Melee
         if(target instanceof MagicAttacker) {
             if(element.isStrongerThan(target.getElementType()))
                 return Math.round(1.2 * (getPower() * 1.5));
-            else
+            else if(element.isWeakerThan(target.getElementType()))
                 return Math.round(0.8 * (getPower() * 1.5));
         }
         return Math.round(getPower() * 1.5);
@@ -175,11 +175,11 @@ public class Dragon extends Enemy implements MagicAttacker, RangedFighter, Melee
     /**
      * Determines whether the dragon performs a critical hit.
      *
-     * @return true if a critical hit occurred
+     * @return true if a critical hit occurred (always false as enemies do not crit)
      */
     @Override
     public boolean isCriticalHit() {
-        return RandomUtil.getRandomInt(10) == 0;
+        return false;
     }
 
     /**

@@ -83,7 +83,11 @@ public class GameWorld {
     public PlayerCharacter createCharacter() {
         System.out.print("What is your name?: ");
         String name = scanner.nextLine();
-        int choice = getIntInput("Choose your class:\n1.Warrior\n2.Archer\n3.Mage\n", 1, 3);
+        int choice = getIntInput("Choose your class:\n" +
+                "1.Warrior - A melee-focused fighter skilled in close-range physical combat.\n" +
+                "2.Archer - A ranged combatant who excels at striking from afar with physical attacks.\n" +
+                "3.Mage - A master of magic who uses powerful ranged spells to defeat enemies.\n",
+                1, 3);
         switch (choice) {
             case 1 -> {
                 return new Warrior(name);

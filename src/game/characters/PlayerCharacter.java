@@ -3,7 +3,6 @@ package game.characters;
 import game.combat.Combatant;
 import game.core.Inventory;
 import game.core.PlayerMovement;
-import game.items.GameItem;
 import game.items.Interactable;
 import game.items.Potion;
 import game.items.PowerPotion;

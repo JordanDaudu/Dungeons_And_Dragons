@@ -4,7 +4,6 @@ import game.characters.Dragon;
 import game.characters.Enemy;
 import game.characters.Goblin;
 import game.characters.Orc;
-import game.combat.MagicElement;
 import game.map.Position;
 
 import java.util.Random;

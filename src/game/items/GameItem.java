@@ -1,6 +1,5 @@
 package game.items;
 
-import game.characters.PlayerCharacter;
 import game.core.GameEntity;
 import game.map.Position;
 
