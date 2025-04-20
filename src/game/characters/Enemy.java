@@ -90,6 +90,7 @@ public class Enemy extends AbstractCharacter {
     /**
      * Handles logic when the enemy is defeated, such as dropping loot on the game map.
      */
+    @Override
     public void defeat() {
         GameMap map = GameMap.getInstance();
         setVisible(false);

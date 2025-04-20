@@ -51,12 +51,12 @@ public class CombatSystem {
 
         // Handling of dying player or enemy
         if(defender.isDead()) {
-            if(defender instanceof PlayerCharacter) {
-                System.out.println("\n||GAME OVER!||\n");
-            }
-            else if(defender instanceof Enemy) {
-                ((Enemy) defender).defeat();
+            if(defender instanceof Enemy) {
+                defender.defeat();
                 SoundManager.playRandomBattleTrack(true);
+            }
+            else {
+                defender.defeat();
             }
         }
     }

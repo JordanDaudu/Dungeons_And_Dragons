@@ -88,15 +88,6 @@ public class PlayerCharacter extends AbstractCharacter implements PlayerMovement
     }
 
     /**
-     * Gets the player's inventory.
-     *
-     * @return the player's inventory
-     */
-    public Inventory getInventory() {
-        return inventory;
-    }
-
-    /**
      * Adds a game item to the player's inventory.
      *
      * @param item the item to add
@@ -243,5 +234,11 @@ public class PlayerCharacter extends AbstractCharacter implements PlayerMovement
     @Override
     public void fight(Combatant target) {
         System.out.println("Choose a class to be able to fight");
+    }
+
+    @Override
+    public void defeat() {
+        System.out.println("\n||GAME OVER " + getName() + "!||\n");
+        System.out.println(getName() + " you gained " + getTreasurePoints() + " treasure point(s) in total!\n");
     }
 }

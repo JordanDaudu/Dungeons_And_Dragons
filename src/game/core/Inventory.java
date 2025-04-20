@@ -11,10 +11,6 @@ import java.util.Map;
  */
 public class Inventory {
 
-    // Data Members
-    /**
-     * A list storing all the items in the inventory.
-     */
     private List<Interactable> items;
 
     // Methods
