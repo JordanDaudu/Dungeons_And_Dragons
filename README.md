@@ -1,4 +1,4 @@
-<img src="Photos/DD6.png" align="center" alt="logo" width="768" height="512">
+<img src="Photos/Main photo for ReadMe/DD7.png" align="center" alt="logo" width="768" height="512">
 
 # 🐉 Dungeons & Dragons Inspired - Java Game Project
 
@@ -14,6 +14,14 @@ Key features include:
 - 🌟 Magic and physical attacks with hit and evade mechanics
 - 🎵 Sound effects integration
 - 📦 Resource handling via a dedicated `resources` folder
+
+---
+
+## 🧩 Project Architecture Diagram
+To better understand the class structure, relationships, and project flow, here's a visual representation of the game's architecture.
+It includes core components of the game file.
+
+<p align="center"> <img src="Photos/Diagrams/Advanced Object Oriented Programming.jpg" alt="Architecture Diagram" width="768"> </p>
 
 ---
 
