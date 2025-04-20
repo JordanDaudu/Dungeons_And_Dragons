@@ -17,14 +17,6 @@ Key features include:
 
 ---
 
-## 🧩 Project Architecture Diagram
-To better understand the class structure, relationships, and project flow, here's a visual representation of the game's architecture.
-It includes core components of the game file.
-
-<p align="center"> <img src="Photos/Diagrams/Advanced Object Oriented Programming.jpg" alt="Architecture Diagram" width="768"> </p>
-
----
-
 ## 📁 Project Structure
 
 ```
@@ -68,3 +60,12 @@ If not set correctly, resources like sound files may fail to load at runtime.
 4. Click **OK** and **Apply and Close**.
 
 ✅ This adds the `resources` folder to your classpath.
+
+---
+
+## 🧩 Project Architecture Diagram
+To better understand the class structure, relationships, and project flow, here's a visual representation of the game's architecture.<br>
+It includes core components of the game file.
+
+<p align="center"> <img src="Photos/Diagrams/Advanced Object Oriented Programming.jpg" alt="Architecture Diagram" width="768"> </p>
+
