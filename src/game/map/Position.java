@@ -62,7 +62,7 @@ public class Position {
      * @return the hash code based on row and column
      */
     public int hashCode() {
-        return 31 * row + col;
+        return java.util.Objects.hash(row, col);
     }
 
     /**

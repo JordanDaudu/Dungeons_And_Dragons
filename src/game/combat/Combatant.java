@@ -78,8 +78,9 @@ public interface Combatant extends GameEntity {
     /**
      * Attempts to evade an attack using a custom multiplier to modify the evasion chance.
      * Override this method to support advanced evasion logic.
+     * Defaults to using the normal tryEvade()
      *
-     * @param multiplier the evasion modifier (lower = better chance to evade)
+     * @param multiplier the evasion modifier
      * @return true if the attack was evaded, false otherwise
      */
     default boolean tryEvade(double multiplier) {
