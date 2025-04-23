@@ -7,11 +7,22 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.swing.Timer;
 
+/**
+ * Manages loading, playing, and transitioning between background music tracks in the game.
+ * Supports volume control, looping, and crossfading between tracks.
+ */
 public class SoundManager {
+
+    // Data Members
     private static Clip currentClip;
     private static final Map<String, Clip> tracks = new HashMap<>();
     private static float volume = 0.65f; // Default volume (0.0 to 1.0)
 
+    // Methods
+    /**
+     * Loads all predefined music tracks into memory.
+     * This should be called at game startup to preload sounds.
+     */
     public static void loadMusic() {
         loadTrack("preparations", "sounds/Preparations.wav");
         loadTrack("battle1", "sounds/battle1.wav");
@@ -20,6 +31,12 @@ public class SoundManager {
         loadTrack("dragon1", "sounds/dragon1.wav");
     }
 
+    /**
+     * Loads a single music track into memory and maps it by name.
+     *
+     * @param name     the unique name used to refer to the track
+     * @param filePath the relative file path to the sound file
+     */
     private static void loadTrack(String name, String filePath) {
         try {
             URL resource = SoundManager.class.getResource("/" + filePath);
@@ -39,6 +56,12 @@ public class SoundManager {
         }
     }
 
+    /**
+     * Plays a loaded music track by name.
+     *
+     * @param name the name of the track to play
+     * @param loop true to loop the track continuously, false to play once
+     */
     public static void playMusic(String name, boolean loop) {
         stopCurrentMusic();
 
@@ -61,7 +84,10 @@ public class SoundManager {
         }
     }
 
-
+    /**
+     * Stops any currently playing music track.
+     * Resets the track to the beginning.
+     */
     public static void stopCurrentMusic() {
         if (currentClip != null && currentClip.isRunning()) {
             currentClip.stop();
@@ -69,6 +95,11 @@ public class SoundManager {
         }
     }
 
+    /**
+     * Sets the global volume level for playback.
+     *
+     * @param newVolume a float value between 0.0 (silent) and 1.0 (full volume)
+     */
     public static void setVolume(float newVolume) {
         volume = Math.max(0f, Math.min(newVolume, 1f)); // Clamp to [0, 1]
         if (currentClip != null) {
@@ -76,6 +107,12 @@ public class SoundManager {
         }
     }
 
+    /**
+     * Applies volume level to a specific audio clip.
+     *
+     * @param clip   the clip to modify
+     * @param volume a float value between 0.0 and 1.0
+     */
     private static void setVolume(Clip clip, float volume) {
         if (clip == null) return;
 
@@ -85,6 +122,12 @@ public class SoundManager {
         gainControl.setValue(gain);
     }
 
+    /**
+     * Plays a randomly selected battle-themed music track.
+     * Automatically loops and crossfades to it from the current track.
+     *
+     * @param loop true to loop the selected track
+     */
     public static void playRandomBattleTrack(boolean loop) {
         // Filter for battle tracks
         var battleTracks = tracks.keySet().stream()
@@ -104,6 +147,12 @@ public class SoundManager {
         crossfadeTo(selectedTrack, loop);
     }
 
+    /**
+     * Smoothly fades out the current track and fades in the specified track.
+     *
+     * @param name the name of the new track to transition to
+     * @param loop whether the new track should loop
+     */
     public static void crossfadeTo(String name, boolean loop) {
         Clip newClip = tracks.get(name);
         if (newClip == null) {
