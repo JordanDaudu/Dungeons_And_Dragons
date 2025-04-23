@@ -117,6 +117,7 @@ public class GameWorld {
             System.out.println("3. Attack");
             System.out.println("4. Use Item");
             System.out.println("5. End Turn");
+            System.out.println("6. Finish Game");
 
             String input = scanner.nextLine();
 
@@ -128,6 +129,10 @@ public class GameWorld {
                 case "5" -> {
                     System.out.println("Ending turn.");
                     return;
+                }
+                case "6" -> {
+                    scanner.close();
+                    System.exit(0);
                 }
                 default -> System.out.println("Invalid option, try again.");
             }
