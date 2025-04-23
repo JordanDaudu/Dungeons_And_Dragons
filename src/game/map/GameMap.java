@@ -23,6 +23,8 @@ public class GameMap {
     private int cols;
     private static GameMap instance = null;
 
+    // Methods
+    // Note: We didn't add any docs here as Tamar said everything here is subject to change because of gui added later
     private GameMap() {
         grid = new HashMap<>();
     }

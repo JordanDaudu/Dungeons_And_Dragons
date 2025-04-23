@@ -78,11 +78,13 @@ public class Goblin extends Enemy implements PhysicalAttacker, MeleeFighter {
     /**
      * Attempts to evade an attack using a multiplier to the base agility-based evasion.
      *
-     * @param multiplier evasion penalty or bonus (lower = better evasion)
+     * @param multiplier evasion penalty between 0 and 1 (lower = evasion goes down)
      * @return true if the goblin successfully evades the attack
      */
     @Override
     public boolean tryEvade(double multiplier) {
+        if(multiplier < 0 || multiplier > 1)
+            System.err.println("Multiplier isn't between 0 and 1, error in calculation may occur");
         double goblin_evasion = Math.min(0.8, agility / 100.0);
         return RandomUtil.getRandomDouble() < (goblin_evasion * (1 - multiplier));
     }
@@ -146,7 +148,7 @@ public class Goblin extends Enemy implements PhysicalAttacker, MeleeFighter {
     /**
      * Returns the symbol used to represent the goblin on the game map.
      *
-     * @return the character "G"
+     * @return the character "⟨G⟩"
      */
     @Override
     public String getDisplaySymbol() {

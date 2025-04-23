@@ -124,7 +124,7 @@ public abstract class AbstractCharacter implements Combatant, GameEntity {
     public void setPosition(Position pos) { this.position = new Position(pos); }
 
     /**
-     * Attempts to evade an attack using the default evasion chance.
+     * Attempts to evade an attack using the evasion chance.
      * @return true if the attack is evaded
      */
     @Override
@@ -132,11 +132,13 @@ public abstract class AbstractCharacter implements Combatant, GameEntity {
 
     /**
      * Attempts to evade an attack using a modified evasion multiplier.
-     * @param multiplier evasion penalty or bonus (lower = better evasion)
+     * @param multiplier evasion penalty between 0 and 1 (lower = evasion goes down)
      * @return true if evaded
      */
     @Override
     public boolean tryEvade(double multiplier) {
+        if(multiplier < 0 || multiplier > 1)
+            System.err.println("Multiplier isn't between 0 and 1, error in calculation may occur");
         return RandomUtil.getRandomDouble() < evasionChance * (1 - multiplier);
     }
 

@@ -157,7 +157,7 @@ public class Archer extends PlayerCharacter implements PhysicalAttacker, RangedF
     /**
      * Returns the symbol used to represent an Archer on the game map.
      *
-     * @return the string "ARCHER"
+     * @return the string "⟨ARCHER⟩"
      */
     @Override
     public String getDisplaySymbol() {

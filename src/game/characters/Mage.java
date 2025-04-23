@@ -163,7 +163,7 @@ public class Mage extends PlayerCharacter implements MagicAttacker, RangedFighte
     /**
      * Returns the symbol used to display the Mage on the map.
      *
-     * @return the string "MAGE"
+     * @return the string "⟨MAGE⟩"
      */
     @Override
     public String getDisplaySymbol() {

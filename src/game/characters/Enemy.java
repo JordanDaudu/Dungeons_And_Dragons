@@ -65,11 +65,11 @@ public class Enemy extends AbstractCharacter {
     /**
      * Returns the symbol used to display this enemy on the game map.
      *
-     * @return the character "E"
+     * @return the character "⟨E⟩"
      */
     @Override
     public String getDisplaySymbol() {
-        return "E";
+        return "⟨E⟩";
     }
 
     /**

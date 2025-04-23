@@ -146,7 +146,7 @@ public class Warrior extends PlayerCharacter implements MeleeFighter, PhysicalAt
     /**
      * Gets the symbol used to represent a warrior on the map.
      *
-     * @return "WARRIOR"
+     * @return "⟨WARRIOR⟩"
      */
     @Override
     public String getDisplaySymbol() {

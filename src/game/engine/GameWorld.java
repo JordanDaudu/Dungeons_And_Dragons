@@ -29,6 +29,7 @@ public class GameWorld {
     private static final Scanner scanner = new Scanner(System.in);
 
     // Methods
+    // Note: We didn't add any docs here as Tamar said everything here is subject to change because of gui added later
     public GameWorld(int row, int col) {
         this.players = new ArrayList<>();
         this.enemies = new ArrayList<>();
@@ -132,6 +133,8 @@ public class GameWorld {
                 }
                 case "6" -> {
                     scanner.close();
+                    for(PlayerCharacter p : players)
+                        System.out.println(p.getName() + " - Treasure Points: " + p.getTreasurePoints());
                     System.exit(0);
                 }
                 default -> System.out.println("Invalid option, try again.");

@@ -68,7 +68,7 @@ public class Orc extends Enemy implements MeleeFighter, PhysicalAttacker {
     }
 
     /**
-     * Receives damage from a source, factoring in magic resistance or potential evasion.
+     * Receives damage from a source, factoring in magic resistance if attack is a magic attacker.
      *
      * @param amount the raw damage amount
      * @param source the source of the attack
@@ -146,7 +146,7 @@ public class Orc extends Enemy implements MeleeFighter, PhysicalAttacker {
     /**
      * Returns the symbol used to represent the orc on the game map.
      *
-     * @return the character "O"
+     * @return the character "⟨O⟩"
      */
     @Override
     public String getDisplaySymbol() {

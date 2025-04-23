@@ -163,11 +163,11 @@ public class PlayerCharacter extends AbstractCharacter implements PlayerMovement
     /**
      * Gets the symbol used to represent the player on the map.
      *
-     * @return the display symbol ("C")
+     * @return the display symbol "⟨C⟩"
      */
     @Override
     public String getDisplaySymbol() {
-        return "C";
+        return "⟨C⟩";
     }
 
     /**

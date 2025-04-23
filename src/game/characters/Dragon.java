@@ -193,7 +193,7 @@ public class Dragon extends Enemy implements MagicAttacker, RangedFighter, Melee
     }
 
     /**
-     * Returns the spellcasting range of the dragon.
+     * Returns the spell casting range of the dragon.
      *
      * @return the range value
      */
@@ -203,7 +203,7 @@ public class Dragon extends Enemy implements MagicAttacker, RangedFighter, Melee
     }
 
     /**
-     * Determines if the target is within ranged spellcasting distance.
+     * Determines if the target is within ranged spell casting distance.
      *
      * @param self the dragon's position
      * @param target the target's position
@@ -219,7 +219,7 @@ public class Dragon extends Enemy implements MagicAttacker, RangedFighter, Melee
     /**
      * Returns the symbol used to represent the dragon on the map.
      *
-     * @return the character "D"
+     * @return the character "⟨D⟩"
      */
     @Override
     public String getDisplaySymbol() {

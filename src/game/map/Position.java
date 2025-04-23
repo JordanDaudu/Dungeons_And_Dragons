@@ -10,6 +10,7 @@ public class Position {
     private int row;
     private int col;
 
+    // Methods
     /**
      * Constructs a new position with the specified row and column.
      *
