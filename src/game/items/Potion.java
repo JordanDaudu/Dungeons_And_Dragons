@@ -119,7 +119,7 @@ public class Potion extends GameItem implements Interactable {
      * @return a string symbol for this item
      */
     @Override
-    public String getDisplaySymbol() { return "H"; }
+    public String getDisplaySymbol() { return "⟨H⟩"; }
 
     /**
      * Initializes the healing amount randomly between 10 and 50.

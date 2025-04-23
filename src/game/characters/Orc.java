@@ -150,7 +150,7 @@ public class Orc extends Enemy implements MeleeFighter, PhysicalAttacker {
      */
     @Override
     public String getDisplaySymbol() {
-        return "O";
+        return "⟨O⟩";
     }
 
     /**

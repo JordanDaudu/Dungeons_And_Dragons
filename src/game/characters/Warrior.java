@@ -150,7 +150,7 @@ public class Warrior extends PlayerCharacter implements MeleeFighter, PhysicalAt
      */
     @Override
     public String getDisplaySymbol() {
-        return "WARRIOR";
+        return "⟨WARRIOR⟩";
     }
 
     /**

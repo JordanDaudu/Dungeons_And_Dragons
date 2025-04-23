@@ -56,5 +56,5 @@ public class Wall extends GameItem {
      * @return the character symbol "W"
      */
     @Override
-    public String getDisplaySymbol() { return "W";}
+    public String getDisplaySymbol() { return "⟨W⟩";}
 }

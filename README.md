@@ -21,14 +21,15 @@ Key features include:
 
 ```
 src/
-├── game/
-│   ├── characters/      # All character types (players and enemies)
-│   ├── combat/          # Combat logic and attacker interfaces
-│   ├── core/            # Game entity base classes and inventory system
-│   ├── engine/          # Game engine and utilities
-│   ├── items/           # In-game items (potions, treasure, etc.)
-│   └── map/             # Map and position logic
-└── resources/           # Sound and other media files
+└── game/
+    ├── characters/      # All character types (players and enemies)
+    ├── combat/          # Combat logic and attacker interfaces
+    ├── core/            # Game entity base classes and inventory system
+    ├── engine/          # Game engine and utilities
+    ├── items/           # In-game items (potions, treasure, etc.)
+    ├── map/             # Map and position logic
+    └── resources/       # Sound, images, config files
+
 ```
 
 ---

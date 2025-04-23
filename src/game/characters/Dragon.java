@@ -223,7 +223,7 @@ public class Dragon extends Enemy implements MagicAttacker, RangedFighter, Melee
      */
     @Override
     public String getDisplaySymbol() {
-        return "D";
+        return "⟨D⟩";
     }
 
     /**

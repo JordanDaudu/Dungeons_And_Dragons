@@ -161,7 +161,7 @@ public class Archer extends PlayerCharacter implements PhysicalAttacker, RangedF
      */
     @Override
     public String getDisplaySymbol() {
-        return "ARCHER";
+        return "⟨ARCHER⟩";
     }
 
     /**

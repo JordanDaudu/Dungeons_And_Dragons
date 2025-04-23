@@ -150,7 +150,7 @@ public class Goblin extends Enemy implements PhysicalAttacker, MeleeFighter {
      */
     @Override
     public String getDisplaySymbol() {
-        return "G";
+        return "⟨G⟩";
     }
 
     /**

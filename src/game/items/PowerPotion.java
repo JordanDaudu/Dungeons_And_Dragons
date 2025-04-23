@@ -83,7 +83,7 @@ public class PowerPotion extends Potion {
      * @return a string symbol for this item
      */
     @Override
-    public String getDisplaySymbol() { return "P"; }
+    public String getDisplaySymbol() { return "⟨P⟩"; }
 
     /**
      * Initializes the power boost amount randomly between 1 and 5.

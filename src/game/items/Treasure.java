@@ -121,7 +121,7 @@ public class Treasure extends GameItem implements Interactable {
      * @return the character symbol "T"
      */
     @Override
-    public String getDisplaySymbol() { return "T"; }
+    public String getDisplaySymbol() { return "⟨T⟩"; }
 
     /**
      * Returns the value of this treasure.

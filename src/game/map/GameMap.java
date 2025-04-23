@@ -184,11 +184,11 @@ public class GameMap {
                         GameEntity top = entities.getLast();
                         System.out.print(top.getDisplaySymbol());
                     } else {
-                        System.out.print(".");
+                        System.out.print("⟨.⟩");
                     }
                 } else {
                     // Outside visible range
-                    System.out.print("#");
+                    System.out.print("⟨#⟩");
                 }
                 System.out.print(" ");
             }
