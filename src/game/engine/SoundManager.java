@@ -180,7 +180,7 @@ public class SoundManager {
             return;
         }
 
-        // Fade duration in ms
+        // Fade duration in milliseconds
         final int fadeDuration = 2000;
         final int steps = 40;
         final int delay = fadeDuration / steps;

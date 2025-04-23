@@ -25,7 +25,7 @@ public class GameWorld {
     private List<Enemy> enemies;
     private List<GameItem> items;
     private GameMap map;
-    private CombatSystem combatSystem = new CombatSystem();
+    private final CombatSystem combatSystem = new CombatSystem();
     private static final Scanner scanner = new Scanner(System.in);
 
     // Methods
@@ -84,10 +84,12 @@ public class GameWorld {
     public PlayerCharacter createCharacter() {
         System.out.print("What is your name?: ");
         String name = scanner.nextLine();
-        int choice = getIntInput("Choose your class:\n" +
-                "1.Warrior - A melee-focused fighter skilled in close-range physical combat.\n" +
-                "2.Archer - A ranged combatant who excels at striking from afar with physical attacks.\n" +
-                "3.Mage - A master of magic who uses powerful ranged spells to defeat enemies.\n",
+        int choice = getIntInput("""
+                        Choose your class:
+                        1.Warrior - A melee-focused fighter skilled in close-range physical combat.
+                        2.Archer - A ranged combatant who excels at striking from afar with physical attacks.
+                        3.Mage - A master of magic who uses powerful ranged spells to defeat enemies.
+                        """,
                 1, 3);
         switch (choice) {
             case 1 -> {

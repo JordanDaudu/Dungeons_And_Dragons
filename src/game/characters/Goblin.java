@@ -13,7 +13,7 @@ import game.map.Position;
 public class Goblin extends Enemy implements PhysicalAttacker, MeleeFighter {
 
     // data members
-    private int agility;
+    private final int agility;
 
     //methods
     /**
@@ -165,7 +165,3 @@ public class Goblin extends Enemy implements PhysicalAttacker, MeleeFighter {
         fightClose(target);
     }
 }
-
-
-
-

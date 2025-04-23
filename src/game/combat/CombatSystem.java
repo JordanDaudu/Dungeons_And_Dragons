@@ -2,7 +2,6 @@ package game.combat;
 
 import game.characters.Archer;
 import game.characters.Enemy;
-import game.characters.PlayerCharacter;
 import game.engine.SoundManager;
 
 /**

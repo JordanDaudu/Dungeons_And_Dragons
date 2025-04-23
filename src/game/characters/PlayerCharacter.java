@@ -16,8 +16,8 @@ import game.map.Position;
 public class PlayerCharacter extends AbstractCharacter implements PlayerMovement {
 
     // Data Members
-    private String name;
-    private Inventory inventory;
+    private final String name;
+    private final Inventory inventory;
     private int treasurePoints;
 
     // Methods
@@ -30,7 +30,7 @@ public class PlayerCharacter extends AbstractCharacter implements PlayerMovement
     public PlayerCharacter(String name) {
 
         super();
-        this.name = name;
+        this.name = name.substring(0, 1).toUpperCase() + name.substring(1); // making sure starts with an uppercase
         inventory = new Inventory();
         treasurePoints = 0;
     }

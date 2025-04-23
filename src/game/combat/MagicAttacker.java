@@ -31,7 +31,7 @@ public interface MagicAttacker {
     MagicElement getElement();
 
     /**
-     * Compares this attacker's element to another's.
+     * Compares this attacker's element to another.
      *
      * @param other the other magic attacker to compare against
      * @return true if this attacker's element is stronger, false otherwise

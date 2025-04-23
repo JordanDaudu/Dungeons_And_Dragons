@@ -16,7 +16,7 @@ public abstract class AbstractCharacter implements Combatant, GameEntity {
     private Position position;
     private int health;
     private int power;
-    private double evasionChance = 0.25;
+    private final double evasionChance = 0.25;
     private boolean visible;
 
 

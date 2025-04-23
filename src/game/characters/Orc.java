@@ -77,13 +77,9 @@ public class Orc extends Enemy implements MeleeFighter, PhysicalAttacker {
     public void receiveDamage(int amount, Combatant source) {
         if(source instanceof MagicAttacker) {
             amount = ((int) Math.round(amount * (1 - resistance)));
-            setHealth(getHealth() - amount);
-            System.out.println(getClass().getSimpleName() +" received " + amount + " damage!");
         }
-        else {
-            setHealth(getHealth() - amount);
-            System.out.println(getClass().getSimpleName() +" received " + amount + " damage!");
-        }
+        setHealth(getHealth() - amount);
+        System.out.println(getClass().getSimpleName() +" received " + amount + " damage!");
     }
 
     /**

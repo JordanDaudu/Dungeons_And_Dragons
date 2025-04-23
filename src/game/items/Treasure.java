@@ -11,7 +11,7 @@ import game.map.Position;
 public class Treasure extends GameItem implements Interactable {
 
     // Data Members
-    private int value;
+    private final int value;
     boolean collected;
 
     // Methods
@@ -97,19 +97,19 @@ public class Treasure extends GameItem implements Interactable {
                 int randomizer = RandomUtil.getRandomInt(0, 6);
                 if(randomizer >= 0 && randomizer <= 2) {
                     // ADD TREASURE POINTS
-                    System.out.println(c.getName() + " gained " + getValue() + " treasure points!");
-                    c.updateTreasurePoint(value);
+                    if(c.updateTreasurePoint(value))
+                        System.out.println(c.getName() + " gained " + getValue() + " treasure points!");
                 }
                 // Items in the inventory don't have a position on the map so we initialize as (-1, -1)
                 else if(randomizer >= 3 && randomizer <= 4) {
                     // ADD TO INVENTORY POTION
-                    System.out.println("Potion added!");
-                    c.addToInventory(new Potion(new Position(-1, -1), false, "Potion"));
+                    if(c.addToInventory(new Potion(new Position(-1, -1), false, "Potion")))
+                        System.out.println("Potion added to " + c.getName() + "'s inventory!");
                 }
                 else {
                     // ADD TO INVENTORY POWER POTION
-                    System.out.println("Power Potion added!");
-                    c.addToInventory(new PowerPotion(new Position(-1, -1), false, "Power Potion"));
+                    if(c.addToInventory(new PowerPotion(new Position(-1, -1), false, "Power Potion")))
+                        System.out.println("Power Potion added to " + c.getName() + "'s inventory!");
                 }
             }
         }

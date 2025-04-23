@@ -50,8 +50,7 @@ public class Position {
      */
     public boolean equals(Object obj) {
         if (this == obj) return true;
-        if(obj instanceof Position) {
-            Position other = (Position) obj;
+        if(obj instanceof Position other) {
             return row == other.row && col == other.col;
         }
         return false;

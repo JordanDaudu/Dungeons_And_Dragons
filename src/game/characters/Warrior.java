@@ -13,7 +13,7 @@ import game.map.Position;
 public class Warrior extends PlayerCharacter implements MeleeFighter, PhysicalAttacker {
 
     // Data Members
-    private int defence;
+    private final int defence;
 
     // Methods
     /**

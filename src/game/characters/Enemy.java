@@ -12,7 +12,7 @@ import game.map.GameMap;
 public class Enemy extends AbstractCharacter {
 
     // Data Members
-    private int loot;
+    private final int loot;
 
     // Methods
     /**
