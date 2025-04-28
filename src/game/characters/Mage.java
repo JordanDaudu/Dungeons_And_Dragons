@@ -7,6 +7,10 @@ import game.combat.RangedFighter;
 import game.engine.RandomUtil;
 import game.map.Position;
 
+import java.awt.Image;
+import java.util.Objects;
+import javax.swing.ImageIcon;
+
 /**
  * Represents a Mage character with magical ranged attack abilities.
  * A Mage has a magical element and can cast spells from a distance.
@@ -168,6 +172,12 @@ public class Mage extends PlayerCharacter implements MagicAttacker, RangedFighte
     @Override
     public String getDisplaySymbol() {
         return "⟨MAGE⟩";
+    }
+
+    @Override
+    public Image getDisplayImage() {
+        ImageIcon icon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/mage.png")));
+        return icon.getImage();
     }
 
     /**

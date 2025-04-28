@@ -6,6 +6,10 @@ import game.combat.PhysicalAttacker;
 import game.engine.RandomUtil;
 import game.map.Position;
 
+import java.awt.Image;
+import java.util.Objects;
+import javax.swing.ImageIcon;
+
 /**
  * Represents a Warrior character that specializes in close-range combat.
  * Inherits from PlayerCharacter and implements melee fighting and physical attacking behavior.
@@ -151,6 +155,12 @@ public class Warrior extends PlayerCharacter implements MeleeFighter, PhysicalAt
     @Override
     public String getDisplaySymbol() {
         return "⟨WARRIOR⟩";
+    }
+
+    @Override
+    public Image getDisplayImage() {
+        ImageIcon icon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/warrior.png")));
+        return icon.getImage();
     }
 
     /**

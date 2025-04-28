@@ -7,6 +7,10 @@ import game.combat.PhysicalAttacker;
 import game.engine.RandomUtil;
 import game.map.Position;
 
+import java.awt.Image;
+import java.util.Objects;
+import javax.swing.ImageIcon;
+
 /**
  * Represents an Orc enemy in the game.
  * Orcs are melee fighters with resistance to magic damage and a chance to evade attacks.
@@ -147,6 +151,12 @@ public class Orc extends Enemy implements MeleeFighter, PhysicalAttacker {
     @Override
     public String getDisplaySymbol() {
         return "⟨O⟩";
+    }
+
+    @Override
+    public Image getDisplayImage() {
+        ImageIcon icon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/orc.png")));
+        return icon.getImage();
     }
 
     /**

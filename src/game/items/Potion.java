@@ -4,6 +4,10 @@ import game.characters.PlayerCharacter;
 import game.engine.RandomUtil;
 import game.map.Position;
 
+import java.awt.Image;
+import java.util.Objects;
+import javax.swing.ImageIcon;
+
 /**
  * Represents a health potion that can be picked up and used by a {@link PlayerCharacter}.
  * When interacted with, it heals the character by a random amount between 10 and 50 HP.
@@ -120,6 +124,12 @@ public class Potion extends GameItem implements Interactable {
      */
     @Override
     public String getDisplaySymbol() { return "⟨H⟩"; }
+
+    @Override
+    public Image getDisplayImage() {
+        ImageIcon icon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/life_potion.png")));
+        return icon.getImage();
+    }
 
     /**
      * Initializes the healing amount randomly between 10 and 50.

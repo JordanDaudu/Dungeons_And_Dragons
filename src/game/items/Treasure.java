@@ -4,6 +4,10 @@ import game.characters.PlayerCharacter;
 import game.engine.RandomUtil;
 import game.map.Position;
 
+import java.awt.Image;
+import java.util.Objects;
+import javax.swing.ImageIcon;
+
 /**
  * Represents a collectible treasure item in the game world.
  * A treasure can either grant treasure points or provide a random item (Potion or PowerPotion) upon interaction.
@@ -122,6 +126,12 @@ public class Treasure extends GameItem implements Interactable {
      */
     @Override
     public String getDisplaySymbol() { return "⟨T⟩"; }
+
+    @Override
+    public Image getDisplayImage() {
+        ImageIcon icon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/treasure.png")));
+        return icon.getImage();
+    }
 
     /**
      * Returns the value of this treasure.

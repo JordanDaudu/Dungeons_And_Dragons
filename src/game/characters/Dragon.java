@@ -4,6 +4,10 @@ import game.combat.*;
 import game.engine.RandomUtil;
 import game.map.Position;
 
+import java.awt.Image;
+import java.util.Objects;
+import javax.swing.ImageIcon;
+
 /**
  * Represents a Dragon enemy character.
  * Dragons are powerful foes capable of both magic and physical attacks,
@@ -224,6 +228,12 @@ public class Dragon extends Enemy implements MagicAttacker, RangedFighter, Melee
     @Override
     public String getDisplaySymbol() {
         return "⟨D⟩";
+    }
+
+    @Override
+    public Image getDisplayImage() {
+        ImageIcon icon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/dragon.png")));
+        return icon.getImage();
     }
 
     /**

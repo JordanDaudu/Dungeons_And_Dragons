@@ -9,7 +9,7 @@ import game.map.GameMap;
  * Represents an enemy character in the game.
  * An Enemy has limited health and can drop loot (as a Treasure) when defeated.
  */
-public class Enemy extends AbstractCharacter {
+public abstract class Enemy extends AbstractCharacter {
 
     // Data Members
     private final int loot;

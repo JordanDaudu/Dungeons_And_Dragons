@@ -6,6 +6,10 @@ import game.combat.RangedFighter;
 import game.engine.RandomUtil;
 import game.map.Position;
 
+import java.awt.Image;
+import java.util.Objects;
+import javax.swing.ImageIcon;
+
 /**
  * Represents an Archer character that specializes in ranged attacks.
  * Inherits from PlayerCharacter and implements ranged and physical combat behavior.
@@ -162,6 +166,12 @@ public class Archer extends PlayerCharacter implements PhysicalAttacker, RangedF
     @Override
     public String getDisplaySymbol() {
         return "⟨ARCHER⟩";
+    }
+
+    @Override
+    public Image getDisplayImage() {
+        ImageIcon icon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/archer.png")));
+        return icon.getImage();
     }
 
     /**

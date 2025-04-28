@@ -2,6 +2,8 @@ package game.core;
 
 import game.map.Position;
 
+import java.awt.Image;
+
 /**
  * Represents a generic entity that exists within the game world.
  * Entities have a position on the map, a visible state, and a symbol for display.
@@ -44,4 +46,11 @@ public interface GameEntity {
      * @return true if visible, false otherwise
      */
     boolean isVisible();
+
+    /**
+     * Returns an image representation of the entity for display.
+     *
+     * @return the image of the entity
+     */
+    Image getDisplayImage();
 }

@@ -1,7 +1,6 @@
 package game.map;
 
-import game.characters.Enemy;
-import game.characters.PlayerCharacter;
+import game.characters.*;
 import game.core.GameEntity;
 import game.engine.RandomUtil;
 import game.items.GameItem;
@@ -18,7 +17,7 @@ public class GameMap {
     // Important! GameMap is a singleton (One object exists only)
 
     // Data Members
-    private Map<Position, List<GameEntity>> grid;
+    private final Map<Position, List<GameEntity>> grid;
     private int rows;
     private int cols;
     private static GameMap instance = null;
@@ -100,6 +99,31 @@ public class GameMap {
 
     public int getCols() {
         return cols;
+    }
+
+    public PlayerCharacter createCharacter(String name, String choice) {
+        PlayerCharacter player;
+        switch (choice) {
+            case "Warrior" -> {
+                player = new Warrior(name);
+                placePlayerRandomly(player);
+                return player;
+            }
+            case "Archer" -> {
+                player = new Archer(name);
+                placePlayerRandomly(player);
+                return player;
+            }
+            case "Mage" -> {
+                player = new Mage(name);
+                placePlayerRandomly(player);
+                return player;
+            }
+            default -> {
+                System.err.println("Choice for player isn't available!");
+                return null;
+            }
+        }
     }
 
     public void placePlayerRandomly(PlayerCharacter player) {

@@ -12,6 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * Main class for running the Dungeons & Dragons-like game.
+ * Manages the game loop, player actions, world setup, and entity interactions.
+ */
 public class GameWorld {
 
     // Main
@@ -25,17 +29,44 @@ public class GameWorld {
     private List<Enemy> enemies;
     private List<GameItem> items;
     private GameMap map;
+    private static GameWorld instance = null;
     private final CombatSystem combatSystem = new CombatSystem();
     private static final Scanner scanner = new Scanner(System.in);
 
     // Methods
-    // Note: We didn't add any docs here as Tamar said everything here is subject to change because of gui added later
-    public GameWorld(int row, int col) {
+    /**
+     * Constructs the game world with a map of specified size.
+     *
+     * @param row number of rows in the map
+     * @param col number of columns in the map
+     */
+    private GameWorld(int row, int col) {
         this.players = new ArrayList<>();
         this.enemies = new ArrayList<>();
         this.items = new ArrayList<>();
         this.map = GameMap.getInstance();
         this.map.init(row, col);
+    }
+
+    // This method is called once to initialize the world with custom size
+    public static void initialize(int row, int col) {
+        if (instance == null) {
+            instance = new GameWorld(row, col); // Create instance only once
+            instance.map.init(row, col); // Initialize the map with custom size
+        } else {
+            throw new IllegalStateException("GameWorld is already initialized.");
+        }
+    }
+
+    public static GameWorld getInstance() {
+        if (instance == null) {
+            throw new IllegalStateException("GameWorld is not initialized.");
+        }
+        return instance;
+    }
+
+    public static boolean isInitialized() {
+        return instance != null;
     }
 
     public List<PlayerCharacter> getPlayers() {
@@ -374,7 +405,7 @@ public class GameWorld {
         map.removeEntity(item);         // Remove from map
     }
 
-    private void collectPlayersFromMap() {
+    public void collectPlayersFromMap() {
         for (GameEntity entity : map.getAllEntities()) {
             if (entity instanceof PlayerCharacter player) {
                 players.add(player);
@@ -382,7 +413,7 @@ public class GameWorld {
         }
     }
 
-    private void collectEnemiesFromMap() {
+    public void collectEnemiesFromMap() {
         for (GameEntity entity : map.getAllEntities()) {
             if (entity instanceof Enemy enemy) {
                 enemies.add(enemy);
@@ -390,7 +421,7 @@ public class GameWorld {
         }
     }
 
-    private void collectItemsFromMap() {
+    public void collectItemsFromMap() {
         for (GameEntity entity : map.getAllEntities()) {
             if (entity instanceof GameItem item) {
                 items.add(item);

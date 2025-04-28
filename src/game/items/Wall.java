@@ -2,6 +2,10 @@ package game.items;
 
 import game.map.Position;
 
+import java.awt.Image;
+import java.util.Objects;
+import javax.swing.ImageIcon;
+
 /**
  * Represents a wall in the game world.
  * Walls are static obstacles that block player and enemy movement.
@@ -57,4 +61,10 @@ public class Wall extends GameItem {
      */
     @Override
     public String getDisplaySymbol() { return "⟨W⟩";}
+
+    @Override
+    public Image getDisplayImage() {
+        ImageIcon icon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/wall.png")));
+        return icon.getImage();
+    }
 }

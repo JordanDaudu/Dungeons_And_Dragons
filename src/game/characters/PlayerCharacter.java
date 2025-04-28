@@ -13,7 +13,7 @@ import game.map.Position;
  * Inherits combat and position logic from AbstractCharacter,
  * and adds inventory management, treasure tracking, and movement.
  */
-public class PlayerCharacter extends AbstractCharacter implements PlayerMovement {
+public abstract class PlayerCharacter extends AbstractCharacter implements PlayerMovement {
 
     // Data Members
     private final String name;

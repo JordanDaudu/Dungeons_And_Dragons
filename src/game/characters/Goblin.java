@@ -6,6 +6,10 @@ import game.combat.PhysicalAttacker;
 import game.engine.RandomUtil;
 import game.map.Position;
 
+import java.awt.Image;
+import java.util.Objects;
+import javax.swing.ImageIcon;
+
 /**
  * Represents a Goblin enemy in the game.
  * Goblins are melee fighters with a chance to evade attacks based on agility.
@@ -153,6 +157,12 @@ public class Goblin extends Enemy implements PhysicalAttacker, MeleeFighter {
     @Override
     public String getDisplaySymbol() {
         return "⟨G⟩";
+    }
+
+    @Override
+    public Image getDisplayImage() {
+        ImageIcon icon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/goblin.png")));
+        return icon.getImage();
     }
 
     /**

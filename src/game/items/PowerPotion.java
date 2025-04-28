@@ -4,6 +4,10 @@ import game.characters.PlayerCharacter;
 import game.engine.RandomUtil;
 import game.map.Position;
 
+import java.awt.Image;
+import java.util.Objects;
+import javax.swing.ImageIcon;
+
 /**
  * Represents a power potion that can be picked up and used by a {@link PlayerCharacter}.
  * When interacted with, it increases the player's power points (PP) by a random amount.
@@ -84,6 +88,12 @@ public class PowerPotion extends Potion {
      */
     @Override
     public String getDisplaySymbol() { return "⟨P⟩"; }
+
+    @Override
+    public Image getDisplayImage() {
+        ImageIcon icon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/power_potion.png")));
+        return icon.getImage();
+    }
 
     /**
      * Initializes the power boost amount randomly between 1 and 5.
