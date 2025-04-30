@@ -53,4 +53,6 @@ public interface GameEntity {
      * @return the image of the entity
      */
     Image getDisplayImage();
+
+    default String getDescription() {return "null";}
 }

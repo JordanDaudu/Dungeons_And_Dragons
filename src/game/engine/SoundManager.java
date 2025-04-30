@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import javax.swing.Timer;
 
 /**
@@ -16,7 +17,11 @@ public class SoundManager {
     // Data Members
     private static Clip currentClip;
     private static final Map<String, Clip> tracks = new HashMap<>();
-    private static float volume = 0.65f; // Default volume (0.0 to 1.0)
+    private static final Map<String, Clip> soundEffects = new HashMap<>();
+    private static final Map<String, String> soundEffectPaths = new HashMap<>();
+    private static float musicVolume = 0.65f;
+    private static float sfxVolume = 0.85f;
+
 
     // Methods
     /**
@@ -24,12 +29,20 @@ public class SoundManager {
      * This should be called at game startup to preload sounds.
      */
     public static void loadMusic() {
-        loadTrack("preparations", "sounds/Preparations.wav");
-        loadTrack("battle1", "sounds/battle1.wav");
-        loadTrack("battle2", "sounds/battle2.wav");
-        loadTrack("battle3", "sounds/battle3.wav");
-        loadTrack("dragon1", "sounds/dragon1.wav");
+        loadTrack("preparations", "sounds/music/Preparations.wav");
+        loadTrack("battle1", "sounds/music/battle1.wav");
+        loadTrack("battle2", "sounds/music/battle2.wav");
+        loadTrack("battle3", "sounds/music/battle3.wav");
+        loadTrack("dragon1", "sounds/music/dragon1.wav");
     }
+
+    public static void loadSoundEffects() {
+        loadEffect("criticalHit", "sounds/effects/criticalHit.wav");
+        loadEffect("swordSwing", "sounds/effects/swordSwing.wav");
+        loadEffect("bowShot", "sounds/effects/bow.wav");
+        loadEffect("magicSpell", "sounds/effects/magic_spell.wav");
+    }
+
 
     /**
      * Loads a single music track into memory and maps it by name.
@@ -56,6 +69,16 @@ public class SoundManager {
         }
     }
 
+    public static void loadEffect(String name, String filePath) {
+        URL resource = SoundManager.class.getResource("/" + filePath);
+        if (resource == null) {
+            System.err.println("Couldn't find sound effect: " + filePath);
+            return;
+        }
+        // Store path instead of clip
+        soundEffectPaths.put(name, "/" + filePath);
+    }
+
     /**
      * Plays a loaded music track by name.
      *
@@ -69,7 +92,7 @@ public class SoundManager {
         if (clip != null) {
             currentClip = clip; // ✅ Assign it first!
 
-            setVolume(currentClip, volume); // ✅ Now it's safe to call this
+            setVolume(currentClip, musicVolume); // ✅ Now it's safe to call this
 
             if (loop) {
                 clip.loop(Clip.LOOP_CONTINUOUSLY);
@@ -84,6 +107,33 @@ public class SoundManager {
         }
     }
 
+    public static void playEffect(String name) {
+        String path = soundEffectPaths.get(name);
+        if (path == null) {
+            System.err.println("Sound effect not loaded: " + name);
+            return;
+        }
+
+        try {
+            URL resource = SoundManager.class.getResource(path);
+            if (resource == null) {
+                System.err.println("Resource not found for sound effect: " + path);
+                return;
+            }
+
+            AudioInputStream audioIn = AudioSystem.getAudioInputStream(resource);
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioIn);
+            setVolume(clip, sfxVolume);
+            clip.start();
+        } catch (Exception e) {
+            System.err.println("Failed to play sound effect: " + name);
+            e.printStackTrace();
+        }
+    }
+
+
+
     /**
      * Stops any currently playing music track.
      * Resets the track to the beginning.
@@ -92,18 +142,6 @@ public class SoundManager {
         if (currentClip != null && currentClip.isRunning()) {
             currentClip.stop();
             currentClip.setFramePosition(0);
-        }
-    }
-
-    /**
-     * Sets the global volume level for playback.
-     *
-     * @param newVolume a float value between 0.0 (silent) and 1.0 (full volume)
-     */
-    public static void setVolume(float newVolume) {
-        volume = Math.max(0f, Math.min(newVolume, 1f)); // Clamp to [0, 1]
-        if (currentClip != null) {
-            setVolume(currentClip, volume);
         }
     }
 
@@ -120,6 +158,25 @@ public class SoundManager {
         float range = gainControl.getMaximum() - gainControl.getMinimum();
         float gain = (range * volume) + gainControl.getMinimum();
         gainControl.setValue(gain);
+    }
+
+    public static void setMusicVolume(float newVolume) {
+        musicVolume = Math.max(0f, Math.min(newVolume, 1f));
+        if (currentClip != null) {
+            setVolume(currentClip, musicVolume);
+        }
+    }
+
+    public static void setSFXVolume(float newVolume) {
+        sfxVolume = Math.max(0f, Math.min(newVolume, 1f));
+    }
+
+    public static float getMusicVolume() {
+        return musicVolume;
+    }
+
+    public static float getSFXVolume() {
+        return sfxVolume;
     }
 
     /**
@@ -191,9 +248,9 @@ public class SoundManager {
         timer.addActionListener(e -> {
             float progress = step[0] / (float) steps;
             if (oldClip != null && oldClip.isRunning()) {
-                setVolume(oldClip, volume * (1.0f - progress));
+                setVolume(oldClip, musicVolume * (1.0f - progress));
             }
-            setVolume(newClip, volume * progress);
+            setVolume(newClip, musicVolume * progress);
 
             step[0]++;
             if (step[0] > steps) {

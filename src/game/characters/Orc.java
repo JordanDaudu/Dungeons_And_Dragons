@@ -71,6 +71,11 @@ public class Orc extends Enemy implements MeleeFighter, PhysicalAttacker {
         return Double.compare(that.resistance, resistance) == 0;
     }
 
+    @Override
+    public String getType() {
+        return "MeleeFighter, PhysicalAttacker";
+    }
+
     /**
      * Receives damage from a source, factoring in magic resistance if attack is a magic attacker.
      *
@@ -167,5 +172,10 @@ public class Orc extends Enemy implements MeleeFighter, PhysicalAttacker {
     @Override
     public void fight(Combatant target) {
         fightClose(target);
+    }
+
+    @Override
+    public String getDescription(){
+        return "High physical damage dealer, have low evasion but hits hard in close combat.";
     }
 }

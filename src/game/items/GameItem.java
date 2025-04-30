@@ -31,6 +31,18 @@ public abstract class GameItem implements GameEntity {
     }
 
     /**
+     * Copy constructor for GameItem.
+     *
+     * @param other the GameItem to copy.
+     */
+    public GameItem(GameItem other) {
+        this.position = new Position(other.position); // deep copy
+        this.blocksMovement = other.blocksMovement;
+        this.description = other.description;
+        this.visible = other.visible;
+    }
+
+    /**
      * Returns the description of this item.
      *
      * @return the item's description.

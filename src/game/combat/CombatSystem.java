@@ -2,7 +2,13 @@ package game.combat;
 
 import game.characters.Archer;
 import game.characters.Enemy;
+import game.characters.Mage;
+import game.characters.Warrior;
+import game.engine.ScreenAction;
+import game.engine.ScreenListener;
 import game.engine.SoundManager;
+
+import java.awt.*;
 
 /**
  * The CombatSystem class handles combat resolution between two Combatants.
@@ -10,11 +16,19 @@ import game.engine.SoundManager;
  */
 public class CombatSystem {
 
+    private static CombatSystem instance = null;
+    private ScreenListener listener;
     // Methods
     /**
      * Constructs a new CombatSystem instance.
      */
-    public CombatSystem() {}
+    private CombatSystem(ScreenListener screenListener) {}
+
+    public static CombatSystem getInstance() {
+        if(instance == null)
+            instance = new CombatSystem(null);
+        return instance;
+    }
 
     /**
      * Resolve combat interaction between an attacker and a defender. The attacker will attempt
@@ -34,18 +48,31 @@ public class CombatSystem {
         if(attacker instanceof Archer) {
             if(defender.tryEvade(attacker.getAccuracyModifier())) {
                 System.out.println("Attack evaded!");
+                if(listener != null)
+                    listener.onAction(ScreenAction.RECEIVEDDAMAGE, defender.getPosition().getRow(), defender.getPosition().getCol(), new Color(128, 128, 128, 120));
                 return;
             }
             else {
                 attacker.fight(defender);
+                SoundManager.playEffect("bowShot");
+                if(listener != null)
+                    listener.onAction(ScreenAction.RECEIVEDDAMAGE, defender.getPosition().getRow(), defender.getPosition().getCol(), new Color(255, 0, 0, 120));
             }
         }
         else if(defender.tryEvade()) {
             System.out.println("Attack evaded!");
+            if(listener != null)
+                listener.onAction(ScreenAction.RECEIVEDDAMAGE, defender.getPosition().getRow(), defender.getPosition().getCol(), new Color(128, 128, 128, 120));
             return;
         }
         else {
             attacker.fight(defender);
+            if(attacker instanceof Warrior)
+                SoundManager.playEffect("swordSwing");
+            else if(attacker instanceof Mage)
+                SoundManager.playEffect("magicSpell");
+            if(listener != null)
+                listener.onAction(ScreenAction.RECEIVEDDAMAGE, defender.getPosition().getRow(), defender.getPosition().getCol(), new Color(255, 0, 0, 120));
         }
 
         // Handling of dying player or enemy
@@ -58,5 +85,10 @@ public class CombatSystem {
                 defender.defeat();
             }
         }
+    }
+
+    public boolean setListener(ScreenListener screenListener) {
+        this.listener = screenListener;
+        return true;
     }
 }

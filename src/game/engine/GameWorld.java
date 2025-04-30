@@ -29,8 +29,9 @@ public class GameWorld {
     private List<Enemy> enemies;
     private List<GameItem> items;
     private GameMap map;
+    private PlayerCharacter currentPlayer;
     private static GameWorld instance = null;
-    private final CombatSystem combatSystem = new CombatSystem();
+    private final CombatSystem combatSystem = CombatSystem.getInstance();
     private static final Scanner scanner = new Scanner(System.in);
 
     // Methods
@@ -83,6 +84,13 @@ public class GameWorld {
 
     public GameMap getMap() {
         return map;
+    }
+
+    public PlayerCharacter getCurrentPlayer() {return currentPlayer;}
+
+    public boolean setCurrentPlayer(PlayerCharacter p) {
+        currentPlayer = p;
+        return true;
     }
 
     public static void gameLoop() {
@@ -189,10 +197,10 @@ public class GameWorld {
         Position newPosition = null;
 
         switch (choice) {
-            case 1 -> newPosition = player.MoveLeft(player); // Move Left
-            case 2 -> newPosition = player.MoveRight(player); // Move Right
-            case 3 -> newPosition = player.MoveUp(player); // Move Up
-            case 4 -> newPosition = player.MoveDown(player); // Move Down
+            case 1 -> newPosition = player.moveLeft(); // Move Left
+            case 2 -> newPosition = player.moveRight(); // Move Right
+            case 3 -> newPosition = player.moveUp(); // Move Up
+            case 4 -> newPosition = player.moveDown(); // Move Down
             default -> {
                 System.out.println("Invalid input. Please enter a number between 1 and 4.");
                 return false;

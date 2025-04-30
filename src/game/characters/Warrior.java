@@ -4,6 +4,7 @@ import game.combat.Combatant;
 import game.combat.MeleeFighter;
 import game.combat.PhysicalAttacker;
 import game.engine.RandomUtil;
+import game.engine.SoundManager;
 import game.map.Position;
 
 import java.awt.Image;
@@ -69,6 +70,11 @@ public class Warrior extends PlayerCharacter implements MeleeFighter, PhysicalAt
         }
         Warrior warrior = (Warrior) obj;
         return defence == warrior.defence;
+    }
+
+    @Override
+    public String getType() {
+        return "MagicAttacker, RangedFighter";
     }
 
     /**
@@ -144,7 +150,11 @@ public class Warrior extends PlayerCharacter implements MeleeFighter, PhysicalAt
      */
     @Override
     public boolean isCriticalHit() {
-        return RandomUtil.getRandomInt(10) == 0;
+        if(RandomUtil.getRandomInt(10) == 0) {
+            SoundManager.playEffect("criticalHit");
+            return true;
+        }
+        return false;
     }
 
     /**

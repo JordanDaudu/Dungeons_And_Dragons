@@ -68,6 +68,11 @@ public class Dragon extends Enemy implements MagicAttacker, RangedFighter, Melee
         return range == that.range && element == that.element;
     }
 
+    @Override
+    public String getType() {
+        return "MagicAttacker, RangedFighter, MeleeFighter, PhysicalAttacker";
+    }
+
     /**
      * Calculates the magic damage dealt to a target.
      * Elemental strengths and weaknesses are taken into account.
@@ -245,4 +250,10 @@ public class Dragon extends Enemy implements MagicAttacker, RangedFighter, Melee
     public void fight(Combatant target) {
         attack(target);
     }
+
+    @Override
+    public String getDescription(){
+        return "All-around powerhouse, strong in magic, ranged, and melee attacks.";
+    }
+
 }

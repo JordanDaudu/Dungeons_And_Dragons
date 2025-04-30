@@ -4,6 +4,7 @@ import game.combat.Combatant;
 import game.combat.PhysicalAttacker;
 import game.combat.RangedFighter;
 import game.engine.RandomUtil;
+import game.engine.SoundManager;
 import game.map.Position;
 
 import java.awt.Image;
@@ -76,6 +77,11 @@ public class Archer extends PlayerCharacter implements PhysicalAttacker, RangedF
         return Double.compare(archer.accuracy, accuracy) == 0 && range == archer.range;
     }
 
+    @Override
+    public String getType() {
+        return "PhysicalAttacker, RangedFighter";
+    }
+
     /**
      * Attacks a target using the Archer's ranged attack method.
      *
@@ -107,8 +113,12 @@ public class Archer extends PlayerCharacter implements PhysicalAttacker, RangedF
      * @return true if it's a critical hit
      */
     @Override
-    public boolean isCriticalHit(){
-        return RandomUtil.getRandomInt(10) == 0;
+    public boolean isCriticalHit() {
+        if(RandomUtil.getRandomInt(10) == 0) {
+            SoundManager.playEffect("criticalHit");
+            return true;
+        }
+        return false;
     }
 
     /**

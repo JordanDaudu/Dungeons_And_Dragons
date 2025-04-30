@@ -67,6 +67,11 @@ public class Goblin extends Enemy implements PhysicalAttacker, MeleeFighter {
         return agility == that.agility;
     }
 
+    @Override
+    public String getType() {
+        return "PhysicalAttacker, MeleeFighter";
+    }
+
     /**
      * Attempts to evade an attack using the goblin's agility.
      * Goblins can evade with a probability based on their agility (max 80%).
@@ -174,4 +179,10 @@ public class Goblin extends Enemy implements PhysicalAttacker, MeleeFighter {
     public void fight(Combatant target) {
         fightClose(target);
     }
+
+    @Override
+    public String getDescription(){
+        return "Fast and evasive, excels in melee with high dodge and swift strikes.";
+    }
+
 }

@@ -116,6 +116,8 @@ public abstract class AbstractCharacter implements Combatant, GameEntity {
         return true;
     }
 
+    public abstract String getType();
+
     /**
      * Sets the character's position.
      * @param pos the new position
@@ -193,5 +195,4 @@ public abstract class AbstractCharacter implements Combatant, GameEntity {
     public int getPower(){
         return power;
     }
-
 }

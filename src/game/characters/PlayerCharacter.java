@@ -87,6 +87,8 @@ public abstract class PlayerCharacter extends AbstractCharacter implements Playe
         return name;
     }
 
+    public Inventory getInventory() {return inventory;}
+
     /**
      * Adds a game item to the player's inventory.
      *
@@ -173,49 +175,45 @@ public abstract class PlayerCharacter extends AbstractCharacter implements Playe
     /**
      * Calculates the new position if the player moves right.
      *
-     * @param player the current player
      * @return the new position
      */
     @Override
-    public Position MoveRight(PlayerCharacter player){
-        Position currentPosition = player.getPosition();
-        return new Position(currentPosition.getRow(),currentPosition.getCol() + 1);
+    public Position moveRight(){
+        Position currentPosition = this.getPosition();
+        return new Position(currentPosition.getRow(), currentPosition.getCol() + 1);
     }
 
     /**
      * Calculates the new position if the player moves left.
      *
-     * @param player the current player
      * @return the new position
      */
     @Override
-    public Position MoveLeft(PlayerCharacter player){
-        Position currentPosition = player.getPosition();
+    public Position moveLeft(){
+        Position currentPosition = this.getPosition();
         return new Position(currentPosition.getRow(), currentPosition.getCol() - 1);
     }
 
     /**
      * Calculates the new position if the player moves up.
      *
-     * @param player the current player
      * @return the new position
      */
     @Override
-    public Position MoveUp(PlayerCharacter player){
-        Position currentPosition = player.getPosition();
+    public Position moveUp(){
+        Position currentPosition = this.getPosition();
         return new Position(currentPosition.getRow() - 1, currentPosition.getCol());
     }
 
     /**
      * Calculates the new position if the player moves down.
      *
-     * @param player the current player
      * @return the new position
      */
     @Override
-    public Position MoveDown(PlayerCharacter player){
-        Position currentPosition = player.getPosition();
-         return new Position(currentPosition.getRow() + 1, currentPosition.getCol());
+    public Position moveDown(){
+        Position currentPosition = this.getPosition();
+        return new Position(currentPosition.getRow() + 1, currentPosition.getCol());
     }
 
     /**

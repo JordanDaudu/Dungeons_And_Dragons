@@ -3,10 +3,8 @@ package game.map;
 import game.characters.*;
 import game.core.GameEntity;
 import game.engine.RandomUtil;
-import game.items.GameItem;
-import game.items.Potion;
-import game.items.PowerPotion;
-import game.items.Wall;
+import game.items.*;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -66,6 +64,19 @@ public class GameMap {
 
     public List<GameEntity> getEntitiesAt(Position pos) {
         return grid.getOrDefault(pos, new ArrayList<>());
+    }
+
+    public GameItem getEntityGameItemAt(Position pos) {
+        List<GameEntity> entities = grid.get(pos);
+        if (entities != null && !entities.isEmpty()) {
+            for (int i = entities.size() - 1; i >= 0; i--) {
+                GameEntity entity = entities.get(i);
+                if (entity instanceof GameItem) {
+                    return (GameItem) entity;
+                }
+            }
+        }
+        return null;
     }
 
     public boolean isOccupied(Position pos) {
@@ -171,15 +182,41 @@ public class GameMap {
                 }
                 else if (roll < 0.55) {
                     // Next 15% → Regular potion
-                    addEntity(new Potion(pos, true, "Healing Potion"));
+                    addEntity(new Potion(pos, true, "Healing Potion, restores 10–50 HP. Use to recover health."));
                     System.out.println("Placing Potion at: " + pos);
                 }
                 else if (roll < 0.60) {
                     // Next 5% → Power potion
-                    addEntity(new PowerPotion(pos, true, "Power Potion"));
+                    addEntity(new PowerPotion(pos, true, "Power Potion, grants 1-5 Power. boosts damage potential by increasing power."));
                     System.out.println("Placing Power Potion at: " + pos);
                 }
                 // Else: 40% chance to place nothing — do nothing
+            }
+        }
+    }
+
+    public void updatePlayerView(Position playerPos) {
+        // Reset visibility for all entities
+        for (List<GameEntity> entities : grid.values()) {
+            for (GameEntity entity : entities) {
+                entity.setVisible(false);
+            }
+        }
+
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < cols; col++) {
+                Position pos = new Position(row, col);
+                List<GameEntity> entities = grid.get(pos);
+
+                // Check visibility range
+                if (playerPos.distanceTo(pos) <= 2) {
+                    // Within view range → reveal
+                    if (entities != null) {
+                        for (GameEntity entity : entities) {
+                            entity.setVisible(true);
+                        }
+                    }
+                }
             }
         }
     }

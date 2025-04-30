@@ -72,6 +72,11 @@ public class Mage extends PlayerCharacter implements MagicAttacker, RangedFighte
         return range == mage.range && element == mage.element;
     }
 
+    @Override
+    public String getType() {
+        return "MagicAttacker, RangedFighter";
+    }
+
     /**
      * Calculates the magical damage dealt to a target.
      * Adjusts damage based on element type interactions and power.

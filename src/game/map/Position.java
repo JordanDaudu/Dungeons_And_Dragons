@@ -91,4 +91,8 @@ public class Position {
     public int getCol() {
         return col;
     }
+
+    public boolean isAdjacent(Position other) {
+        return this.distanceTo(other) == 1;
+    }
 }

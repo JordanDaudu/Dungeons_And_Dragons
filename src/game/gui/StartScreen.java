@@ -2,7 +2,6 @@ package game.gui;
 
 import game.engine.ScreenAction;
 import game.engine.ScreenListener;
-import game.map.GameMap;
 
 import javax.swing.*;
 import java.awt.*;
@@ -87,7 +86,7 @@ public class StartScreen extends JPanel {
                 if (selectedClass != null && !playerName.trim().isEmpty()) {
                     System.out.println("Player Name: " + playerName);
                     System.out.println("Chosen Class: " + selectedClass);
-                    listener.onAction(ScreenAction.START_GAME, GameMap.getInstance().createCharacter(playerName, selectedClass));
+                    listener.onAction(ScreenAction.START_GAME, playerName, selectedClass);
                     dialog.setVisible(false);
                 } else {
                     JOptionPane.showMessageDialog(StartScreen.this, "Please enter your name and select a class.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -114,6 +113,14 @@ public class StartScreen extends JPanel {
         dialog.setSize(600, 600);
         dialog.setLocationRelativeTo(null);
         dialog.add(this);
+        dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent e) {
+                System.out.println("StartScreen was closed without starting the game.");
+                // Optionally:
+                System.exit(0); // Exit the game
+            }
+        });
     }
 
     public void showModal() {
