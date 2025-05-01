@@ -244,6 +244,7 @@ public abstract class PlayerCharacter extends AbstractCharacter implements Playe
      */
     @Override
     public void defeat() {
+        setVisible(false);
         System.out.println("\n||GAME OVER " + getName() + "!||\n");
         System.out.println(getName() + " you gained " + getTreasurePoints() + " treasure point(s) in total!\n");
     }

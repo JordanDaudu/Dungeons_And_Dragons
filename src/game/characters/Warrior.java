@@ -182,4 +182,9 @@ public class Warrior extends PlayerCharacter implements MeleeFighter, PhysicalAt
     public void fight(Combatant target) {
         fightClose(target);
     }
+
+    @Override
+    public String getAttackSound() {
+        return "swordSwing";
+    }
 }

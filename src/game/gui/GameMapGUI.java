@@ -19,12 +19,16 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Set;
 
 public class GameMapGUI extends JFrame implements ScreenListener{
-    private GameMap map;
-    private GameController gameController;
-    private ScreenListener controllerListener;
+    private final GameMap map;
+    private final GameController gameController;
+    private final ScreenListener controllerListener;
     private MapPanel mapPanel;
+
+    private static final int ANIMATION_DELAY = 30; // ms between animation steps
+    private static final float FADE_STEP = 0.1f;   // alpha step per tick
 
     public GameMapGUI(GameController gameController ,GameMap map, ScreenListener controllerListener) {
         this.gameController = gameController;
@@ -43,7 +47,7 @@ public class GameMapGUI extends JFrame implements ScreenListener{
         // Adding the panel to draw the map
         mapPanel = new MapPanel(map);  // ✅ Changed to keep a reference
         add(mapPanel);
-        this.setVisible(true);
+        this.setVisible(false);
     }
 
     @Override
@@ -64,13 +68,24 @@ public class GameMapGUI extends JFrame implements ScreenListener{
         private final GameMap map;
         private int tileSize;
         InventoryPanel inventoryPanel;
+
+        // Fields used for blinking animation
         private final int BLINK_DURATION_MS = 300;
-        private final Map<Position, Long> redBlinkPositions = new HashMap<>(); // hashmap of red blinking tiles
         private final Map<Position, Long> blinkStartTimes = new HashMap<>();
         private final Map<Position, Color> blinkColors = new HashMap<>();
 
+        // Fields for fade animations
+        private final Map<GameEntity, Float> entityAlphaMap = new HashMap<>();
+        private final Timer animationTimer; // this runs periodically for smooth fade in / out animations
+
         public MapPanel(GameMap map) {
             this.map = map;
+            animationTimer = new Timer(ANIMATION_DELAY, e -> animateAlphaTransitions());
+            animationTimer.start();
+
+            for (GameEntity entity : map.getAllEntities()) {
+                entityAlphaMap.put(entity, entity.isVisible() ? 1f : 0f);
+            }
 
             addMouseListener(new MouseAdapter() {
                 @Override
@@ -182,6 +197,28 @@ public class GameMapGUI extends JFrame implements ScreenListener{
                     }
                 }
             });
+
+            // Key binding for 'Q' to show player status
+            getInputMap(WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("Q"), "showStatus");
+            getActionMap().put("showStatus", new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    PlayerCharacter currentPlayer = gameController.getCurrentPlayer();
+                    if (currentPlayer != null) {
+                        PlayerStatusDialog statusDialog = new PlayerStatusDialog(GameMapGUI.this, currentPlayer);
+                        statusDialog.setVisible(true);  // modal dialog
+                    }
+                }
+            });
+
+            // Key binding for "ESC" to show settings menu
+            getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("ESCAPE"), "openSettings");
+            getActionMap().put("openSettings", new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    new SettingsMenuGUI(GameMapGUI.this).setVisible(true);
+                }
+            });
         }
 
         private Position getNewPositionForDirection(String direction) {
@@ -218,15 +255,24 @@ public class GameMapGUI extends JFrame implements ScreenListener{
                     if (!entitiesAtPosition.isEmpty()) {
                         GameEntity entity = entitiesAtPosition.get(0);
 
-                        if (entity.isVisible()) {  // ✅ Fog-of-war visibility check
+                        // ✅ Fog of war visibility check
+                        Float alpha = entityAlphaMap.getOrDefault(entity, entity.isVisible() ? 1f : 0f);
+                        if (alpha > 0f) {
+                            Graphics2D g2d = (Graphics2D) g.create();
+                            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
+
                             Image entityImage = entity.getDisplayImage();
                             if (entityImage != null) {
-                                g.drawImage(entityImage, j * tileSize, i * tileSize, tileSize, tileSize, this);
+                                g2d.drawImage(entityImage, j * tileSize, i * tileSize, tileSize, tileSize, this);
                             } else {
-                                g.setColor(Color.GRAY);
-                                g.fillRect(j * tileSize, i * tileSize, tileSize, tileSize);
+                                g2d.setColor(Color.GRAY);
+                                g2d.fillRect(j * tileSize, i * tileSize, tileSize, tileSize);
                             }
-                        } else {
+
+                            g2d.dispose();
+                        }
+
+                        else {
                             // ✅ Hidden tile rendering
                             g.setColor(Color.WHITE);
                             g.fillRect(j * tileSize, i * tileSize, tileSize, tileSize);
@@ -270,6 +316,36 @@ public class GameMapGUI extends JFrame implements ScreenListener{
                 }
             });
             timer.start();
+        }
+
+        private void animateAlphaTransitions() {
+            Set<GameEntity> currentlyVisible = map.getVisibleEntities();
+
+            boolean needsRepaint = false;
+
+            for (GameEntity entity : map.getAllEntities()) {
+                float currentAlpha = entityAlphaMap.getOrDefault(entity, 0f);
+                boolean isVisible = currentlyVisible.contains(entity);
+
+                if (isVisible) {
+                    if (currentAlpha < 1f) {
+                        currentAlpha = Math.min(1f, currentAlpha + FADE_STEP);
+                        needsRepaint = true;
+                    }
+                }
+                else {
+                    if (currentAlpha > 0f) {
+                        currentAlpha = Math.max(0f, currentAlpha - FADE_STEP);
+                        needsRepaint = true;
+                    }
+                }
+
+                entityAlphaMap.put(entity, currentAlpha);
+            }
+
+            if (needsRepaint) {
+                repaint();
+            }
         }
 
     }

@@ -1,6 +1,7 @@
 package game.combat;
 
 import game.core.GameEntity;
+import game.map.Position;
 
 /**
  * The Combatant interface represents any entity that can participate in combat.
@@ -106,4 +107,14 @@ public interface Combatant extends GameEntity {
     default MagicElement getElementType() {
         return null; // Default: not magical
     }
+
+    default String getAttackSound() {
+        return null;
+    }
+
+    default int getRangeModifier() {
+        return 1; // default: no modification
+    }
+
+    default Position getPositionModifier() {return null;}
 }

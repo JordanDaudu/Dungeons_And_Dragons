@@ -15,16 +15,16 @@ public class StartScreen extends JPanel {
     private JRadioButton warriorButton, archerButton, mageButton;
     private ImageIcon warriorIcon, archerIcon, mageIcon;
     private ButtonGroup classGroup;
+    private JPanel classPanel;
     private JButton startButton;
     private String playerName;
     private String selectedClass;
     private JLabel nameLabel, classLabel;
     private JTextPane classDescriptionPane;
+    private JScrollPane scrollPane;
 
-    private ScreenListener listener;
 
     public StartScreen(ScreenListener listener) {
-        this.listener = listener;
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setAlignmentX(Component.CENTER_ALIGNMENT);
         playerName = null;
@@ -63,18 +63,22 @@ public class StartScreen extends JPanel {
         classGroup.add(mageButton);
 
         // Panel for class buttons
-        JPanel classPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        classPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         classPanel.add(warriorButton);
         classPanel.add(archerButton);
         classPanel.add(mageButton);
 
-        // Class Description Panel
+        // Class Description Panel with scroll
         classDescriptionPane = new JTextPane();
         classDescriptionPane.setEditable(false);
         classDescriptionPane.setContentType("text/html");
         classDescriptionPane.setBackground(getBackground());
-        classDescriptionPane.setText("<html><body style='font-family:sans-serif; font-size:14px;'>Select a class to see its description.</body></html>");
-        classDescriptionPane.setMaximumSize(new Dimension(500, 100));
+        classDescriptionPane.setText(getDefaultDescription());
+
+        scrollPane = new JScrollPane(classDescriptionPane);
+        scrollPane.setMaximumSize(new Dimension(500, 150));
+        scrollPane.setBorder(null);
+        scrollPane.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         // Start Button
         startButton = new JButton("Start Game");
@@ -102,7 +106,7 @@ public class StartScreen extends JPanel {
         add(classLabel);
         add(classPanel);
         add(Box.createRigidArea(new Dimension(0, 10)));
-        add(classDescriptionPane);
+        add(scrollPane);
         add(Box.createRigidArea(new Dimension(0, 20)));
         add(startButton);
 
@@ -117,7 +121,6 @@ public class StartScreen extends JPanel {
             @Override
             public void windowClosing(java.awt.event.WindowEvent e) {
                 System.out.println("StartScreen was closed without starting the game.");
-                // Optionally:
                 System.exit(0); // Exit the game
             }
         });
@@ -164,7 +167,26 @@ public class StartScreen extends JPanel {
                         "Specializes in high-power elemental attacks.";
                 break;
         }
-        classDescriptionPane.setText("<html><body style='font-family:sans-serif; font-size:14px;'>" + description + "</body></html>");
+        classDescriptionPane.setText("<html><body style='font-family:sans-serif; font-size:14px;'>" +
+                description + getInstructionsHTML() + "</body></html>");
+
+        // Force scroll to the top after update
+        classDescriptionPane.setCaretPosition(0);
+    }
+
+    private String getDefaultDescription() {
+        return "<html><body style='font-family:sans-serif; font-size:14px;'>" +
+                "Select a class to see its description." +
+                getInstructionsHTML() +
+                "</body></html>";
+    }
+
+    private String getInstructionsHTML() {
+        return "<br><br><b><u>Game Instructions</u></b><br>" +
+                "Use <b>WASD</b> keys or <b>left-click</b> to move your character.<br>" +
+                "Press <b>E</b> or <b>middle-click</b> to open your inventory.<br>" +
+                "Use <b>right-click</b> on an entity to view its information.<br>" +
+                "Press <b>Q</b> to view your player status.";
     }
 
     private ImageIcon scaleIcon(ImageIcon icon, int width, int height) {

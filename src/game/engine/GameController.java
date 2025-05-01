@@ -1,10 +1,11 @@
 package game.engine;
 
-import game.characters.Dragon;
 import game.characters.Enemy;
 import game.characters.PlayerCharacter;
 import game.combat.CombatSystem;
 import game.combat.RangedFighter;
+import game.gui.GameMapGUI;
+import game.gui.GameOverGUI;
 import game.items.GameItem;
 import game.items.Interactable;
 import game.items.Treasure;
@@ -18,6 +19,7 @@ public class GameController implements ScreenListener {
     private GameWorld gameWorld;
     private final GameMap map;
     private final CombatSystem combatSystem = CombatSystem.getInstance();
+    private final GameMapGUI gameMapGUI;
     private static final Scanner scanner = new Scanner(System.in);
     private boolean endTurn = false;
 
@@ -25,6 +27,7 @@ public class GameController implements ScreenListener {
         if(GameWorld.isInitialized())
             gameWorld = GameWorld.getInstance();
         map = GameMap.getInstance();
+        this.gameMapGUI = new GameMapGUI(this, map, this);
     }
 
     public boolean getEndTurn() {return endTurn;}
@@ -35,6 +38,8 @@ public class GameController implements ScreenListener {
     }
 
     public CombatSystem getCombatSystem() {return combatSystem;}
+
+    public GameMapGUI getGameMapGUI() {return gameMapGUI;}
 
     public PlayerCharacter getCurrentPlayer() {
         return gameWorld.getCurrentPlayer();
@@ -112,36 +117,37 @@ public class GameController implements ScreenListener {
                 if(data[0] instanceof Position position && map.isValidPosition(position)) {
                     Position newPosition = attemptMoveTo(position);
                     updateAfterMovingPlayer(newPosition, map);
+                    return true;
                 }
             }
-            case ScreenAction.MOVEDOWN -> {
-                System.out.println("PLAYER IS TRYING TO MOVE");
-                if(data[0] instanceof Position position && map.isValidPosition(position)) {
-                    Position newPosition = attemptMoveDown(position);
-                    updateAfterMovingPlayer(newPosition, map);
-                }
-            }
-            case ScreenAction.MOVEUP -> {
-                System.out.println("PLAYER IS TRYING TO MOVE");
-                if(data[0] instanceof Position position && map.isValidPosition(position)) {
-                    Position newPosition = attemptMoveUp(position);
-                    updateAfterMovingPlayer(newPosition, map);
-                }
-            }
-            case ScreenAction.MOVERIGHT -> {
-                System.out.println("PLAYER IS TRYING TO MOVE");
-                if(data[0] instanceof Position position && map.isValidPosition(position)) {
-                    Position newPosition = attemptMoveRight(position);
-                    updateAfterMovingPlayer(newPosition, map);
-                }
-            }
-            case ScreenAction.MOVELEFT -> {
-                System.out.println("PLAYER IS TRYING TO MOVE");
-                if(data[0] instanceof Position position && map.isValidPosition(position)) {
-                    Position newPosition = attemptMoveLeft(position);
-                    updateAfterMovingPlayer(newPosition, map);
-                }
-            }
+//            case ScreenAction.MOVEDOWN -> {
+//                System.out.println("PLAYER IS TRYING TO MOVE");
+//                if(data[0] instanceof Position position && map.isValidPosition(position)) {
+//                    Position newPosition = attemptMoveDown(position);
+//                    updateAfterMovingPlayer(newPosition, map);
+//                }
+//            }
+//            case ScreenAction.MOVEUP -> {
+//                System.out.println("PLAYER IS TRYING TO MOVE");
+//                if(data[0] instanceof Position position && map.isValidPosition(position)) {
+//                    Position newPosition = attemptMoveUp(position);
+//                    updateAfterMovingPlayer(newPosition, map);
+//                }
+//            }
+//            case ScreenAction.MOVERIGHT -> {
+//                System.out.println("PLAYER IS TRYING TO MOVE");
+//                if(data[0] instanceof Position position && map.isValidPosition(position)) {
+//                    Position newPosition = attemptMoveRight(position);
+//                    updateAfterMovingPlayer(newPosition, map);
+//                }
+//            }
+//            case ScreenAction.MOVELEFT -> {
+//                System.out.println("PLAYER IS TRYING TO MOVE");
+//                if(data[0] instanceof Position position && map.isValidPosition(position)) {
+//                    Position newPosition = attemptMoveLeft(position);
+//                    updateAfterMovingPlayer(newPosition, map);
+//                }
+//            }
             case ScreenAction.ATTACK -> {
                 // Getting player position and attack range
                 Enemy target;
@@ -157,9 +163,6 @@ public class GameController implements ScreenListener {
                 if (player instanceof RangedFighter)
                     range = ((RangedFighter) player).getRange();
 
-                if(target instanceof Dragon)
-                    SoundManager.crossfadeTo("dragon1", true);
-
                 if(player.getPosition().distanceTo(enemy.getPosition()) <= range) {
                     // Combat resolution
                     combatSystem.resolveCombat(player, target);
@@ -167,6 +170,9 @@ public class GameController implements ScreenListener {
                     if (target.isDead()) {
                         System.out.println("You defeated the " + target.getClass().getSimpleName() + "!");
                         gameWorld.removeEnemy(target);
+                    }
+                    if(player.isDead()) {
+                        gameWorld.removePlayerFromMap(player);
                     }
                     map.updatePlayerView(gameWorld.getCurrentPlayer().getPosition());
                     this.onAction(ScreenAction.END_TURN, (Object) null);
@@ -200,12 +206,6 @@ public class GameController implements ScreenListener {
                 }
                 return false;
             }
-            case ScreenAction.INTERACT -> {
-
-            }
-            case ScreenAction.OPEN_INVENTORY -> {
-
-            }
             case ScreenAction.END_TURN -> {
                 endTurn = true;
                 map.updatePlayerView(gameWorld.getCurrentPlayer().getPosition());
@@ -219,6 +219,9 @@ public class GameController implements ScreenListener {
                     }
                 }
                 if(endGame) {
+                    GameOverGUI gameOver = new GameOverGUI(gameMapGUI, gameWorld.getPlayers());
+                    gameOver.showDialog();
+                    gameOver.setVisible(true);  // blocks until closed
                     scanner.close();
                     for(PlayerCharacter p : gameWorld.getPlayers())
                         System.out.println(p.getName() + " - Treasure Points: " + p.getTreasurePoints());

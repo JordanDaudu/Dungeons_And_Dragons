@@ -168,6 +168,16 @@ public class Archer extends PlayerCharacter implements PhysicalAttacker, RangedF
         return accuracy;
     }
 
+    @Override
+    public String getAttackSound() {
+        return "bowShot";
+    }
+
+    @Override
+    public int getRangeModifier() {
+        return range;
+    }
+
     /**
      * Returns the symbol used to represent an Archer on the game map.
      *

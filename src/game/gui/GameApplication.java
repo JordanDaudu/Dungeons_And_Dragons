@@ -8,7 +8,7 @@ import javax.swing.*;
 
 public class GameApplication implements ScreenListener{
 
-    private GameWorld game;  // Add a GameWorld field
+    private GameWorld game;
     private GameMap map;
     private GameController controller;
 
@@ -31,10 +31,11 @@ public class GameApplication implements ScreenListener{
 
         // After creating the character, move to the map screen:
         SoundManager.crossfadeTo("battle1", true);
-        GameMapGUI mapGUI = new GameMapGUI(gameApplication.getController() ,game.getMap(), gameApplication.controller);
+
         // Ensure the map is fully drawn and refreshed
-        mapGUI.revalidate();
-        mapGUI.repaint();
+        gameApplication.controller.getGameMapGUI().setVisible(true);
+        gameApplication.controller.getGameMapGUI().revalidate();
+        gameApplication.controller.getGameMapGUI().repaint();
         // Start the turn loop (not blocking the GUI thread, it's for better performance on the cpu)
         gameApplication.startGameLoop();  // Start the turn-based game loop
 
@@ -49,8 +50,6 @@ public class GameApplication implements ScreenListener{
         map = game.getMap();
         controller = new GameController();
     }
-
-    public GameController getController() {return controller;}
 
     @Override
     public boolean onAction(ScreenAction action, Object... data) {
@@ -77,12 +76,18 @@ public class GameApplication implements ScreenListener{
                 controller.setEndTurn(false); // Reset for next turn
 
                 // Advance to next player
-                int currentIndex = game.getPlayers().indexOf(currentPlayer);
-                int nextIndex = (currentIndex + 1) % game.getPlayers().size();
-                PlayerCharacter nextPlayer = game.getPlayers().get(nextIndex);
+                if(!controller.onAction(ScreenAction.EXIT_GAME, (Object) null)) {
+                    PlayerCharacter nextPlayer;
+                    do {
+                        int currentIndex = game.getPlayers().indexOf(currentPlayer);
+                        int nextIndex = (currentIndex + 1) % game.getPlayers().size();
+                        nextPlayer = game.getPlayers().get(nextIndex);
 
-                game.setCurrentPlayer(nextPlayer);
-                GameMap.getInstance().updatePlayerView(nextPlayer.getPosition());
+                        game.setCurrentPlayer(nextPlayer);
+                        GameMap.getInstance().updatePlayerView(nextPlayer.getPosition());
+                    }
+                    while (nextPlayer.isDead());
+                }
             }
         });
         turnTimer.start();

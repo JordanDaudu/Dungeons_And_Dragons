@@ -144,6 +144,11 @@ public class Dragon extends Enemy implements MagicAttacker, RangedFighter, Melee
         return getElement();
     }
 
+    @Override
+    public int getRangeModifier() {
+        return range;
+    }
+
     /**
      * Performs a melee attack if the target is adjacent.
      *

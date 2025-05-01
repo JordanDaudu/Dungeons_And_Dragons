@@ -136,6 +136,16 @@ public class Mage extends PlayerCharacter implements MagicAttacker, RangedFighte
         return getElement();
     }
 
+    @Override
+    public String getAttackSound() {
+        return "magicSpell";
+    }
+
+    @Override
+    public int getRangeModifier() {
+        return range;
+    }
+
     /**
      * Performs a ranged attack against a target if it is in range.
      *

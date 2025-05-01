@@ -10,9 +10,7 @@ public enum ScreenAction {
     ATTACK,
     RECEIVEDDAMAGE,
     PICKUP,
-    INTERACT,
     CHARACTER_DIED_ANIMATION,
     END_TURN,
-    OPEN_INVENTORY,
     EXIT_GAME
 }

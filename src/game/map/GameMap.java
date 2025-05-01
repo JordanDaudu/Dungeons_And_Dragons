@@ -5,10 +5,7 @@ import game.core.GameEntity;
 import game.engine.RandomUtil;
 import game.items.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class GameMap {
 
@@ -21,7 +18,6 @@ public class GameMap {
     private static GameMap instance = null;
 
     // Methods
-    // Note: We didn't add any docs here as Tamar said everything here is subject to change because of gui added later
     private GameMap() {
         grid = new HashMap<>();
     }
@@ -221,6 +217,19 @@ public class GameMap {
         }
     }
 
+    public Set<GameEntity> getVisibleEntities() {
+        Set<GameEntity> visibleEntities = new HashSet<>();
+        for (List<GameEntity> entities : grid.values()) {
+            for (GameEntity entity : entities) {
+                if (entity.isVisible()) {
+                    visibleEntities.add(entity);
+                }
+            }
+        }
+        return visibleEntities;
+    }
+
+
     public void printPlayerView(Position playerPos) {
         // Reset visibility for all entities
         for (List<GameEntity> entities : grid.values()) {
@@ -252,25 +261,6 @@ public class GameMap {
                 } else {
                     // Outside visible range
                     System.out.print("⟨#⟩");
-                }
-                System.out.print(" ");
-            }
-            System.out.println();
-        }
-    }
-
-
-    public void printDebugGrid() {
-        for (int row = 0; row < rows; row++) {
-            for (int col = 0; col < cols; col++) {
-                Position pos = new Position(row, col);
-                List<GameEntity> entities = grid.get(pos);
-
-                if (entities != null && !entities.isEmpty()) {
-                    GameEntity top = entities.getLast();
-                    System.out.print(top.getDisplaySymbol());
-                } else {
-                    System.out.print(".");
                 }
                 System.out.print(" ");
             }

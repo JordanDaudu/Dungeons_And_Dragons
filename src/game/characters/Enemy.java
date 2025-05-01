@@ -20,7 +20,7 @@ public abstract class Enemy extends AbstractCharacter {
      */
     public Enemy() {
         super();
-        setHealth(50);
+        setHealth(getMaxHealth());
         loot = RandomUtil.getRandomInt(100, 301);
     }
 
@@ -62,6 +62,11 @@ public abstract class Enemy extends AbstractCharacter {
         return loot == that.loot;
     }
 
+    @Override
+    public int getMaxHealth() {
+        return 50;
+    }
+
     /**
      * Returns the symbol used to display this enemy on the game map.
      *
@@ -83,8 +88,8 @@ public abstract class Enemy extends AbstractCharacter {
         if (isDead())
             return;
         setHealth(getHealth() + amount);
-        if(getHealth() > 50)
-            setHealth(50);
+        if(getHealth() > getMaxHealth())
+            setHealth(getMaxHealth());
     }
 
     /**

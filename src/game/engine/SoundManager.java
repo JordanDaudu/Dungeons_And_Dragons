@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
+import java.util.concurrent.locks.ReentrantLock;
 import javax.swing.Timer;
 
 /**
@@ -15,6 +15,7 @@ import javax.swing.Timer;
 public class SoundManager {
 
     // Data Members
+    private static final ReentrantLock musicLock = new ReentrantLock();
     private static Clip currentClip;
     private static final Map<String, Clip> tracks = new HashMap<>();
     private static final Map<String, Clip> soundEffects = new HashMap<>();
@@ -34,6 +35,8 @@ public class SoundManager {
         loadTrack("battle2", "sounds/music/battle2.wav");
         loadTrack("battle3", "sounds/music/battle3.wav");
         loadTrack("dragon1", "sounds/music/dragon1.wav");
+        loadTrack("lowHP", "sounds/music/lowHP.wav");
+        loadTrack("gameOver", "sounds/music/game over.wav");
     }
 
     public static void loadSoundEffects() {
@@ -86,26 +89,26 @@ public class SoundManager {
      * @param loop true to loop the track continuously, false to play once
      */
     public static void playMusic(String name, boolean loop) {
-        stopCurrentMusic();
-
-        Clip clip = tracks.get(name); // Get the requested clip
-        if (clip != null) {
-            currentClip = clip; // ✅ Assign it first!
-
-            setVolume(currentClip, musicVolume); // ✅ Now it's safe to call this
-
-            if (loop) {
-                clip.loop(Clip.LOOP_CONTINUOUSLY);
+        musicLock.lock();
+        try {
+            stopCurrentMusic();
+            Clip clip = tracks.get(name);
+            if (clip != null) {
+                currentClip = clip;
+                setVolume(currentClip, musicVolume);
+                clip.setFramePosition(0);
+                if (loop) {
+                    clip.loop(Clip.LOOP_CONTINUOUSLY);
+                }
+                clip.start();
             } else {
-                clip.loop(0);
+                System.err.println("No music track named: " + name);
             }
-
-            clip.setFramePosition(0);
-            clip.start();
-        } else {
-            System.err.println("No music track named: " + name);
+        } finally {
+            musicLock.unlock();
         }
     }
+
 
     public static void playEffect(String name) {
         String path = soundEffectPaths.get(name);
@@ -211,58 +214,50 @@ public class SoundManager {
      * @param loop whether the new track should loop
      */
     public static void crossfadeTo(String name, boolean loop) {
-        Clip newClip = tracks.get(name);
-        if (newClip == null) {
-            System.err.println("No music track named: " + name);
-            return; // clip not found
-        }
-        else if(newClip == currentClip) {
-            return; // No need to switch, same track
-        }
-
-        final Clip oldClip = currentClip;
-        currentClip = newClip;
-
+        musicLock.lock();
         try {
+            Clip newClip = tracks.get(name);
+            if (newClip == null || newClip == currentClip) return;
+
+            final Clip oldClip = currentClip;
+            currentClip = newClip;
+
             setVolume(newClip, 0f);
             newClip.setFramePosition(0);
             if (loop) {
                 newClip.loop(Clip.LOOP_CONTINUOUSLY);
-            } else {
-                newClip.loop(0);
             }
             newClip.start();
-        } catch (Exception e) {
-            System.err.println("Error starting new clip: " + e.getMessage());
-            return;
-        }
 
-        // Fade duration in milliseconds
-        final int fadeDuration = 2000;
-        final int steps = 40;
-        final int delay = fadeDuration / steps;
+            final int fadeDuration = 2000;
+            final int steps = 40;
+            final int delay = fadeDuration / steps;
 
-        Timer timer = new Timer(delay, null);
-        final int[] step = {0};
+            Timer timer = new Timer(delay, null);
+            final int[] step = {0};
 
-        timer.addActionListener(e -> {
-            float progress = step[0] / (float) steps;
-            if (oldClip != null && oldClip.isRunning()) {
-                setVolume(oldClip, musicVolume * (1.0f - progress));
-            }
-            setVolume(newClip, musicVolume * progress);
-
-            step[0]++;
-            if (step[0] > steps) {
-                if (oldClip != null) {
-                    oldClip.stop();
-                    oldClip.setFramePosition(0);
+            timer.addActionListener(e -> {
+                float progress = step[0] / (float) steps;
+                if (oldClip != null && oldClip.isRunning()) {
+                    setVolume(oldClip, musicVolume * (1.0f - progress));
                 }
-                timer.stop();
-            }
-        });
+                setVolume(newClip, musicVolume * progress);
 
-        timer.start();
+                step[0]++;
+                if (step[0] > steps) {
+                    if (oldClip != null) {
+                        oldClip.stop();
+                        oldClip.setFramePosition(0);
+                    }
+                    timer.stop();
+                }
+            });
+
+            timer.start();
+        } finally {
+            musicLock.unlock();
+        }
     }
+
 
 }

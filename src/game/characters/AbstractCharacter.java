@@ -26,7 +26,7 @@ public abstract class AbstractCharacter implements Combatant, GameEntity {
      */
     public AbstractCharacter(){
         this.position = null;
-        this.health = 100;
+        this.health = getMaxHealth();
         this.power = RandomUtil.getRandomInt(4, 15);
         visible = false;
     }
@@ -81,6 +81,10 @@ public abstract class AbstractCharacter implements Combatant, GameEntity {
     @Override
     public int getHealth() {
         return health;
+    }
+
+    public int getMaxHealth() {
+        return 100;
     }
 
     /**
@@ -144,6 +148,11 @@ public abstract class AbstractCharacter implements Combatant, GameEntity {
         return RandomUtil.getRandomDouble() < evasionChance * (1 - multiplier);
     }
 
+    @Override
+    public Position getPositionModifier() {
+        return getPosition();
+    }
+
     /**
      * Applies damage to the character from an attacker.
      * @param amount the amount of damage received
@@ -175,8 +184,8 @@ public abstract class AbstractCharacter implements Combatant, GameEntity {
         if (isDead())
             return;
         health += amount;
-        if(health > 100)
-            health = 100;
+        if(health > getMaxHealth())
+            health = getMaxHealth();
     }
 
     /**
