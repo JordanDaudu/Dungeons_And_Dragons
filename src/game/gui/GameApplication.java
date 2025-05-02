@@ -20,8 +20,16 @@ public class GameApplication implements ScreenListener{
         GameWorld game = GameWorld.getInstance();
 
         SoundManager.playMusic("preparations", true);
-        StartScreen startScreen = new StartScreen(gameApplication);
-        startScreen.showModal();  // This will block until the user clicks "Start Game"
+        int numberOfPlayers = -1;
+        do {
+            numberOfPlayers = StartingScreenGUI.askForPlayers();
+        }
+        while (numberOfPlayers == -1);
+
+        for(int i = 0; i < numberOfPlayers; i++) {
+            PlayerCreationPanel startScreen = new PlayerCreationPanel(gameApplication);
+            startScreen.showModal();  // This will block until the user clicks "Start Game"
+        }
 
         game.collectPlayersFromMap();
         game.getMap().populateRandomEntities();
@@ -76,17 +84,22 @@ public class GameApplication implements ScreenListener{
                 controller.setEndTurn(false); // Reset for next turn
 
                 // Advance to next player
-                if(!controller.onAction(ScreenAction.EXIT_GAME, (Object) null)) {
-                    PlayerCharacter nextPlayer;
-                    do {
-                        int currentIndex = game.getPlayers().indexOf(currentPlayer);
-                        int nextIndex = (currentIndex + 1) % game.getPlayers().size();
-                        nextPlayer = game.getPlayers().get(nextIndex);
+                int currentIndex = game.getPlayers().indexOf(currentPlayer);
+                int size = game.getPlayers().size();
+                boolean foundAlive = false;
 
+                for (int i = 0; i < size; i++) {
+                    int nextIndex = (currentIndex + 1 + i) % size;
+                    PlayerCharacter nextPlayer = game.getPlayers().get(nextIndex);
+                    if (!nextPlayer.isDead()) {
                         game.setCurrentPlayer(nextPlayer);
                         GameMap.getInstance().updatePlayerView(nextPlayer.getPosition());
+                        foundAlive = true;
+                        break;
                     }
-                    while (nextPlayer.isDead());
+                }
+                if (!foundAlive) {
+                    controller.onAction(ScreenAction.EXIT_GAME, (Object) null);
                 }
             }
         });

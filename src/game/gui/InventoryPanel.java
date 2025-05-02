@@ -10,12 +10,13 @@ import game.items.PowerPotion;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.net.URL;
 import java.util.*;
 
 public class InventoryPanel extends JDialog {
     private final PlayerCharacter player;
     private final JPanel itemsPanel;
-    private final ImageIcon lifePotionIcon, powerPotionIcon;
+    private final ImageIcon lifePotionIcon, powerPotionIcon, emptyPotion;
     private final ScreenListener controllerListener;
 
     public InventoryPanel(JFrame parent, PlayerCharacter player, ScreenListener controllerListener) {
@@ -24,10 +25,9 @@ public class InventoryPanel extends JDialog {
         this.controllerListener = controllerListener;
 
         // Load icons, we are making sure they are scaled down to look normal in the inventory
-        lifePotionIcon = new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/life_potion.png")))
-                        .getImage().getScaledInstance(64, 64, Image.SCALE_SMOOTH));
-        powerPotionIcon = new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/power_potion.png")))
-                        .getImage().getScaledInstance(64, 64, Image.SCALE_SMOOTH));
+        lifePotionIcon = loadImage("/images/life_potion.png", 64, 64);
+        powerPotionIcon = loadImage("/images/power_potion.png", 64, 64);
+        emptyPotion = loadImage("/images/empty_potion.png", 32, 32);
 
         setLayout(new BorderLayout());
 
@@ -73,29 +73,50 @@ public class InventoryPanel extends JDialog {
 
                 if (itemName.equals(Potion.class.getSimpleName())) {
                     icon = lifePotionIcon;
-                } else if (itemName.equals(PowerPotion.class.getSimpleName())) {
+                }
+                else if (itemName.equals(PowerPotion.class.getSimpleName())) {
                     icon = powerPotionIcon;
                 }
 
+                // Button to use specific interactable
                 JButton useButton = new JButton(buttonText, icon);
                 useButton.setAlignmentX(Component.CENTER_ALIGNMENT);
                 useButton.setHorizontalAlignment(SwingConstants.LEFT); // Aligns text left
 
                 useButton.addActionListener((ActionEvent e) -> {
                     boolean used = false;
+                    String interactionDetails = null;
+
+                    for (Interactable item : player.getInventory().getItems()) {
+                        if (item.getClass().getSimpleName().equals(itemName)) {
+                            interactionDetails = item.getInteractionDetails(); // no cast needed
+                            break;
+                        }
+                    }
                     if (itemName.equals(Potion.class.getSimpleName())) {
                         used = player.usePotion();
-                    } else if (itemName.equals(PowerPotion.class.getSimpleName())) {
+                    }
+                    else if (itemName.equals(PowerPotion.class.getSimpleName())) {
                         used = player.usePowerPotion();
                     }
 
                     if (used) {
-                        JOptionPane.showMessageDialog(this, itemName + " used!");
+                        if(interactionDetails != null)
+                            JOptionPane.showMessageDialog(this, itemName + " used!\nGained " + interactionDetails,
+                                    "Item Used", JOptionPane.INFORMATION_MESSAGE, emptyPotion);
+                        else
+                            JOptionPane.showMessageDialog(this, itemName + " used!",
+                                    "Item Used", JOptionPane.INFORMATION_MESSAGE, emptyPotion);
+
+                        // Close the inventory panel after use
+                        dispose();
+
                         controllerListener.onAction(ScreenAction.END_TURN, (Object) null);
                         refreshInventory(); // Refresh after use
                         revalidate();
                         repaint();
-                    } else {
+                    }
+                    else {
                         JOptionPane.showMessageDialog(this, "No " + itemName + " available.");
                     }
                 });
@@ -104,4 +125,19 @@ public class InventoryPanel extends JDialog {
             }
         }
     }
+
+    private ImageIcon loadImage(String path, int width, int height) {
+        URL imageUrl = getClass().getResource(path);
+        if (imageUrl == null) {
+            System.err.println("WARNING: Image not found at " + path + ", using fallback.");
+            imageUrl = getClass().getResource("/images/missing.png");
+            if (imageUrl == null) {
+                System.err.println("ERROR: Fallback image '/images/missing.png' also missing.");
+                return null;
+            }
+        }
+        Image image = new ImageIcon(imageUrl).getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
+        return new ImageIcon(image);
+    }
+
 }

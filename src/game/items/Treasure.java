@@ -119,6 +119,11 @@ public class Treasure extends GameItem implements Interactable {
         }
     }
 
+    @Override
+    public String getInteractionDetails() {
+        return getValue() + " Points";
+    }
+
     /**
      * Returns the symbol used to represent treasure on the game map.
      *

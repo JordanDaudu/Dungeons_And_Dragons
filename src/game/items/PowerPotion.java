@@ -81,6 +81,11 @@ public class PowerPotion extends Potion {
         }
     }
 
+    @Override
+    public String getInteractionDetails() {
+        return getIncreaseAmount() + "PP";
+    }
+
     /**
      * Returns the display symbol used to represent this power potion on the game map.
      *

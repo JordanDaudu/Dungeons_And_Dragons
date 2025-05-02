@@ -117,6 +117,11 @@ public class Potion extends GameItem implements Interactable {
         }
     }
 
+    @Override
+    public String getInteractionDetails() {
+        return getIncreaseAmount() + "HP";
+    }
+
     /**
      * Returns the display symbol used to represent this potion on the game map.
      *

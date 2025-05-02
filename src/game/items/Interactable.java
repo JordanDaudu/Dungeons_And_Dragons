@@ -22,4 +22,5 @@ public interface Interactable {
      */
     void setPosition(Position newPos);
 
+    default String getInteractionDetails() {return null;}
 }

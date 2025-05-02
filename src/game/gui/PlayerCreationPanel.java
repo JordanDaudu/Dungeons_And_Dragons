@@ -9,7 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Objects;
 
-public class StartScreen extends JPanel {
+public class PlayerCreationPanel extends JPanel {
     private JDialog dialog;
     private JTextField nameField;
     private JRadioButton warriorButton, archerButton, mageButton;
@@ -24,7 +24,7 @@ public class StartScreen extends JPanel {
     private JScrollPane scrollPane;
 
 
-    public StartScreen(ScreenListener listener) {
+    public PlayerCreationPanel(ScreenListener listener) {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setAlignmentX(Component.CENTER_ALIGNMENT);
         playerName = null;
@@ -93,7 +93,7 @@ public class StartScreen extends JPanel {
                     listener.onAction(ScreenAction.START_GAME, playerName, selectedClass);
                     dialog.setVisible(false);
                 } else {
-                    JOptionPane.showMessageDialog(StartScreen.this, "Please enter your name and select a class.", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(PlayerCreationPanel.this, "Please enter your name and select a class.", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });

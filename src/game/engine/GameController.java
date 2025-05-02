@@ -218,6 +218,9 @@ public class GameController implements ScreenListener {
                         break;
                     }
                 }
+                if(gameWorld.getEnemies().isEmpty())
+                    endGame = true;
+
                 if(endGame) {
                     GameOverGUI gameOver = new GameOverGUI(gameMapGUI, gameWorld.getPlayers());
                     gameOver.showDialog();
