@@ -1,5 +1,7 @@
 package game.gui;
 
+import game.core.GameSettings;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
@@ -8,101 +10,163 @@ import java.util.Objects;
 
 /**
  * A modal dialog that prompts the user to select the number of players
- * before starting the game. Displays a resizable background image and a
- * spinner input for choosing between 1 and 4 players.
+ * and the grid size (rows and columns) before starting the game.
+ * Displays a resizable background image with a transparent input panel.
  */
 public class StartingScreenGUI extends JDialog {
 
-    // Data Members
-    private int selectedPlayers = -1; // -1 means cancelled or closed
-    private ImageIcon backgroundImage;
-    private final JLabel backgroundLabel;
+    // === Data Members ===
+    private int selectedPlayers = -1; // Default: -1 means cancelled or window closed
+    private int selectedRows = 10;    // Default grid rows
+    private int selectedCols = 10;    // Default grid columns
+    private ImageIcon backgroundImage; // Background image to be resized
+    private final JLabel backgroundLabel; // Label to hold and display the background image
 
-    // Methods
+    // === Constructor ===
     /**
      * Private constructor for the StartingScreenGUI dialog.
      * Initializes UI components including the background image,
-     * player count spinner, and confirmation button.
+     * player count spinner, grid size spinners, and confirmation button.
      *
      * @param owner the parent Frame of this dialog (can be null)
      */
     private StartingScreenGUI(Frame owner) {
-        super(owner, "Select Number of Players", true); // Modal dialog (true here)
+        super(owner, "Select Number of Players", true); // Modal dialog
         setSize(600, 400);
         setLocationRelativeTo(owner);
         setLayout(new BorderLayout());
 
-        // Background image
+        // Load and display the background image
         backgroundImage = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/Main photo.png")));
         backgroundLabel = new JLabel(backgroundImage);
-        backgroundLabel.setLayout(new GridBagLayout());
+        backgroundLabel.setLayout(new GridBagLayout()); // Allow centered overlay panel
+        setContentPane(backgroundLabel);
 
+        // Handle window closing: exit app completely if user closes this dialog
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                System.exit(0); // Shutdown the system
+                System.exit(0);
             }
         });
 
-        // Add component listener to resize the background image only once
+        // Resize background image smoothly when the dialog is resized
         addComponentListener(new java.awt.event.ComponentAdapter() {
-            /**
-             * Called when the dialog is resized. Triggers a rescaling of the background image
-             * to match the new dimensions of the window.
-             *
-             * @param e the component event containing resize details
-             */
             public void componentResized(java.awt.event.ComponentEvent e) {
                 resizeBackgroundImage();
             }
         });
 
+        // === Main content panel ===
         JPanel contentPanel = new JPanel();
-        contentPanel.setPreferredSize(new Dimension(300, 150));
-        contentPanel.setBackground(new Color(0, 0, 0, 150));
+        contentPanel.setPreferredSize(new Dimension(350, 150));
+        contentPanel.setBackground(new Color(0, 0, 0, 150)); // Semi-transparent black
         contentPanel.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createLineBorder(Color.WHITE, 2),
                 "Choose Players", 0, 0, null, Color.WHITE));
-        contentPanel.setLayout(new GridLayout(3, 1, 10, 10));
+        contentPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
 
-        JLabel prompt = new JLabel("How many players?", SwingConstants.CENTER);
-        prompt.setForeground(Color.WHITE);
-        prompt.setFont(new Font("Arial", Font.BOLD, 18));
+        // === Player selection ===
+        JPanel playerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        playerPanel.setOpaque(false); // Transparent background
 
-        SpinnerNumberModel spinnerModel = new SpinnerNumberModel(1, 1, 4, 1);
-        JSpinner playerSpinner = new JSpinner(spinnerModel);
-        playerSpinner.setFont(new Font("Arial", Font.BOLD, 16));
+        // Label for the player selection
+        JLabel playerLabel = new JLabel("How many players?");
+        playerLabel.setForeground(Color.WHITE);
+        playerLabel.setFont(new Font("Arial", Font.BOLD, 16)); // Same font size as rows and columns
 
+        // Spinner for player selection
+        JSpinner playerSpinner = new JSpinner(new SpinnerNumberModel(1, 1, 4, 1));
+        playerSpinner.setFont(new Font("Arial", Font.BOLD, 16)); // Same font size as rows and columns
+
+        // Add label and spinner to the panel
+        playerPanel.add(playerLabel);
+        playerPanel.add(playerSpinner);
+
+        // Add player panel to content panel
+        contentPanel.add(playerPanel);
+        contentPanel.add(Box.createVerticalStrut(10)); // Added vertical space
+
+        // === Grid row selection ===
+        JPanel rowPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        rowPanel.setOpaque(false); // Transparent background
+        JLabel rowLabel = new JLabel("Rows:");
+        rowLabel.setForeground(Color.WHITE);
+        rowLabel.setFont(new Font("Arial", Font.BOLD, 16)); // Same font size as player spinner
+        JSpinner rowSpinner = new JSpinner(new SpinnerNumberModel(10, 10, 100, 1));
+        rowSpinner.setFont(new Font("Arial", Font.BOLD, 16)); // Same font size as player spinner
+        rowPanel.add(rowLabel);
+        rowPanel.add(rowSpinner);
+
+        contentPanel.add(rowPanel);
+        contentPanel.add(Box.createVerticalStrut(10)); // Added vertical space
+
+        // === Grid column selection ===
+        JPanel colPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        colPanel.setOpaque(false); // Transparent background
+        JLabel colLabel = new JLabel("Columns:");
+        colLabel.setForeground(Color.WHITE);
+        colLabel.setFont(new Font("Arial", Font.BOLD, 16)); // Same font size as player spinner
+        JSpinner colSpinner = new JSpinner(new SpinnerNumberModel(10, 10, 100, 1));
+        colSpinner.setFont(new Font("Arial", Font.BOLD, 16)); // Same font size as player spinner
+        colPanel.add(colLabel);
+        colPanel.add(colSpinner);
+
+        contentPanel.add(colPanel);
+        contentPanel.add(Box.createVerticalStrut(10)); // Added vertical space
+
+
+
+        // === Confirm Button ===
         JButton confirmButton = new JButton("Start Game");
         confirmButton.setFont(new Font("Arial", Font.BOLD, 16));
         confirmButton.addActionListener(e -> {
             selectedPlayers = (int) playerSpinner.getValue();
-            dispose();
+            selectedRows = (int) rowSpinner.getValue();
+            selectedCols = (int) colSpinner.getValue();
+            dispose(); // Close the dialog
         });
 
-        contentPanel.add(prompt);
-        contentPanel.add(playerSpinner);
         contentPanel.add(confirmButton);
 
+        // Add content panel to center of background label
         backgroundLabel.add(contentPanel);
-        setContentPane(backgroundLabel);
+    }
+
+    // === Public Interface ===
+    /**
+     * Displays the dialog and blocks until the user makes a selection or closes the window.
+     *
+     * @return number of players selected (1–4), or -1 if the dialog was closed
+     */
+    public static GameSettings askForSettings() {
+        StartingScreenGUI dialog = new StartingScreenGUI(null);
+        dialog.setVisible(true); // Blocks until user closes or confirms
+
+        // Return a new GameSettings object with all selected values
+        return new GameSettings(dialog.selectedPlayers, dialog.selectedRows, dialog.selectedCols);
     }
 
     /**
-     * Displays the dialog and blocks until the user selects a number
-     * of players or closes the window. Returns the chosen player count.
-     *
-     * @return number of players (1–4), or -1 if the dialog was closed
+     * Returns the number of rows selected by the user.
+     * Only valid if askForPlayers() returns a value >= 1.
      */
-    public static int askForPlayers() {
-        StartingScreenGUI dialog = new StartingScreenGUI(null);
-        dialog.setVisible(true); // Blocks until user closes dialog
-        return dialog.selectedPlayers;
+    public int getSelectedRows() {
+        return selectedRows;
     }
 
+    /**
+     * Returns the number of columns selected by the user.
+     * Only valid if askForPlayers() returns a value >= 1.
+     */
+    public int getSelectedCols() {
+        return selectedCols;
+    }
+
+    // === Image Handling ===
     /**
      * Rescales and updates the background image to fit the current size of the dialog.
-     * Ensures that the image is scaled from the original resource to preserve quality.
+     * Reloads from the original image each time to avoid progressive quality loss.
      */
     private void resizeBackgroundImage() {
         if (backgroundImage == null) return;
@@ -110,17 +174,14 @@ public class StartingScreenGUI extends JDialog {
         int width = getWidth();
         int height = getHeight();
 
-        // Load the original image each time from the resource (instead of the previously scaled one)
-        Image originalImage = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/Main photo.png"))).getImage();
-
-        // Scale from the original image to prevent progressive quality loss
+        Image originalImage = new ImageIcon(Objects.requireNonNull(
+                getClass().getResource("/images/Main photo.png"))).getImage();
         Image scaledImage = originalImage.getScaledInstance(width, height, Image.SCALE_SMOOTH);
-
-        // Update the background image and label
         backgroundImage = new ImageIcon(scaledImage);
         backgroundLabel.setIcon(backgroundImage);
     }
 
+    // === Test Harness ===
     /**
      * Entry point for testing the dialog independently.
      * Prints the selected number of players or a cancellation message to the console.
@@ -128,9 +189,13 @@ public class StartingScreenGUI extends JDialog {
      * @param args command-line arguments (not used)
      */
     public static void main(String[] args) {
-        int players = StartingScreenGUI.askForPlayers();
-        if (players != -1) {
-            System.out.println("User chose " + players + " players.");
+        StartingScreenGUI gui = new StartingScreenGUI(null);
+        gui.setVisible(true);
+
+        if (gui.selectedPlayers != -1) {
+            System.out.println("Players: " + gui.selectedPlayers);
+            System.out.println("Rows: " + gui.selectedRows);
+            System.out.println("Cols: " + gui.selectedCols);
         } else {
             System.out.println("User cancelled.");
         }

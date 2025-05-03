@@ -4,6 +4,7 @@ import game.characters.Enemy;
 import game.characters.PlayerCharacter;
 import game.combat.CombatSystem;
 import game.combat.RangedFighter;
+import game.gui.CongratulationsGUI;
 import game.gui.GameMapGUI;
 import game.gui.GameOverGUI;
 import game.items.GameItem;
@@ -135,6 +136,7 @@ public class GameController implements ScreenListener {
                 if(data[0] instanceof Position position && map.isValidPosition(position)) {
                     Position newPosition = attemptMoveTo(position);
                     updateAfterMovingPlayer(newPosition, map);
+                    this.onAction(ScreenAction.END_TURN, (Object) null);
                     return true;
                 }
             }
@@ -201,20 +203,31 @@ public class GameController implements ScreenListener {
                 map.updatePlayerView(gameWorld.getCurrentPlayer().getPosition());
             }
             case ScreenAction.EXIT_GAME -> {
-                boolean endGame = true;
+                boolean gameIsOver = true;
+                boolean gameIsWon = false;
                 for(PlayerCharacter player : gameWorld.getPlayers()) {
                     if(!player.isDead()) {
-                        endGame = false;
+                        gameIsOver = false;
                         break;
                     }
                 }
-                if(gameWorld.getEnemies().isEmpty())
-                    endGame = true;
 
-                if(endGame) {
+                if(gameWorld.getEnemies().isEmpty())
+                    gameIsWon = true;
+
+                if(gameIsOver) {
                     GameOverGUI gameOver = new GameOverGUI(gameMapGUI, gameWorld.getPlayers());
                     gameOver.showDialog();
                     gameOver.setVisible(true);  // blocks until closed
+                    scanner.close();
+                    for(PlayerCharacter p : gameWorld.getPlayers())
+                        System.out.println(p.getName() + " - Treasure Points: " + p.getTreasurePoints());
+                    System.exit(0);
+                }
+                else if(gameIsWon) {
+                    CongratulationsGUI congratulationsGUI = new CongratulationsGUI(gameMapGUI, gameWorld.getPlayers());
+                    congratulationsGUI.showDialog();
+                    congratulationsGUI.setVisible(true);
                     scanner.close();
                     for(PlayerCharacter p : gameWorld.getPlayers())
                         System.out.println(p.getName() + " - Treasure Points: " + p.getTreasurePoints());

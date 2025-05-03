@@ -5,25 +5,25 @@ import game.characters.PlayerCharacter;
 import java.util.List;
 import javax.swing.JFrame;
 
+public class CongratulationsGUI extends GameEndDialog {
 
-public class GameOverGUI extends GameEndDialog {
-
-    public GameOverGUI(JFrame parent, List<PlayerCharacter> players) {
+    public CongratulationsGUI(JFrame parent, List<PlayerCharacter> players) {
         super(parent, players);
     }
 
     @Override
     protected String getDialogTitle() {
-        return "★ GAME OVER ★"; // Title
+        return "★ CONGRATULATIONS ★\n★ YOU WON ★"; // Title
     }
 
     @Override
     protected String getBackgroundImagePath() {
-        return "/images/gameover.jpeg"; // Image Path
+        return "/images/winning.jpg"; // Image Path
     }
 
     @Override
     protected String getMusicTrack() {
-        return "gameOver"; // Music track
+        return "winning"; // Music track
     }
 }
+

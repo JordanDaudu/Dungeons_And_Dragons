@@ -35,6 +35,7 @@ public class SoundManager {
         loadTrack("dragon1", "sounds/music/dragon1.wav");
         loadTrack("lowHP", "sounds/music/lowHP.wav");
         loadTrack("gameOver", "sounds/music/game over.wav");
+        loadTrack("winning", "sounds/music/winning.wav");
     }
 
     /**

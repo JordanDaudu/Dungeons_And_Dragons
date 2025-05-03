@@ -46,8 +46,8 @@ public class GameWorld {
     public static void initialize(int row, int col) {
         if (instance == null) {
             instance = new GameWorld(row, col); // Create instance only once
-            instance.map.init(row, col); // Initialize the map with custom size
-        } else {
+        }
+        else {
             throw new IllegalStateException("GameWorld is already initialized.");
         }
     }

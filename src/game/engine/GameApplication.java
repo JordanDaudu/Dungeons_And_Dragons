@@ -1,6 +1,7 @@
 package game.engine;
 
 import game.characters.PlayerCharacter;
+import game.core.GameSettings;
 import game.gui.PlayerCreationPanel;
 import game.gui.StartingScreenGUI;
 import game.map.GameMap;
@@ -30,15 +31,19 @@ public class GameApplication implements ScreenListener{
         SoundManager.loadMusic();
         SoundManager.loadSoundEffects();
 
-        GameApplication gameApplication = new GameApplication();
-        GameWorld game = GameWorld.getInstance();
-
         SoundManager.playMusic("preparations", true);
-        int numberOfPlayers = -1;
+        GameSettings gameSettings;
         do {
-            numberOfPlayers = StartingScreenGUI.askForPlayers();
+            gameSettings = StartingScreenGUI.askForSettings();
         }
-        while (numberOfPlayers == -1);
+        while (!GameSettings.checkSettings(gameSettings));
+
+        int numberOfPlayers = gameSettings.getPlayers();
+        int mapRows = gameSettings.getRows();
+        int mapCols = gameSettings.getCols();
+
+        GameApplication gameApplication = new GameApplication(mapRows, mapCols);
+        GameWorld game = GameWorld.getInstance();
 
         for(int i = 0; i < numberOfPlayers; i++) {
             PlayerCreationPanel startScreen = new PlayerCreationPanel(gameApplication);
@@ -70,8 +75,8 @@ public class GameApplication implements ScreenListener{
      * Constructs the main game application.
      * Initializes the game world, map, and controller.
      */
-    public GameApplication() {
-        GameWorld.initialize(10, 10);
+    public GameApplication(int rows, int cols) {
+        GameWorld.initialize(rows, cols);
         game = GameWorld.getInstance();
         map = game.getMap();
         controller = new GameController();
@@ -127,7 +132,7 @@ public class GameApplication implements ScreenListener{
                         break;
                     }
                 }
-                if (!foundAlive) {
+                if (!foundAlive || game.getEnemies().isEmpty()) {
                     controller.onAction(ScreenAction.EXIT_GAME, (Object) null);
                 }
             }
