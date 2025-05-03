@@ -62,6 +62,12 @@ public abstract class Enemy extends AbstractCharacter {
         return loot == that.loot;
     }
 
+    /**
+     * Returns the maximum health of the enemy.
+     * Fixed at 50 for all enemies.
+     *
+     * @return the max health value (50)
+     */
     @Override
     public int getMaxHealth() {
         return 50;
@@ -113,8 +119,7 @@ public abstract class Enemy extends AbstractCharacter {
     }
 
     /**
-     * Setting up for future enemy type chosen
-     *
+     * Handles the fight action for enemies that have not implemented specific combat behavior.
      * @param target the combatant to attack
      */
     @Override

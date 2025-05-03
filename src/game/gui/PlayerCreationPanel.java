@@ -9,21 +9,37 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Objects;
 
+/**
+ * A panel for creating a new player character, allowing the user to:
+ * - Enter a name
+ * - Choose a class (Warrior, Archer, Mage)
+ * - View class descriptions and game instructions
+ * - Start the game via the provided ScreenListener.
+ *
+ * Displays itself in a modal dialog and exits the game if closed without starting.
+ */
 public class PlayerCreationPanel extends JPanel {
-    private JDialog dialog;
-    private JTextField nameField;
-    private JRadioButton warriorButton, archerButton, mageButton;
+
+    // Data Members
+    private final JDialog dialog;
+    private final JTextField nameField;
+    private final JRadioButton warriorButton, archerButton, mageButton;
     private ImageIcon warriorIcon, archerIcon, mageIcon;
-    private ButtonGroup classGroup;
-    private JPanel classPanel;
-    private JButton startButton;
+    private final ButtonGroup classGroup;
+    private final JPanel classPanel;
+    private final JButton startButton;
     private String playerName;
     private String selectedClass;
-    private JLabel nameLabel, classLabel;
-    private JTextPane classDescriptionPane;
-    private JScrollPane scrollPane;
+    private final JLabel nameLabel, classLabel;
+    private final JTextPane classDescriptionPane;
+    private final JScrollPane scrollPane;
 
-
+    // Methods
+    /**
+     * Constructs a new PlayerCreationPanel with the required listener.
+     *
+     * @param listener the ScreenListener used to trigger game start events
+     */
     public PlayerCreationPanel(ScreenListener listener) {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -84,6 +100,11 @@ public class PlayerCreationPanel extends JPanel {
         startButton = new JButton("Start Game");
         startButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         startButton.addActionListener(new ActionListener() {
+            /**
+             * Handles the "Start Game" button click.
+             * Validates user input (name and class), notifies the screen listener,
+             * and closes the dialog if successful. Otherwise, displays an error.
+             */
             @Override
             public void actionPerformed(ActionEvent e) {
                 playerName = nameField.getText();
@@ -118,6 +139,10 @@ public class PlayerCreationPanel extends JPanel {
         dialog.setLocationRelativeTo(null);
         dialog.add(this);
         dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+            /**
+             * Handles the event where the player creation window is closed manually
+             * before starting the game. Logs the closure and exits the application.
+             */
             @Override
             public void windowClosing(java.awt.event.WindowEvent e) {
                 System.out.println("StartScreen was closed without starting the game.");
@@ -126,11 +151,22 @@ public class PlayerCreationPanel extends JPanel {
         });
     }
 
+    /**
+     * Displays the player creation panel as a modal dialog.
+     * Blocks input to other windows until the dialog is closed.
+     */
     public void showModal() {
         dialog.setModal(true);
         dialog.setVisible(true);
     }
 
+    /**
+     * Creates a radio button representing a player class, complete with image and listener.
+     *
+     * @param className  the name of the class (e.g., "Warrior")
+     * @param classImage the icon associated with the class
+     * @return a configured JRadioButton
+     */
     private JRadioButton createClassRadioButton(final String className, ImageIcon classImage) {
         JRadioButton radioButton = new JRadioButton(className);
         radioButton.setIcon(classImage);
@@ -139,6 +175,10 @@ public class PlayerCreationPanel extends JPanel {
         radioButton.setAlignmentY(Component.CENTER_ALIGNMENT);
 
         radioButton.addActionListener(new ActionListener() {
+            /**
+             * Sets the selected class to the one associated with this button
+             * and updates the class description pane accordingly.
+             */
             @Override
             public void actionPerformed(ActionEvent e) {
                 selectedClass = className;
@@ -148,25 +188,25 @@ public class PlayerCreationPanel extends JPanel {
         return radioButton;
     }
 
+    /**
+     * Updates the class description pane with details about the selected class
+     * and game instructions.
+     *
+     * @param className the name of the selected class
+     */
     private void updateClassDescription(String className) {
-        String description = "";
-        switch (className) {
-            case "Warrior":
-                description = "<b><u>Warrior</u></b><br>" +
-                        "A melee-focused fighter skilled in close-range physical combat.<br>" +
-                        "Excels in defense and durability.";
-                break;
-            case "Archer":
-                description = "<b><u>Archer</u></b><br>" +
-                        "A ranged combatant who excels at striking from afar with physical attacks.<br>" +
-                        "Boasts high accuracy, making them less likely to miss.";
-                break;
-            case "Mage":
-                description = "<b><u>Mage</u></b><br>" +
-                        "A master of magic who uses powerful ranged spells to defeat enemies.<br>" +
-                        "Specializes in high-power elemental attacks.";
-                break;
-        }
+        String description = switch (className) {
+            case "Warrior" -> "<b><u>Warrior</u></b><br>" +
+                    "A melee-focused fighter skilled in close-range physical combat.<br>" +
+                    "Excels in defense and durability.";
+            case "Archer" -> "<b><u>Archer</u></b><br>" +
+                    "A ranged combatant who excels at striking from afar with physical attacks.<br>" +
+                    "Boasts high accuracy, making them less likely to miss.";
+            case "Mage" -> "<b><u>Mage</u></b><br>" +
+                    "A master of magic who uses powerful ranged spells to defeat enemies.<br>" +
+                    "Specializes in high-power elemental attacks.";
+            default -> "";
+        };
         classDescriptionPane.setText("<html><body style='font-family:sans-serif; font-size:14px;'>" +
                 description + getInstructionsHTML() + "</body></html>");
 
@@ -174,6 +214,12 @@ public class PlayerCreationPanel extends JPanel {
         classDescriptionPane.setCaretPosition(0);
     }
 
+    /**
+     * Returns the default description to show in the class description pane
+     * before a class has been selected.
+     *
+     * @return an HTML string with default instructions
+     */
     private String getDefaultDescription() {
         return "<html><body style='font-family:sans-serif; font-size:14px;'>" +
                 "Select a class to see its description." +
@@ -181,14 +227,28 @@ public class PlayerCreationPanel extends JPanel {
                 "</body></html>";
     }
 
+    /**
+     * Returns an HTML-formatted string with basic game instructions for display.
+     *
+     * @return an HTML string describing game controls
+     */
     private String getInstructionsHTML() {
         return "<br><br><b><u>Game Instructions</u></b><br>" +
                 "Use <b>WASD</b> keys or <b>left-click</b> to move your character.<br>" +
                 "Press <b>E</b> or <b>middle-click</b> to open your inventory.<br>" +
                 "Use <b>right-click</b> on an entity to view its information.<br>" +
-                "Press <b>Q</b> to view your player status.";
+                "Press <b>Q</b> to view your player status.<br>" +
+                "Press <b>ESC</b> to open the settings menu";
     }
 
+    /**
+     * Scales an ImageIcon to the given width and height using smooth scaling.
+     *
+     * @param icon  the icon to scale
+     * @param width the target width
+     * @param height the target height
+     * @return a new scaled ImageIcon
+     */
     private ImageIcon scaleIcon(ImageIcon icon, int width, int height) {
         Image img = icon.getImage();
         Image scaledImg = img.getScaledInstance(width, height, Image.SCALE_SMOOTH);

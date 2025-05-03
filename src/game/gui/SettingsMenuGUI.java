@@ -5,8 +5,14 @@ import game.engine.SoundManager;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * A modal settings menu dialog for adjusting game audio preferences.
+ * Provides sliders for modifying music and sound effects (SFX) volume,
+ * along with buttons to return to the game or quit the application.
+ */
 public class SettingsMenuGUI extends JDialog {
 
+    // Data Members
     private JPanel slidersPanel;
     private JPanel musicPanel;
     private JPanel sfxPanel;
@@ -18,6 +24,13 @@ public class SettingsMenuGUI extends JDialog {
     private JButton backButton;
     private JButton quitButton;
 
+    // Methods
+    /**
+     * Constructs a new SettingsMenuGUI dialog with sliders for audio volume settings
+     * and control buttons for navigation.
+     *
+     * @param parent the parent JFrame that owns this settings dialog
+     */
     public SettingsMenuGUI(JFrame parent) {
         super(parent, "Settings", true);  // modal
         setLayout(new BorderLayout());
@@ -30,6 +43,9 @@ public class SettingsMenuGUI extends JDialog {
         attachListeners();
     }
 
+    /**
+     * Initializes all UI components such as sliders, labels, and buttons.
+     */
     private void initComponents() {
         slidersPanel = new JPanel(new GridLayout(2, 1, 10, 10));
 
@@ -55,6 +71,9 @@ public class SettingsMenuGUI extends JDialog {
         quitButton = new JButton("Quit Game");
     }
 
+    /**
+     * Arranges all UI components within the dialog using appropriate layouts.
+     */
     private void layoutComponents() {
         musicPanel.add(musicLabel, BorderLayout.WEST);
         musicPanel.add(musicSlider, BorderLayout.CENTER);
@@ -76,6 +95,9 @@ public class SettingsMenuGUI extends JDialog {
         add(buttonPanel, BorderLayout.SOUTH);
     }
 
+    /**
+     * Attaches action and change listeners to UI components to handle user interaction.
+     */
     private void attachListeners() {
         musicSlider.addChangeListener(e -> SoundManager.setMusicVolume(musicSlider.getValue() / 100f));
         sfxSlider.addChangeListener(e -> SoundManager.setSFXVolume(sfxSlider.getValue() / 100f));

@@ -87,6 +87,11 @@ public abstract class PlayerCharacter extends AbstractCharacter implements Playe
         return name;
     }
 
+    /**
+     * Retrieves the player's inventory.
+     *
+     * @return the Inventory object containing the player's items
+     */
     public Inventory getInventory() {return inventory;}
 
     /**

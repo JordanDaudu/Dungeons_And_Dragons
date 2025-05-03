@@ -21,14 +21,26 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Set;
 
+/**
+ * The GameMapGUI class represents the main gameplay interface,
+ * handling user input (keyboard/mouse), entity rendering, and interaction logic
+ * with the map grid for a turn-based game.
+ * Features include:
+ * - Player movement (WASD keys)
+ * - Interaction via mouse (attack, pickup, inspect)
+ * - Inventory and status access
+ * - Entity visibility animations (fade in/out)
+ */
 public class GameMapGUI extends JFrame implements ScreenListener{
+
+    // Data Members
     private final GameMap map;
     private final GameController gameController;
     private final ScreenListener controllerListener;
     private JPanel gridPanel;
 
-    InputMap inputMap = getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
-    ActionMap actionMap = getRootPane().getActionMap();
+    private final InputMap inputMap = getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+    private final ActionMap actionMap = getRootPane().getActionMap();
 
     private InventoryPanel inventoryPanel;
 
@@ -39,6 +51,14 @@ public class GameMapGUI extends JFrame implements ScreenListener{
     private final Map<GameEntity, Float> entityAlphaMap = new HashMap<>();
     private final Timer animationTimer; // this runs periodically for smooth fade in / out animations
 
+    // Methods
+    /**
+     * Constructs the GameMapGUI.
+     *
+     * @param gameController        the game controller handling core logic
+     * @param map                   the game map to render and interact with
+     * @param controllerListener    listener to handle screen-related events
+     */
     public GameMapGUI(GameController gameController, GameMap map, ScreenListener controllerListener) {
         this.gameController = gameController;
         this.map = map;
@@ -53,6 +73,12 @@ public class GameMapGUI extends JFrame implements ScreenListener{
         inputMap.put(KeyStroke.getKeyStroke("D"), "moveRight");
 
         actionMap.put("moveUp", new AbstractAction() {
+            /**
+             * Moves the player upwards on the map.
+             * This action is triggered when the user presses the 'W' key.
+             *
+             * @param e the action event triggered by the key press
+             */
             @Override
             public void actionPerformed(ActionEvent e) {
                 movePlayerTo(getNewPositionForDirection("W"));
@@ -60,6 +86,12 @@ public class GameMapGUI extends JFrame implements ScreenListener{
         });
 
         actionMap.put("moveDown", new AbstractAction() {
+            /**
+             * Moves the player downwards on the map.
+             * This action is triggered when the user presses the 'S' key.
+             *
+             * @param e the action event triggered by the key press
+             */
             @Override
             public void actionPerformed(ActionEvent e) {
                 movePlayerTo(getNewPositionForDirection("S"));
@@ -67,6 +99,12 @@ public class GameMapGUI extends JFrame implements ScreenListener{
         });
 
         actionMap.put("moveLeft", new AbstractAction() {
+            /**
+             * Moves the player left on the map.
+             * This action is triggered when the user presses the 'A' key.
+             *
+             * @param e the action event triggered by the key press
+             */
             @Override
             public void actionPerformed(ActionEvent e) {
                 movePlayerTo(getNewPositionForDirection("A"));
@@ -74,6 +112,12 @@ public class GameMapGUI extends JFrame implements ScreenListener{
         });
 
         actionMap.put("moveRight", new AbstractAction() {
+            /**
+             * Moves the player right on the map.
+             * This action is triggered when the user presses the 'D' key.
+             *
+             * @param e the action event triggered by the key press
+             */
             @Override
             public void actionPerformed(ActionEvent e) {
                 movePlayerTo(getNewPositionForDirection("D"));
@@ -83,6 +127,12 @@ public class GameMapGUI extends JFrame implements ScreenListener{
         // Key binding for 'E' to show inventory
         inputMap.put(KeyStroke.getKeyStroke("E"), "showInventory");
         actionMap.put("showInventory", new AbstractAction() {
+            /**
+             * Displays the player's inventory in a modal dialog.
+             * This action is triggered when the user presses the 'E' key.
+             *
+             * @param e the action event triggered by the key press
+             */
             @Override
             public void actionPerformed(ActionEvent e) {
                 PlayerCharacter currentPlayer = gameController.getCurrentPlayer();
@@ -97,6 +147,12 @@ public class GameMapGUI extends JFrame implements ScreenListener{
         // Key binding for 'Q' to show player status
         inputMap.put(KeyStroke.getKeyStroke("Q"), "showStatus");
         actionMap.put("showStatus", new AbstractAction() {
+            /**
+             * Displays a modal dialog showing the current player's status.
+             * This is triggered when the user presses the 'Q' key.
+             *
+             * @param e the action event triggered by key binding
+             */
             @Override
             public void actionPerformed(ActionEvent e) {
                 PlayerCharacter currentPlayer = gameController.getCurrentPlayer();
@@ -110,6 +166,12 @@ public class GameMapGUI extends JFrame implements ScreenListener{
         // Key binding for "ESC" to show settings menu
         inputMap.put(KeyStroke.getKeyStroke("ESCAPE"), "openSettings");
         actionMap.put("openSettings", new AbstractAction() {
+            /**
+             * Opens the settings menu as a modal window.
+             * Triggered when the user presses the 'Escape' key.
+             *
+             * @param e the action event triggered by key binding
+             */
             @Override
             public void actionPerformed(ActionEvent e) {
                 new SettingsMenuGUI(GameMapGUI.this).setVisible(true);
@@ -119,6 +181,9 @@ public class GameMapGUI extends JFrame implements ScreenListener{
         initUI();
     }
 
+    /**
+     * Initializes the JFrame and populates the map grid with interactive cells.
+     */
     private void initUI() {
         setTitle("Dungeons & Dragons - like game");
         setSize(800, 800);  // Default size, can be resized
@@ -147,6 +212,13 @@ public class GameMapGUI extends JFrame implements ScreenListener{
         this.setVisible(false);
     }
 
+    /**
+     * Handles screen actions sent from the game engine or other UI components.
+     *
+     * @param action the type of screen action to process
+     * @param data   optional parameters for the action
+     * @return true if the action was handled, false otherwise
+     */
     @Override
     public boolean onAction(ScreenAction action, Object... data) {
         switch (action) {
@@ -164,11 +236,22 @@ public class GameMapGUI extends JFrame implements ScreenListener{
         return false;
     }
 
+    /**
+     * Attempts to move the player to the specified position.
+     *
+     * @param position the new position to move the player to
+     */
     private void movePlayerTo(Position position) {
         controllerListener.onAction(ScreenAction.MOVE, position);
         repaint(); // repaint the entire frame
     }
 
+    /**
+     * Gets the GUI tile component corresponding to a map position.
+     *
+     * @param pos the position to search for
+     * @return the corresponding TileCell, or null if not found
+     */
     private Component getCellAtPosition(Position pos) {
         for (Component comp : gridPanel.getComponents()) {
             if (comp instanceof TileCell) {
@@ -181,6 +264,9 @@ public class GameMapGUI extends JFrame implements ScreenListener{
         return null;
     }
 
+    /**
+     * Handles smooth visibility transitions (fade-in/out) for entities.
+     */
     private void animateAlphaTransitions() {
         Set<GameEntity> currentlyVisible = map.getVisibleEntities();
         boolean needsRepaint = false;
@@ -212,7 +298,12 @@ public class GameMapGUI extends JFrame implements ScreenListener{
         }
     }
 
-
+    /**
+     * Translates keyboard direction input (WASD) into a new map position.
+     *
+     * @param direction the key direction (W, A, S, D)
+     * @return the new target position for movement
+     */
     private Position getNewPositionForDirection(String direction) {
         Position currentPos = gameController.getCurrentPlayer().getPosition();
         int row = currentPos.getRow();
@@ -227,16 +318,38 @@ public class GameMapGUI extends JFrame implements ScreenListener{
         };
     }
 
+    /**
+     * Represents a single tile cell on the game map.
+     * Handles mouse input for interaction and renders game entities.
+     */
     private class TileCell extends JPanel implements BlinkingAnimation {
+
+        // Data Members
         private final Position position;
         private final int tileSize = 64;
 
+        // Methods
+        /**
+         * Creates a new TileCell at a specified position.
+         *
+         * @param position the map position this cell represents
+         */
         public TileCell(Position position) {
             this.position = position;
             setPreferredSize(new Dimension(tileSize, tileSize));  // Tile size
             setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
 
             addMouseListener(new MouseAdapter() {
+                /**
+                 * Handles mouse press events on a tile:
+                 * <ul>
+                 *     <li><b>Left-click</b>: Moves player or attacks/interacts if entity is present (if in range).</li>
+                 *     <li><b>Right-click</b>: Opens context menu with entity details (if in range).</li>
+                 *     <li><b>Middle-click</b>: Opens inventory regardless of range.</li>
+                 * </ul>
+                 *
+                 * @param e the mouse event triggered by the user
+                 */
                 @Override
                 public void mousePressed(MouseEvent e) {
                     // Handle click events per tile
@@ -251,12 +364,17 @@ public class GameMapGUI extends JFrame implements ScreenListener{
                         repaint();
                     }
                     if(SwingUtilities.isMiddleMouseButton(e)) {
-                        handleMiddleClick(e);
+                        handleMiddleClick();
                     }
                 }
             });
         }
 
+        /**
+         * Causes the tile cell to briefly blink in the specified color.
+         *
+         * @param color the blink color to use
+         */
         @Override
         public void blink(Color color) {
             setBackground(color);
@@ -269,10 +387,20 @@ public class GameMapGUI extends JFrame implements ScreenListener{
             blinkTimer.start();
         }
 
+        /**
+         * Returns the map position this tile cell represents.
+         *
+         * @return the position object
+         */
         private Position getPosition() {
             return position;
         }
 
+        /**
+         * Handles left-click events: move, attack, or interact.
+         *
+         * @param entitiesAtPos list of entities at this tile position
+         */
         private void handleLeftClick(List<GameEntity> entitiesAtPos) {
             if (entitiesAtPos.isEmpty()) {
                 // Made a centralized function for keyboard and mouse
@@ -290,6 +418,12 @@ public class GameMapGUI extends JFrame implements ScreenListener{
             }
         }
 
+        /**
+         * Handles right-click events: show popup information about entity.
+         *
+         * @param e              the MouseEvent from the click
+         * @param entitiesAtPos  list of entities at this tile
+         */
         private void handleRightClick(MouseEvent e, List<GameEntity> entitiesAtPos) {
             if (!entitiesAtPos.isEmpty()) {
                 GameEntity topEntity = entitiesAtPos.getFirst();
@@ -299,7 +433,10 @@ public class GameMapGUI extends JFrame implements ScreenListener{
             }
         }
 
-        private void handleMiddleClick(MouseEvent e) {
+        /**
+         * Handles middle-click: opens the inventory panel.
+         */
+        private void handleMiddleClick() {
             PlayerCharacter currentPlayer = gameController.getCurrentPlayer();
             if (currentPlayer != null) {
                 inventoryPanel = new InventoryPanel(GameMapGUI.this, currentPlayer, controllerListener);
@@ -307,13 +444,18 @@ public class GameMapGUI extends JFrame implements ScreenListener{
             }
         }
 
+        /**
+         * Renders the cell, including entity sprite with alpha fading.
+         *
+         * @param g the Graphics context
+         */
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
             List<GameEntity> entitiesAtPos = map.getEntitiesAt(position);
 
             if (!entitiesAtPos.isEmpty()) {
-                GameEntity entity = entitiesAtPos.get(0);
+                GameEntity entity = entitiesAtPos.getFirst();
                 Float entityAlpha = entityAlphaMap.getOrDefault(entity, 0f);
                 // I'm checking if it's alpha is greater than 0 instead of checking isVisible because
                 // I want to trigger the fade out animation and not immediately disappear
@@ -335,24 +477,34 @@ public class GameMapGUI extends JFrame implements ScreenListener{
         }
     }
 
+    /**
+     * A context menu that displays information about the entity at a tile.
+     */
     private class EntityPopupMenu extends JPopupMenu {
+
+        // Methods
+        /**
+         * Constructs a popup menu for the given entity with description.
+         *
+         * @param entity the game entity to describe
+         */
         public EntityPopupMenu(GameEntity entity) {
-            String helperString = "";
             if (entity == null || !entity.isVisible()) {
                 addDisabledItem("There is nothing here");
             }
             else if (entity instanceof Enemy enemy) {
+                addEnemyHealthBar(enemy);
                 addDisabledItem("Enemy: " + enemy.getClass().getSimpleName());
-                addDisabledItem("Health: " + enemy.getHealth());
                 addDisabledItem("Type: " + enemy.getType());
+
                 if(enemy instanceof MagicAttacker)
                     addDisabledItem("Element: " + enemy.getElementType());
                 addDisabledItem("Description: " + enemy.getDescription());
             }
             else if(entity instanceof PlayerCharacter player) {
+                addPlayerHealthBar(player);
                 addDisabledItem("Name: " + player.getName());
                 addDisabledItem("Type: " + player.getType());
-                addDisabledItem("Health: " + player.getHealth());
                 addDisabledItem("Power: " + player.getPower());
                 if(player instanceof MagicAttacker)
                     addDisabledItem("Element: " + player.getElementType());
@@ -366,10 +518,36 @@ public class GameMapGUI extends JFrame implements ScreenListener{
             }
         }
 
+        /**
+         * Adds a disabled menu item with the given text.
+         *
+         * @param text the text to display in the menu item
+         */
         private void addDisabledItem(String text) {
             JMenuItem item = new JMenuItem(text);
             item.setEnabled(false);
+
+            item.setFont(new Font("Arial", Font.BOLD, 14)); // Set bold and slightly larger font
+            item.setForeground(new Color(0, 128, 0)); // Dark green for better contrast
+            item.setBackground(Color.WHITE); // Light background color to make text pop more
+
             add(item);
+        }
+
+        private void addPlayerHealthBar(PlayerCharacter player) {
+            JPanel healthPanel = new JPanel();
+            healthPanel.setLayout(new BoxLayout(healthPanel, BoxLayout.X_AXIS));
+            healthPanel.add(new JLabel("Health:"));
+            healthPanel.add(new HealthBarPanel(player.getHealth(), player.getMaxHealth()));
+            add(healthPanel); // Add to menu
+        }
+
+        private void addEnemyHealthBar(Enemy enemy) {
+            JPanel healthPanel = new JPanel();
+            healthPanel.setLayout(new BoxLayout(healthPanel, BoxLayout.X_AXIS));
+            healthPanel.add(new JLabel("Health:"));
+            healthPanel.add(new HealthBarPanel(enemy.getHealth(), enemy.getMaxHealth()));
+            add(healthPanel); // Add to menu
         }
     }
 }

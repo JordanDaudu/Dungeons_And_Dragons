@@ -71,6 +71,11 @@ public class Orc extends Enemy implements MeleeFighter, PhysicalAttacker {
         return Double.compare(that.resistance, resistance) == 0;
     }
 
+    /**
+     * Returns the type(s) of combat roles the Orc fulfills.
+     *
+     * @return a string listing the Orc's combat roles
+     */
     @Override
     public String getType() {
         return "MeleeFighter, PhysicalAttacker";
@@ -127,7 +132,6 @@ public class Orc extends Enemy implements MeleeFighter, PhysicalAttacker {
         return distance == 1;
     }
 
-
     /**
      * Executes an attack action against a target.
      *
@@ -158,6 +162,12 @@ public class Orc extends Enemy implements MeleeFighter, PhysicalAttacker {
         return "⟨O⟩";
     }
 
+    /**
+     * Returns an image representing the Orc for the game UI.
+     * The image is loaded from the resource path /images/orc.png.
+     *
+     * @return the orc's image
+     */
     @Override
     public Image getDisplayImage() {
         ImageIcon icon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/orc.png")));
@@ -174,6 +184,11 @@ public class Orc extends Enemy implements MeleeFighter, PhysicalAttacker {
         fightClose(target);
     }
 
+    /**
+     * Provides a textual description of the Orc for the GUI.
+     *
+     * @return the orc's description
+     */
     @Override
     public String getDescription(){
         return "High physical damage dealer, have low evasion but hits hard in close combat.";

@@ -1,17 +1,31 @@
-package game.gui;
+package game.engine;
 
 import game.characters.PlayerCharacter;
-import game.engine.*;
+import game.gui.PlayerCreationPanel;
+import game.gui.StartingScreenGUI;
 import game.map.GameMap;
 
 import javax.swing.*;
 
+/**
+ * Entry point and core application manager for the game GUI.
+ * Manages screen transitions, game initialization, and the main game loop.
+ */
 public class GameApplication implements ScreenListener{
 
-    private GameWorld game;
-    private GameMap map;
-    private GameController controller;
+    // Data Members
+    private final GameWorld game;
+    private final GameMap map;
+    private final GameController controller;
 
+    // Methods
+    /**
+     * Main method to launch the game.
+     * Loads sounds, gathers player input, initializes characters and entities,
+     * and starts the turn-based loop.
+     *
+     * @param args command-line arguments (unused)
+     */
     public static void main(String[] args) {
         SoundManager.loadMusic();
         SoundManager.loadSoundEffects();
@@ -52,6 +66,10 @@ public class GameApplication implements ScreenListener{
         GameMap.getInstance().updatePlayerView(game.getCurrentPlayer().getPosition());
     }
 
+    /**
+     * Constructs the main game application.
+     * Initializes the game world, map, and controller.
+     */
     public GameApplication() {
         GameWorld.initialize(10, 10);
         game = GameWorld.getInstance();
@@ -59,6 +77,13 @@ public class GameApplication implements ScreenListener{
         controller = new GameController();
     }
 
+    /**
+     * Responds to screen actions, such as starting the game after character creation.
+     *
+     * @param action the action that occurred on the screen
+     * @param data   optional additional data, e.g., player name and class
+     * @return true if action was handled successfully, false otherwise
+     */
     @Override
     public boolean onAction(ScreenAction action, Object... data) {
         if (action == ScreenAction.START_GAME) {
@@ -74,6 +99,10 @@ public class GameApplication implements ScreenListener{
         return false;
     }
 
+    /**
+     * Starts the main turn-based game loop using a timer.
+     * Each iteration checks if a player's turn has ended and advances to the next alive player.
+     */
     private void startGameLoop() {
         // checks if the turn has ended, if it did switches to the next current player
         Timer turnTimer = new Timer(200, e -> {

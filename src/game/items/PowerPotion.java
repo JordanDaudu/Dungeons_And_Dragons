@@ -81,6 +81,12 @@ public class PowerPotion extends Potion {
         }
     }
 
+    /**
+     * Returns a string describing the interaction effect of this power potion,
+     * typically the amount of PP it provides.
+     *
+     * @return a string indicating the power bonus amount
+     */
     @Override
     public String getInteractionDetails() {
         return getIncreaseAmount() + "PP";
@@ -94,6 +100,11 @@ public class PowerPotion extends Potion {
     @Override
     public String getDisplaySymbol() { return "⟨P⟩"; }
 
+    /**
+     * Returns the display image used to visually represent this power potion in the GUI.
+     *
+     * @return the image of the power potion
+     */
     @Override
     public Image getDisplayImage() {
         ImageIcon icon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/power_potion.png")));

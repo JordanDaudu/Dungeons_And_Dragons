@@ -120,6 +120,10 @@ public abstract class AbstractCharacter implements Combatant, GameEntity {
         return true;
     }
 
+    /**
+     * Gets the type of the character
+     * @return a string representing the type
+     */
     public abstract String getType();
 
     /**
@@ -148,6 +152,10 @@ public abstract class AbstractCharacter implements Combatant, GameEntity {
         return RandomUtil.getRandomDouble() < evasionChance * (1 - multiplier);
     }
 
+    /**
+     * Gets the character's position modifier for rendering/positioning purposes.
+     * @return the current position
+     */
     @Override
     public Position getPositionModifier() {
         return getPosition();

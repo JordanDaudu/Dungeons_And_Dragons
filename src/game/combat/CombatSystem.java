@@ -54,11 +54,25 @@ public class CombatSystem {
         }
     }
 
+    /**
+     * Sets the ScreenListener used for visual combat feedback such as animations and screen effects.
+     *
+     * @param screenListener the listener to handle screen actions
+     * @return true if the listener was successfully set
+     */
     public boolean setListener(ScreenListener screenListener) {
         this.listener = screenListener;
         return true;
     }
 
+    /**
+     * Executes a single turn of combat from one combatant to another.
+     * Handles evasion checks, damage application, sound/visual effects,
+     * and post-combat logic like death or music changes.
+     *
+     * @param attacker the combatant performing the attack
+     * @param defender the combatant receiving the attack
+     */
     private void executeCombatTurn(Combatant attacker, Combatant defender) {
         // Checks the Combatant type and tries to evade, damage calculation is inside attacking functions
         if (attacker instanceof Archer) {
@@ -89,13 +103,20 @@ public class CombatSystem {
             } else {
                 defender.defeat();
             }
-        } else {
+        }
+        else {
             if (defender instanceof PlayerCharacter)
                 checkLowHPMusic(defender);
-            attemptChangeToDragonBattleMusic(attacker, defender);
+            else if(defender instanceof Dragon)
+                attemptChangeToDragonBattleMusic(attacker);
         }
     }
 
+    /**
+     * Plays the attack sound effect associated with the attacking combatant.
+     *
+     * @param attacker the combatant initiating the attack
+     */
     private void playAttackSound(Combatant attacker) {
         String attackSound = attacker.getAttackSound();
         if (attackSound != null) {
@@ -103,29 +124,57 @@ public class CombatSystem {
         }
     }
 
+    /**
+     * Triggers a red blink animation on the defender to indicate they received damage.
+     *
+     * @param attacker the combatant who attacked
+     * @param defender the combatant who received the attack
+     */
     private void playRedDamagedBlinkAnimation(Combatant attacker, Combatant defender) {
         if (listener != null)
             if (attacker.getPositionModifier().distanceTo(defender.getPositionModifier()) <= attacker.getRangeModifier())
                 listener.onAction(ScreenAction.RECEIVEDDAMAGE, defender.getPosition().getRow(), defender.getPosition().getCol(), new Color(255, 0, 0, 120));
     }
 
+    /**
+     * Triggers a gray blink animation on the defender to indicate they evaded an attack.
+     *
+     * @param attacker the combatant who attempted the attack
+     * @param defender the combatant who evaded the attack
+     */
     private void playGrayEvadedBlinkAnimation(Combatant attacker, Combatant defender) {
         if (listener != null)
             if (attacker.getPositionModifier().distanceTo(defender.getPositionModifier()) <= attacker.getRangeModifier())
                 listener.onAction(ScreenAction.RECEIVEDDAMAGE, defender.getPosition().getRow(), defender.getPosition().getCol(), new Color(128, 128, 128, 120));
     }
 
+    /**
+     * Checks if the player's health is critically low and triggers low HP music if so.
+     *
+     * @param player the player combatant to check
+     */
     private void checkLowHPMusic(Combatant player) {
         if (player.getHealth() <= 25)
             SoundManager.crossfadeTo("lowHP", true);
     }
 
+    /**
+     * Changes the battle music to a random track if the conditions are met (e.g., enemy defeated).
+     *
+     * @param attacker the player who defeated the enemy
+     * @param defender the enemy that was defeated
+     */
     private void changeBattleMusic(Combatant attacker, Combatant defender) {
         if(attacker instanceof PlayerCharacter && attacker.getHealth() > 25 && !(defender instanceof Dragon))
             SoundManager.playRandomBattleTrack(true);
     }
 
-    private void attemptChangeToDragonBattleMusic(Combatant attacker, Combatant defender) {
+    /**
+     * Switches to dragon battle music if the player is fighting a dragon and has enough health.
+     *
+     * @param attacker the attacking player
+     */
+    private void attemptChangeToDragonBattleMusic(Combatant attacker) {
         if(attacker instanceof PlayerCharacter && attacker.getHealth() > 25)
             SoundManager.crossfadeTo("dragon1", true);
     }

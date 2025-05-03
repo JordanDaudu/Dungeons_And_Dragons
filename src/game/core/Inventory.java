@@ -12,7 +12,7 @@ import java.util.Map;
 public class Inventory {
 
     // Data Members
-    private List<Interactable> items;
+    private final List<Interactable> items;
 
     // Methods
     /**

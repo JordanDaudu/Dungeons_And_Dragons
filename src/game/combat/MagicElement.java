@@ -1,5 +1,12 @@
 package game.combat;
 
+/**
+ * Represents the elemental type used in magic-based combat.
+ * Each element has strengths and weaknesses relative to the others.
+ *
+ * The elemental relationships are:
+ * FIRE > ICE, ICE > LIGHTNING, LIGHTNING > ACID, ACID > FIRE.
+ */
 public enum MagicElement {
     FIRE, ICE, LIGHTNING, ACID;
 

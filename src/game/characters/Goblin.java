@@ -67,6 +67,11 @@ public class Goblin extends Enemy implements PhysicalAttacker, MeleeFighter {
         return agility == that.agility;
     }
 
+    /**
+     * Returns the type(s) of combat roles the Goblin fulfills.
+     *
+     * @return a string listing the Goblin's combat roles
+     */
     @Override
     public String getType() {
         return "PhysicalAttacker, MeleeFighter";
@@ -164,6 +169,12 @@ public class Goblin extends Enemy implements PhysicalAttacker, MeleeFighter {
         return "⟨G⟩";
     }
 
+    /**
+     * Returns an image representing the Goblin for the game UI.
+     * The image is loaded from the resource path /images/goblin.png.
+     *
+     * @return the goblin's image
+     */
     @Override
     public Image getDisplayImage() {
         ImageIcon icon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/goblin.png")));
@@ -180,6 +191,11 @@ public class Goblin extends Enemy implements PhysicalAttacker, MeleeFighter {
         fightClose(target);
     }
 
+    /**
+     * Provides a textual description of the Goblin for the GUI.
+     *
+     * @return the goblin's description
+     */
     @Override
     public String getDescription(){
         return "Fast and evasive, excels in melee with high dodge and swift strikes.";

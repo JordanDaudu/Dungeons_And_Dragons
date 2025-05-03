@@ -144,6 +144,11 @@ public class Dragon extends Enemy implements MagicAttacker, RangedFighter, Melee
         return getElement();
     }
 
+    /**
+     * Returns the range modifier used in combat.
+     *
+     * @return the dragon's range modifier
+     */
     @Override
     public int getRangeModifier() {
         return range;
@@ -240,6 +245,11 @@ public class Dragon extends Enemy implements MagicAttacker, RangedFighter, Melee
         return "⟨D⟩";
     }
 
+    /**
+     * Returns the image used to visually represent the dragon in the GUI.
+     *
+     * @return the Image object of the dragon
+     */
     @Override
     public Image getDisplayImage() {
         ImageIcon icon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/dragon.png")));
@@ -256,6 +266,11 @@ public class Dragon extends Enemy implements MagicAttacker, RangedFighter, Melee
         attack(target);
     }
 
+    /**
+     * Returns a textual description of the dragon's combat abilities.
+     *
+     * @return a description string
+     */
     @Override
     public String getDescription(){
         return "All-around powerhouse, strong in magic, ranged, and melee attacks.";

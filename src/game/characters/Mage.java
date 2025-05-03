@@ -72,6 +72,11 @@ public class Mage extends PlayerCharacter implements MagicAttacker, RangedFighte
         return range == mage.range && element == mage.element;
     }
 
+    /**
+     * Returns the type(s) of combat roles the Mage fulfills.
+     *
+     * @return a string listing the Mage's combat interfaces
+     */
     @Override
     public String getType() {
         return "MagicAttacker, RangedFighter";
@@ -136,11 +141,21 @@ public class Mage extends PlayerCharacter implements MagicAttacker, RangedFighte
         return getElement();
     }
 
+    /**
+     * Returns the name of the sound effect played when the Mage attacks.
+     *
+     * @return the attack sound string identifier
+     */
     @Override
     public String getAttackSound() {
         return "magicSpell";
     }
 
+    /**
+     * Returns the Mage's range modifier, used to determine effective spell casting range.
+     *
+     * @return the range modifier value
+     */
     @Override
     public int getRangeModifier() {
         return range;
@@ -189,6 +204,12 @@ public class Mage extends PlayerCharacter implements MagicAttacker, RangedFighte
         return "⟨MAGE⟩";
     }
 
+    /**
+     * Returns the image representing the Mage on the GUI.
+     * The image is loaded from the resource path /images/mage.png.
+     *
+     * @return the mage's image
+     */
     @Override
     public Image getDisplayImage() {
         ImageIcon icon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/mage.png")));

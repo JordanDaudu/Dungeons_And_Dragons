@@ -12,6 +12,7 @@ import javax.swing.ImageIcon;
  */
 public class Wall extends GameItem {
 
+    // Methods
     /**
      * Constructs a Wall at the specified position with a given description.
      * Walls always block movement.
@@ -62,6 +63,11 @@ public class Wall extends GameItem {
     @Override
     public String getDisplaySymbol() { return "⟨W⟩";}
 
+    /**
+     * Returns the image used to visually represent the wall in the UI.
+     *
+     * @return the wall's image icon
+     */
     @Override
     public Image getDisplayImage() {
         ImageIcon icon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/wall.png")));

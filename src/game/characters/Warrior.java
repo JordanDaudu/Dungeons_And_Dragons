@@ -72,6 +72,11 @@ public class Warrior extends PlayerCharacter implements MeleeFighter, PhysicalAt
         return defence == warrior.defence;
     }
 
+    /**
+     * Gets the type description of the warrior.
+     *
+     * @return a string describing the combat roles of the warrior
+     */
     @Override
     public String getType() {
         return "MagicAttacker, RangedFighter";
@@ -167,6 +172,11 @@ public class Warrior extends PlayerCharacter implements MeleeFighter, PhysicalAt
         return "⟨WARRIOR⟩";
     }
 
+    /**
+     * Retrieves the display image associated with the warrior character.
+     *
+     * @return an Image object representing the warrior
+     */
     @Override
     public Image getDisplayImage() {
         ImageIcon icon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/warrior.png")));
@@ -183,6 +193,11 @@ public class Warrior extends PlayerCharacter implements MeleeFighter, PhysicalAt
         fightClose(target);
     }
 
+    /**
+     * Returns the sound effect to play when the warrior attacks.
+     *
+     * @return the name of the attack sound
+     */
     @Override
     public String getAttackSound() {
         return "swordSwing";

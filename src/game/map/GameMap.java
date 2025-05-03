@@ -26,9 +26,11 @@ public class GameMap {
         if (rows < 10 || cols < 10)
             throw new IllegalArgumentException("Grid size must be at least 10x10");
 
-        this.rows = rows;
-        this.cols = cols;
-        grid.clear(); // clear existing grid if re-initialized
+        synchronized (grid) {
+            this.rows = rows;
+            this.cols = cols;
+            grid.clear(); // clear existing grid if re-initialized
+        }
     }
 
     public static GameMap getInstance() {
@@ -40,15 +42,19 @@ public class GameMap {
     public void addEntity(GameEntity entity) {
         entity.setVisible(false);
         Position pos = entity.getPosition();
-        grid.putIfAbsent(pos, new ArrayList<>());
-        grid.get(pos).add(entity);
+        synchronized (grid) {
+            grid.putIfAbsent(pos, new ArrayList<>());
+            grid.get(pos).add(entity);
+        }
     }
 
     public void removeEntity(GameEntity entity) {
         Position pos = entity.getPosition();
-        List<GameEntity> list = grid.get(pos);
-        if (list != null) {
-            list.remove(entity);
+        synchronized (grid) {
+            List<GameEntity> list = grid.get(pos);
+            if (list != null) {
+                list.remove(entity);
+            }
         }
     }
 
@@ -59,25 +65,31 @@ public class GameMap {
     }
 
     public List<GameEntity> getEntitiesAt(Position pos) {
-        return grid.getOrDefault(pos, new ArrayList<>());
+        synchronized (grid) {
+            return new ArrayList<>(grid.getOrDefault(pos, new ArrayList<>()));
+        }
     }
 
     public GameItem getEntityGameItemAt(Position pos) {
-        List<GameEntity> entities = grid.get(pos);
-        if (entities != null && !entities.isEmpty()) {
-            for (int i = entities.size() - 1; i >= 0; i--) {
-                GameEntity entity = entities.get(i);
-                if (entity instanceof GameItem) {
-                    return (GameItem) entity;
+        synchronized (grid) {
+            List<GameEntity> entities = grid.get(pos);
+            if (entities != null && !entities.isEmpty()) {
+                for (int i = entities.size() - 1; i >= 0; i--) {
+                    GameEntity entity = entities.get(i);
+                    if (entity instanceof GameItem) {
+                        return (GameItem) entity;
+                    }
                 }
             }
+            return null;
         }
-        return null;
     }
 
     public boolean isOccupied(Position pos) {
-        List<GameEntity> entities = grid.get(pos);
-        return entities != null && !entities.isEmpty();
+        synchronized (grid) {
+            List<GameEntity> entities = grid.get(pos);
+            return entities != null && !entities.isEmpty();
+        }
     }
 
     public boolean isGameItemBlocking(Position pos) {
@@ -149,8 +161,10 @@ public class GameMap {
 
     public List<GameEntity> getAllEntities() {
         List<GameEntity> all = new ArrayList<>();
-        for (List<GameEntity> list : grid.values()) {
-            all.addAll(list);
+        synchronized (grid) {
+            for (List<GameEntity> list : grid.values()) {
+                all.addAll(list);
+            }
         }
         return all;
     }
@@ -193,23 +207,25 @@ public class GameMap {
 
     public void updatePlayerView(Position playerPos) {
         // Reset visibility for all entities
-        for (List<GameEntity> entities : grid.values()) {
-            for (GameEntity entity : entities) {
-                entity.setVisible(false);
+        synchronized (grid) {
+            for (List<GameEntity> entities : grid.values()) {
+                for (GameEntity entity : entities) {
+                    entity.setVisible(false);
+                }
             }
-        }
 
-        for (int row = 0; row < rows; row++) {
-            for (int col = 0; col < cols; col++) {
-                Position pos = new Position(row, col);
-                List<GameEntity> entities = grid.get(pos);
+            for (int row = 0; row < rows; row++) {
+                for (int col = 0; col < cols; col++) {
+                    Position pos = new Position(row, col);
+                    List<GameEntity> entities = grid.get(pos);
 
-                // Check visibility range
-                if (playerPos.distanceTo(pos) <= 2) {
-                    // Within view range → reveal
-                    if (entities != null) {
-                        for (GameEntity entity : entities) {
-                            entity.setVisible(true);
+                    // Check visibility range
+                    if (playerPos.distanceTo(pos) <= 2) {
+                        // Within view range → reveal
+                        if (entities != null) {
+                            for (GameEntity entity : entities) {
+                                entity.setVisible(true);
+                            }
                         }
                     }
                 }
@@ -219,10 +235,12 @@ public class GameMap {
 
     public Set<GameEntity> getVisibleEntities() {
         Set<GameEntity> visibleEntities = new HashSet<>();
-        for (List<GameEntity> entities : grid.values()) {
-            for (GameEntity entity : entities) {
-                if (entity.isVisible()) {
-                    visibleEntities.add(entity);
+        synchronized (grid) {
+            for (List<GameEntity> entities : grid.values()) {
+                for (GameEntity entity : entities) {
+                    if (entity.isVisible()) {
+                        visibleEntities.add(entity);
+                    }
                 }
             }
         }

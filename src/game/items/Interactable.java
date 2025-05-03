@@ -22,5 +22,11 @@ public interface Interactable {
      */
     void setPosition(Position newPos);
 
+    /**
+     * Provides a textual description of the interaction, if any.
+     * Useful for displaying contextual information to the player.
+     *
+     * @return a string describing the interaction, or {@code null} if none is provided
+     */
     default String getInteractionDetails() {return null;}
 }

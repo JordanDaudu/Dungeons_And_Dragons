@@ -117,6 +117,12 @@ public class Potion extends GameItem implements Interactable {
         }
     }
 
+    /**
+     * Returns a string describing the interaction effect of this potion,
+     * typically the amount of HP it restores.
+     *
+     * @return a string indicating the healing amount
+     */
     @Override
     public String getInteractionDetails() {
         return getIncreaseAmount() + "HP";
@@ -130,6 +136,11 @@ public class Potion extends GameItem implements Interactable {
     @Override
     public String getDisplaySymbol() { return "⟨H⟩"; }
 
+    /**
+     * Returns the display image used to visually represent this potion in the GUI.
+     *
+     * @return the image of the potion
+     */
     @Override
     public Image getDisplayImage() {
         ImageIcon icon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/life_potion.png")));

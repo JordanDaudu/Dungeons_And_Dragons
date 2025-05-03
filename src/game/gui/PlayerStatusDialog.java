@@ -6,18 +6,33 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
+/**
+ * A modal dialog that displays the current status of a player character,
+ * including name, class type, health bar, power level, and treasure points.
+ *
+ * This dialog is meant to be opened from the main game UI to show a snapshot
+ * of the player's stats in a user-friendly interface.
+ */
 public class PlayerStatusDialog extends JDialog {
 
-    private JPanel mainPanel;
-    private JLabel imageLabel;
-    private JLabel nameLabel;
-    private JLabel typeLabel;
-    private JLabel healthLabel;
-    private JProgressBar healthBar;
-    private JLabel powerLabel;
-    private JLabel treasureLabel;
-    private JButton closeButton;
+    // Data Members
+    private final JPanel mainPanel;
+    private final JLabel imageLabel;
+    private final JLabel nameLabel;
+    private final JLabel typeLabel;
+    private final JLabel healthLabel;
+    private final HealthBarPanel healthBar;
+    private final JLabel powerLabel;
+    private final JLabel treasureLabel;
+    private final JButton closeButton;
 
+    // Methods
+    /**
+     * Constructs a PlayerStatusDialog displaying detailed information about the specified player.
+     *
+     * @param parentFrame the parent JFrame that owns this dialog
+     * @param player the PlayerCharacter whose status should be displayed
+     */
     public PlayerStatusDialog(JFrame parentFrame, PlayerCharacter player) {
         super(parentFrame, "Player Status", true); // modal
 
@@ -60,10 +75,7 @@ public class PlayerStatusDialog extends JDialog {
         mainPanel.add(Box.createVerticalStrut(10));
         mainPanel.add(healthLabel);
 
-        healthBar = new JProgressBar(0, player.getMaxHealth());
-        healthBar.setValue(player.getHealth());
-        healthBar.setStringPainted(true);
-        updateHealthColor(healthBar);
+        healthBar = new HealthBarPanel(player.getHealth(), player.getMaxHealth());
         mainPanel.add(healthBar);
 
         // Power
@@ -86,21 +98,5 @@ public class PlayerStatusDialog extends JDialog {
         add(mainPanel, BorderLayout.CENTER);
         pack();
         setLocationRelativeTo(null); // center on screen
-    }
-
-    private void updateHealthColor(JProgressBar bar) {
-        int health = bar.getValue();
-        int max = bar.getMaximum();
-        float percent = (float) health / max;
-
-        if (percent <= 0.25f) {
-            bar.setForeground(Color.RED);
-        } else if (percent <= 0.49f) {
-            bar.setForeground(Color.YELLOW);
-        } else {
-            bar.setForeground(new Color(0, 128, 0)); // Green
-        }
-
-        bar.repaint(); // Ensure UI updates properly
     }
 }

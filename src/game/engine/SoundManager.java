@@ -17,12 +17,10 @@ public class SoundManager {
     // Data Members
     private static final ReentrantLock musicLock = new ReentrantLock();
     private static Clip currentClip;
-    private static final Map<String, Clip> tracks = new HashMap<>();
-    private static final Map<String, Clip> soundEffects = new HashMap<>();
-    private static final Map<String, String> soundEffectPaths = new HashMap<>();
+    private static final Map<String, Clip> musicTracks = new HashMap<>();
+    private static final Map<String, String> soundEffects = new HashMap<>();
     private static float musicVolume = 0.65f;
-    private static float sfxVolume = 0.85f;
-
+    private static float sfxVolume = 0.65f;
 
     // Methods
     /**
@@ -39,13 +37,16 @@ public class SoundManager {
         loadTrack("gameOver", "sounds/music/game over.wav");
     }
 
+    /**
+     * Loads all predefined sound effects by storing their paths.
+     * This should be called at game startup.
+     */
     public static void loadSoundEffects() {
         loadEffect("criticalHit", "sounds/effects/criticalHit.wav");
         loadEffect("swordSwing", "sounds/effects/swordSwing.wav");
         loadEffect("bowShot", "sounds/effects/bow.wav");
         loadEffect("magicSpell", "sounds/effects/magic_spell.wav");
     }
-
 
     /**
      * Loads a single music track into memory and maps it by name.
@@ -64,7 +65,7 @@ public class SoundManager {
             AudioInputStream audioIn = AudioSystem.getAudioInputStream(resource);
             Clip clip = AudioSystem.getClip();
             clip.open(audioIn);
-            tracks.put(name, clip);
+            musicTracks.put(name, clip);
 
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
             System.err.println("Failed to load sound: " + filePath);
@@ -72,6 +73,12 @@ public class SoundManager {
         }
     }
 
+    /**
+     * Loads a sound effect file path by name into memory.
+     *
+     * @param name  the unique name of the sound effect
+     * @param filePath the relative path to the file
+     */
     public static void loadEffect(String name, String filePath) {
         URL resource = SoundManager.class.getResource("/" + filePath);
         if (resource == null) {
@@ -79,7 +86,7 @@ public class SoundManager {
             return;
         }
         // Store path instead of clip
-        soundEffectPaths.put(name, "/" + filePath);
+        soundEffects.put(name, "/" + filePath);
     }
 
     /**
@@ -92,7 +99,7 @@ public class SoundManager {
         musicLock.lock();
         try {
             stopCurrentMusic();
-            Clip clip = tracks.get(name);
+            Clip clip = musicTracks.get(name);
             if (clip != null) {
                 currentClip = clip;
                 setVolume(currentClip, musicVolume);
@@ -101,17 +108,26 @@ public class SoundManager {
                     clip.loop(Clip.LOOP_CONTINUOUSLY);
                 }
                 clip.start();
-            } else {
+
+                // 🚨 Checking if clip is actually running
+                forceRestartIfNeeded(name);
+            }
+            else {
                 System.err.println("No music track named: " + name);
             }
-        } finally {
+        }
+        finally {
             musicLock.unlock();
         }
     }
 
-
+    /**
+     * Plays a sound effect by name.
+     *
+     * @param name the name of the sound effect
+     */
     public static void playEffect(String name) {
-        String path = soundEffectPaths.get(name);
+        String path = soundEffects.get(name);
         if (path == null) {
             System.err.println("Sound effect not loaded: " + name);
             return;
@@ -135,16 +151,16 @@ public class SoundManager {
         }
     }
 
-
-
     /**
      * Stops any currently playing music track.
      * Resets the track to the beginning.
      */
     public static void stopCurrentMusic() {
-        if (currentClip != null && currentClip.isRunning()) {
-            currentClip.stop();
-            currentClip.setFramePosition(0);
+        if (currentClip != null) {
+            if (currentClip.isRunning()) {
+                currentClip.stop();
+            }
+            currentClip.setFramePosition(0);  // Reset the clip position
         }
     }
 
@@ -163,6 +179,11 @@ public class SoundManager {
         gainControl.setValue(gain);
     }
 
+    /**
+     * Sets the global music volume.
+     *
+     * @param newVolume float between 0.0 and 1.0
+     */
     public static void setMusicVolume(float newVolume) {
         musicVolume = Math.max(0f, Math.min(newVolume, 1f));
         if (currentClip != null) {
@@ -170,14 +191,29 @@ public class SoundManager {
         }
     }
 
+    /**
+     * Sets the global sound effects volume.
+     *
+     * @param newVolume float between 0.0 and 1.0
+     */
     public static void setSFXVolume(float newVolume) {
         sfxVolume = Math.max(0f, Math.min(newVolume, 1f));
     }
 
+    /**
+     * Gets the current music volume.
+     *
+     * @return music volume (0.0 to 1.0)
+     */
     public static float getMusicVolume() {
         return musicVolume;
     }
 
+    /**
+     * Gets the current sound effects volume.
+     *
+     * @return sound effects volume (0.0 to 1.0)
+     */
     public static float getSFXVolume() {
         return sfxVolume;
     }
@@ -190,7 +226,7 @@ public class SoundManager {
      */
     public static void playRandomBattleTrack(boolean loop) {
         // Filter for battle tracks
-        var battleTracks = tracks.keySet().stream()
+        var battleTracks = musicTracks.keySet().stream()
                 .filter(name -> name.startsWith("battle"))
                 .toList();
 
@@ -216,11 +252,23 @@ public class SoundManager {
     public static void crossfadeTo(String name, boolean loop) {
         musicLock.lock();
         try {
-            Clip newClip = tracks.get(name);
-            if (newClip == null || newClip == currentClip) return;
+            System.out.println("Attempting to crossfade to track: " + name);
+
+            Clip newClip = musicTracks.get(name);
+            if (newClip == null) {
+                System.err.println("Error: Requested track '" + name + "' not found.");
+                return;
+            }
+
+            if (newClip == currentClip) {
+                System.out.println("Track '" + name + "' is already playing. No transition needed.");
+                return;
+            }
 
             final Clip oldClip = currentClip;
             currentClip = newClip;
+
+            System.out.println("Transitioning from '" + (oldClip != null ? getTrackName(oldClip) : "None") + "' to '" + name + "'");
 
             setVolume(newClip, 0f);
             newClip.setFramePosition(0);
@@ -246,18 +294,53 @@ public class SoundManager {
                 step[0]++;
                 if (step[0] > steps) {
                     if (oldClip != null) {
+                        System.out.println("Stopping old track: " + getTrackName(oldClip));
                         oldClip.stop();
                         oldClip.setFramePosition(0);
                     }
+                    System.out.println("Crossfade completed. '" + name + "' is now active.");
+                    System.out.println("Current track playing: " + (currentClip != null && currentClip.isRunning() ? name : "NOT PLAYING"));
+
+                    // 🚨 Checking if clip is actually running
+                    forceRestartIfNeeded(name);
+
                     timer.stop();
                 }
             });
 
+            System.out.println("Crossfade initiated for track: " + name);
             timer.start();
         } finally {
             musicLock.unlock();
         }
     }
 
+    /**
+     * Retrieves the name (key) of a loaded music track based on its {@link Clip} reference.
+     *
+     * @param clip the clip to identify
+     * @return the name of the track, or "Unknown Track" if not found
+     */
+    private static String getTrackName(Clip clip) {
+        return musicTracks.entrySet().stream()
+                .filter(entry -> entry.getValue().equals(clip))
+                .map(Map.Entry::getKey)
+                .findFirst()
+                .orElse("Unknown Track");
+    }
 
+    /**
+     * Ensures that the currently set music track is actually playing.
+     * If it is not, attempts to restart it from the beginning.
+     *
+     * @param name the name of the track expected to be playing
+     */
+    private static void forceRestartIfNeeded(String name) {
+        // 🚨 Force restart if the clip isn't running
+        if (!currentClip.isRunning()) {
+            System.out.println("WARNING: '" + name + "' was set but isn't playing! Restarting manually...");
+            currentClip.setFramePosition(0);
+            currentClip.start();
+        }
+    }
 }

@@ -108,13 +108,28 @@ public interface Combatant extends GameEntity {
         return null; // Default: not magical
     }
 
+    /**
+     * Returns the name of the sound to play when this combatant attacks.
+     *
+     * @return the attack sound name, or null if no sound is set
+     */
     default String getAttackSound() {
         return null;
     }
 
+    /**
+     * Returns a value that modifies this combatant's default attack range.
+     * Used to extend or reduce attack distance.
+     *
+     * @return the range modifier (default is 1)
+     */
     default int getRangeModifier() {
         return 1; // default: no modification
     }
 
+    /**
+     * Returns a modified position for this combatant
+     * @return a new Position, or null if unchanged
+     */
     default Position getPositionModifier() {return null;}
 }

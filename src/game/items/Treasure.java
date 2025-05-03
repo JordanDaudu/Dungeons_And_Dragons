@@ -119,6 +119,12 @@ public class Treasure extends GameItem implements Interactable {
         }
     }
 
+    /**
+     * Returns a string describing the interaction effect of the treasure,
+     * typically indicating the amount of treasure points it provides.
+     *
+     * @return a string indicating the treasure value
+     */
     @Override
     public String getInteractionDetails() {
         return getValue() + " Points";
@@ -132,6 +138,11 @@ public class Treasure extends GameItem implements Interactable {
     @Override
     public String getDisplaySymbol() { return "⟨T⟩"; }
 
+    /**
+     * Returns the display image used to visually represent this treasure in the GUI.
+     *
+     * @return the image of the treasure
+     */
     @Override
     public Image getDisplayImage() {
         ImageIcon icon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/treasure.png")));

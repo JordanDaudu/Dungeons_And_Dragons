@@ -77,6 +77,11 @@ public class Archer extends PlayerCharacter implements PhysicalAttacker, RangedF
         return Double.compare(archer.accuracy, accuracy) == 0 && range == archer.range;
     }
 
+    /**
+     * Returns the combat type(s) of the character.
+     *
+     * @return a string indicating combat roles
+     */
     @Override
     public String getType() {
         return "PhysicalAttacker, RangedFighter";
@@ -168,11 +173,22 @@ public class Archer extends PlayerCharacter implements PhysicalAttacker, RangedF
         return accuracy;
     }
 
+    /**
+     * Returns the name of the sound effect used when the Archer attacks.
+     *
+     * @return the attack sound file name
+     */
     @Override
     public String getAttackSound() {
         return "bowShot";
     }
 
+    /**
+     * Returns a modifier related to the Archer's attack range.
+     * May be used to alter game balance dynamically.
+     *
+     * @return the range modifier
+     */
     @Override
     public int getRangeModifier() {
         return range;
@@ -188,6 +204,11 @@ public class Archer extends PlayerCharacter implements PhysicalAttacker, RangedF
         return "⟨ARCHER⟩";
     }
 
+    /**
+     * Loads and returns the image used to display the Archer in the GUI.
+     *
+     * @return an Image object of the Archer
+     */
     @Override
     public Image getDisplayImage() {
         ImageIcon icon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/archer.png")));
