@@ -137,9 +137,11 @@ public class GameController implements ScreenListener {
                 System.out.println("PLAYER IS TRYING TO MOVE");
                 if(data[0] instanceof Position position && map.isValidPosition(position)) {
                     Position newPosition = attemptMoveTo(position);
-                    updateAfterMovingPlayer(newPosition, map);
-                    this.onAction(ScreenAction.END_TURN, (Object) null);
-                    return true;
+                    if(newPosition != null) {
+                        updateAfterMovingPlayer(newPosition, map);
+                        this.onAction(ScreenAction.END_TURN, (Object) null);
+                        return true;
+                    }
                 }
             }
             case ScreenAction.ATTACK -> {
