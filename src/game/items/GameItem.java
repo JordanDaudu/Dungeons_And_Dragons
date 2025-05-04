@@ -13,7 +13,7 @@ public abstract class GameItem implements GameEntity {
     private Position position;
     private boolean blocksMovement;
     private String description;
-    private boolean visible; // Added myself
+    private boolean visible;
 
     // Methods
     /**
@@ -28,18 +28,6 @@ public abstract class GameItem implements GameEntity {
         this.position = new Position(position);
         this.blocksMovement = blocksMovement;
         this.description = description;
-    }
-
-    /**
-     * Copy constructor for GameItem.
-     *
-     * @param other the GameItem to copy.
-     */
-    public GameItem(GameItem other) {
-        this.position = new Position(other.position); // deep copy
-        this.blocksMovement = other.blocksMovement;
-        this.description = other.description;
-        this.visible = other.visible;
     }
 
     /**

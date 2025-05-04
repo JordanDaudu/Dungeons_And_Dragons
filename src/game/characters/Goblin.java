@@ -121,7 +121,7 @@ public class Goblin extends Enemy implements PhysicalAttacker, MeleeFighter {
      */
     @Override
     public int calculateDamage(Combatant target) {
-        // Enemies do not have a crit multiplier therefore
+        // Enemies do not have a critical multiplier therefore
         return getPower();
     }
 

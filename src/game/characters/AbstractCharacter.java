@@ -83,6 +83,10 @@ public abstract class AbstractCharacter implements Combatant, GameEntity {
         return health;
     }
 
+    /**
+     * Gets the character's maximum health.
+     * @return max health is set to 100HP
+     */
     public int getMaxHealth() {
         return 100;
     }

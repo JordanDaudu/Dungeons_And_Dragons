@@ -13,6 +13,7 @@ import java.util.List;
  * Manages the game loop, player actions, world setup, and entity interactions.
  */
 public class GameWorld {
+
     // Data Members
     private final List<PlayerCharacter> players;
     private final List<Enemy> enemies;
@@ -127,7 +128,7 @@ public class GameWorld {
      * @param player the player to remove from the map
      */
     public void removePlayerFromMap(PlayerCharacter player) {
-        map.removeEntity(player);       // Remove from map
+        map.removeEntity(player);
     }
 
     /**
@@ -136,8 +137,8 @@ public class GameWorld {
      * @param player the player character to remove
      */
     public void removePlayer(PlayerCharacter player) {
-        players.remove(player);         // Remove from player list
-        map.removeEntity(player);       // Remove from map
+        players.remove(player);
+        map.removeEntity(player);
     }
 
     /**
@@ -146,8 +147,8 @@ public class GameWorld {
      * @param enemy the enemy to remove
      */
     public void removeEnemy(Enemy enemy) {
-        enemies.remove(enemy);          // Remove from enemy list
-        map.removeEntity(enemy);        // Remove from map
+        enemies.remove(enemy);
+        map.removeEntity(enemy);
     }
 
     /**
@@ -156,8 +157,8 @@ public class GameWorld {
      * @param item the game item to remove
      */
     public void removeItem(GameItem item) {
-        items.remove(item);             // Remove from item list
-        map.removeEntity(item);         // Remove from map
+        items.remove(item);
+        map.removeEntity(item);
     }
 
     /**

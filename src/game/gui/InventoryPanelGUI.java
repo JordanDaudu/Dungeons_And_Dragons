@@ -97,7 +97,7 @@ public class InventoryPanelGUI extends JDialog {
 
                     for (Interactable item : player.getInventory().getItems()) {
                         if (item.getClass().getSimpleName().equals(itemName)) {
-                            interactionDetails = item.getInteractionDetails(); // no cast needed
+                            interactionDetails = item.getInteractionDetails();
                             break;
                         }
                     }
@@ -120,7 +120,7 @@ public class InventoryPanelGUI extends JDialog {
                         dispose();
 
                         controllerListener.onAction(ScreenAction.END_TURN, (Object) null);
-                        refreshInventory(); // Refresh after use
+                        refreshInventory();
                         revalidate();
                         repaint();
                     }
@@ -134,16 +134,25 @@ public class InventoryPanelGUI extends JDialog {
         }
     }
 
+    /**
+     * Creates a JButton representing an item in the player's inventory.
+     * The button displays the item's name and count, and includes an icon if available.
+     * It is aligned properly for display in the inventory panel.
+     *
+     * @param entry     the map entry containing the item name and its count
+     * @param itemName  the name of the item (typically the class simple name)
+     * @return a JButton configured for the specified item
+     */
     private JButton getButton(Map.Entry<String, Integer> entry, String itemName) {
         int count = entry.getValue();
 
         String buttonText = "Use " + itemName + (count > 1 ? " x" + count : "");
-        ImageIcon icon = itemIcons.get(itemName); // Getting the specific Image of each item
+        ImageIcon icon = itemIcons.get(itemName);
 
         // Button to use specific interactable
         JButton useButton = new JButton(buttonText, icon);
         useButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        useButton.setHorizontalAlignment(SwingConstants.LEFT); // Aligns text left
+        useButton.setHorizontalAlignment(SwingConstants.LEFT);
         return useButton;
     }
 

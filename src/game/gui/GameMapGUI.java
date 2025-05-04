@@ -534,20 +534,30 @@ public class GameMapGUI extends JFrame implements ScreenListener{
             add(item);
         }
 
+        /**
+         * Adds a visual health bar for a player character to the popup menu.
+         *
+         * @param player the player character whose health will be displayed
+         */
         private void addPlayerHealthBar(PlayerCharacter player) {
             JPanel healthPanel = new JPanel();
             healthPanel.setLayout(new BoxLayout(healthPanel, BoxLayout.X_AXIS));
             healthPanel.add(new JLabel("Health:"));
             healthPanel.add(new HealthBarPanelGUI(player.getHealth(), player.getMaxHealth()));
-            add(healthPanel); // Add to menu
+            add(healthPanel);
         }
 
+        /**
+         * Adds a visual health bar for an enemy to the popup menu.
+         *
+         * @param enemy the enemy whose health will be displayed
+         */
         private void addEnemyHealthBar(Enemy enemy) {
             JPanel healthPanel = new JPanel();
             healthPanel.setLayout(new BoxLayout(healthPanel, BoxLayout.X_AXIS));
             healthPanel.add(new JLabel("Health:"));
             healthPanel.add(new HealthBarPanelGUI(enemy.getHealth(), enemy.getMaxHealth()));
-            add(healthPanel); // Add to menu
+            add(healthPanel);
         }
     }
 }

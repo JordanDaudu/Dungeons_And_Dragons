@@ -7,9 +7,19 @@ import game.items.*;
 
 import java.util.*;
 
+/**
+ * Singleton class that represents the 2D grid-based game map.
+ * It manages the placement, removal, and visibility of all GameEntity objects,
+ * including characters, enemies, and items.
+ *
+ * It also provides helper methods to:
+ * - Populate the map with random entities.
+ * - Check for collisions and entity presence.
+ * - Update visibility range based on player position.
+ *
+ * Only one instance of GameMap exists during runtime.
+ */
 public class GameMap {
-
-    // Important! GameMap is a singleton (One object exists only)
 
     // Data Members
     private final Map<Position, List<GameEntity>> grid;
@@ -18,10 +28,22 @@ public class GameMap {
     private static GameMap instance = null;
 
     // Methods
+    /**
+     * Private constructor to enforce singleton pattern.
+     * Initializes the grid as an empty HashMap.
+     */
     private GameMap() {
         grid = new HashMap<>();
     }
 
+    /**
+     * Initializes the grid dimensions and clears any existing data.
+     * Must be called before using the map.
+     *
+     * @param rows Number of rows (minimum 10)
+     * @param cols Number of columns (minimum 10)
+     * @throws IllegalArgumentException if either dimension is less than 10
+     */
     public void init(int rows, int cols) {
         if (rows < 10 || cols < 10)
             throw new IllegalArgumentException("Grid size must be at least 10x10");
@@ -33,12 +55,24 @@ public class GameMap {
         }
     }
 
+    /**
+     * Returns the singleton instance of the GameMap.
+     * Creates it if it does not already exist.
+     *
+     * @return the single GameMap instance
+     */
     public static GameMap getInstance() {
         if(instance == null)
             instance = new GameMap();
         return instance;
     }
 
+    /**
+     * Adds a GameEntity to the map at its position.
+     * Marks the entity as not visible by default.
+     *
+     * @param entity the entity to add
+     */
     public void addEntity(GameEntity entity) {
         entity.setVisible(false);
         Position pos = entity.getPosition();
@@ -48,6 +82,11 @@ public class GameMap {
         }
     }
 
+    /**
+     * Removes a GameEntity from its position on the map.
+     *
+     * @param entity the entity to remove
+     */
     public void removeEntity(GameEntity entity) {
         Position pos = entity.getPosition();
         synchronized (grid) {
@@ -58,18 +97,36 @@ public class GameMap {
         }
     }
 
+    /**
+     * Checks if a given position is within the grid bounds.
+     *
+     * @param pos the position to validate
+     * @return true if the position is within the grid, false otherwise
+     */
     public boolean isValidPosition(Position pos) {
         int row = pos.getRow();
         int col = pos.getCol();
         return row >= 0 && row < rows && col >= 0 && col < cols;
     }
 
+    /**
+     * Retrieves a copy of all entities at the given position.
+     *
+     * @param pos the position to query
+     * @return a list of GameEntities at the position (possibly empty)
+     */
     public List<GameEntity> getEntitiesAt(Position pos) {
         synchronized (grid) {
             return new ArrayList<>(grid.getOrDefault(pos, new ArrayList<>()));
         }
     }
 
+    /**
+     * Retrieves the topmost GameItem (if any) from a given position.
+     *
+     * @param pos the position to check
+     * @return a GameItem if found, otherwise null
+     */
     public GameItem getEntityGameItemAt(Position pos) {
         synchronized (grid) {
             List<GameEntity> entities = grid.get(pos);
@@ -85,6 +142,12 @@ public class GameMap {
         }
     }
 
+    /**
+     * Checks if any entity is present at the given position.
+     *
+     * @param pos the position to check
+     * @return true if occupied, false if empty
+     */
     public boolean isOccupied(Position pos) {
         synchronized (grid) {
             List<GameEntity> entities = grid.get(pos);
@@ -102,6 +165,12 @@ public class GameMap {
         return false;
     }
 
+    /**
+     * Checks if an enemy is present at the given position.
+     *
+     * @param pos the position to check
+     * @return true if an enemy is present, false otherwise
+     */
     public boolean isEnemyBlocking(Position pos) {
         List<GameEntity> entities = getEntitiesAt(pos);
         if (entities == null)
@@ -112,39 +181,50 @@ public class GameMap {
         return false;
     }
 
+    /**
+     * Returns the number of rows in the map.
+     *
+     * @return the number of rows
+     */
     public int getRows() {
         return rows;
     }
 
+    /**
+     * Returns the number of columns in the map.
+     *
+     * @return the number of columns
+     */
     public int getCols() {
         return cols;
     }
 
-    public PlayerCharacter createCharacter(String name, String choice) {
+    public void createCharacter(String name, String choice) {
         PlayerCharacter player;
         switch (choice) {
             case "Warrior" -> {
                 player = new Warrior(name);
                 placePlayerRandomly(player);
-                return player;
             }
             case "Archer" -> {
                 player = new Archer(name);
                 placePlayerRandomly(player);
-                return player;
             }
             case "Mage" -> {
                 player = new Mage(name);
                 placePlayerRandomly(player);
-                return player;
             }
             default -> {
                 System.err.println("Choice for player isn't available!");
-                return null;
             }
         }
     }
 
+    /**
+     * Places a PlayerCharacter at a random unoccupied position.
+     *
+     * @param player the player to place
+     */
     public void placePlayerRandomly(PlayerCharacter player) {
         Position pos;
         do {
@@ -159,6 +239,11 @@ public class GameMap {
         addEntity(player);
     }
 
+    /**
+     * Returns all GameEntities on the map in a flat list.
+     *
+     * @return a list of all entities on the grid
+     */
     public List<GameEntity> getAllEntities() {
         List<GameEntity> all = new ArrayList<>();
         synchronized (grid) {
@@ -169,17 +254,18 @@ public class GameMap {
         return all;
     }
 
+    /**
+     * Populates the grid randomly with enemies, items, and walls.
+     * Uses fixed probabilities for each type.
+     */
     public void populateRandomEntities() {
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < cols; col++) {
                 double roll = RandomUtil.getRandomDouble(); // Between 0.0 and 1.0
                 Position pos = new Position(row, col);
 
-                // Skip if something is already placed there
-                if (isOccupied(pos)) {
+                if (isOccupied(pos))
                     continue;
-                }
-
                 if (roll < 0.10) {
                     // 10% → Wall
                     addEntity(new Wall(pos, "Wall"));
@@ -205,6 +291,12 @@ public class GameMap {
         }
     }
 
+    /**
+     * Updates visibility of entities based on the player's current position.
+     * Entities within 2 tiles of the player are set to visible.
+     *
+     * @param playerPos the player's current position
+     */
     public void updatePlayerView(Position playerPos) {
         // Reset visibility for all entities
         synchronized (grid) {
@@ -233,6 +325,11 @@ public class GameMap {
         }
     }
 
+    /**
+     * Returns a set of all currently visible entities on the map.
+     *
+     * @return a set of visible entities
+     */
     public Set<GameEntity> getVisibleEntities() {
         Set<GameEntity> visibleEntities = new HashSet<>();
         synchronized (grid) {
@@ -247,7 +344,13 @@ public class GameMap {
         return visibleEntities;
     }
 
-
+    // For debugging only
+    /**
+     * Prints the player's view of the map.
+     * Visible entities are shown with their symbols; others as ⟨#⟩.
+     *
+     * @param playerPos the player's current position
+     */
     public void printPlayerView(Position playerPos) {
         // Reset visibility for all entities
         for (List<GameEntity> entities : grid.values()) {
@@ -286,6 +389,11 @@ public class GameMap {
         }
     }
 
+    // For debugging only
+    /**
+     * Prints all entities grouped by their tile coordinates.
+     * Helpful for debugging what's on each tile.
+     */
     public void printEntitiesPerTile() {
         System.out.println("\n--- Entities Per Tile ---");
         for (int row = 0; row < rows; row++) {

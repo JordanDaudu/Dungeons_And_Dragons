@@ -15,14 +15,14 @@ import java.util.Objects;
  */
 public class StartingScreenGUI extends JDialog {
 
-    // === Data Members ===
-    private int selectedPlayers = -1; // Default: -1 means cancelled or window closed
-    private int selectedRows = 10;    // Default grid rows
-    private int selectedCols = 10;    // Default grid columns
-    private ImageIcon backgroundImage; // Background image to be resized
-    private final JLabel backgroundLabel; // Label to hold and display the background image
+    // Data Members
+    private int selectedPlayers = -1;
+    private int selectedRows = 10;
+    private int selectedCols = 10;
+    private ImageIcon backgroundImage;
+    private final JLabel backgroundLabel;
 
-    // === Constructor ===
+    // Methods
     /**
      * Private constructor for the StartingScreenGUI dialog.
      * Initializes UI components including the background image,
@@ -119,7 +119,6 @@ public class StartingScreenGUI extends JDialog {
         contentPanel.add(Box.createVerticalStrut(10)); // Added vertical space
 
 
-
         // === Confirm Button ===
         JButton confirmButton = new JButton("Start Game");
         confirmButton.setFont(new Font("Arial", Font.BOLD, 16));
@@ -136,7 +135,6 @@ public class StartingScreenGUI extends JDialog {
         backgroundLabel.add(contentPanel);
     }
 
-    // === Public Interface ===
     /**
      * Displays the dialog and blocks until the user makes a selection or closes the window.
      *
@@ -166,7 +164,6 @@ public class StartingScreenGUI extends JDialog {
         return selectedCols;
     }
 
-    // === Image Handling ===
     /**
      * Rescales and updates the background image to fit the current size of the dialog.
      * Reloads from the original image each time to avoid progressive quality loss.
@@ -184,7 +181,6 @@ public class StartingScreenGUI extends JDialog {
         backgroundLabel.setIcon(backgroundImage);
     }
 
-    // === Test Harness ===
     /**
      * Entry point for testing the dialog independently.
      * Prints the selected number of players or a cancellation message to the console.
