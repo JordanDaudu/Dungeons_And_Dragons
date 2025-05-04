@@ -107,7 +107,7 @@ public class GameController implements ScreenListener {
     public Position attemptMoveTo(Position newPosition) {
         System.out.println("Entered function");
         if(gameWorld.getCurrentPlayer().getPosition().distanceTo(newPosition) <= 1 && map.isValidPosition(newPosition)) {
-            if (map.isGameItemBlocking(newPosition) || map.isEnemyBlocking(newPosition))
+            if (map.isGameItemBlocking(newPosition) || map.isEnemyBlocking(newPosition) || map.isPlayerBlocking(newPosition))
                 return null;
             if((gameWorld.getCurrentPlayer().getPosition().getRow() + 1) == newPosition.getRow())
                 return gameWorld.getCurrentPlayer().moveDown();

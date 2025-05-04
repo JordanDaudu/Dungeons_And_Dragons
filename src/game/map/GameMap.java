@@ -165,6 +165,16 @@ public class GameMap {
         return false;
     }
 
+    public boolean isPlayerBlocking(Position pos) {
+        List<GameEntity> entities = getEntitiesAt(pos);
+        if (entities == null)
+            return false;
+        for (GameEntity entity : entities)
+            if (entity instanceof PlayerCharacter)
+                return true;
+        return false;
+    }
+
     /**
      * Checks if an enemy is present at the given position.
      *
