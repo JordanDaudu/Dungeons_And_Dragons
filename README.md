@@ -82,7 +82,7 @@ A visual tour of the game features and interface:
 
 <img src="Photos/Main photo for ReadMe/Starting_Screen.png" alt="Starting Screen" width="720">
 
-> Select the number of players and the grid size to begin your adventure.
+> Select the number of players (1–4) and the grid size to begin your adventure.
 
 **Character Creation**
 
@@ -94,8 +94,18 @@ A visual tour of the game features and interface:
 
 ### 🎒 Exploring the World
 
+**Single-Player Movement Demo**  
+<img src="Photos\Main photo for ReadMe\1Player_Movement.gif" alt="Single Player Movement" width="768">
+
+> Explore the map as a solo adventurer.
+
+**Two-Player Movement Demo**  
+<img src="Photos\Main photo for ReadMe\2Player_Movement.gif" alt="Two Player Movement" width="768">
+
+> Two players navigating the grid simultaneously. The game supports 1–4 players in total.
+
 **Picking Up Items**  
-<img src="Photos/GIFs/pickup_items.gif" alt="Picking Up Items" width="720">
+<img src="Photos\Main photo for ReadMe\Picking_Up_Items.gif" alt="Picking Up Items" width="720">
 
 > Collect potions, treasure, and useful items scattered across the map.
 
