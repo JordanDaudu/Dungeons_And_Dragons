@@ -26,6 +26,7 @@ src/
     ├── combat/          # Combat logic and attacker interfaces
     ├── core/            # Game entity base classes and inventory system
     ├── engine/          # Game engine and utilities
+    ├── gui/             # Graphical user interface components (Swing windows, screens, etc.)
     ├── items/           # In-game items (potions, treasure, etc.)
     ├── map/             # Map and position logic
     └── resources/       # Sound, images, config files
@@ -46,21 +47,35 @@ If not set correctly, resources like sound files may fail to load at runtime.
 
 ### 💡 IntelliJ IDEA
 
-1. In the **Project** view, right-click on the `resources` folder.
-2. Select **Mark Directory as** → **Resources Root**.
+There are **two ways** to mark the `resources` folder correctly:
 
-✅ This tells IntelliJ to include files from `resources` in your build path and allows `getClass().getResource(...)` to find them.
+#### ✅ Option 1: *Using Project View*
+1. 🖱️ In the **Project** tool window, right-click the `resources` folder.
+2. 📁 Choose **Mark Directory as** → **Resources Root**.
+
+⚡ This method is quick and convenient.
+
+---
+
+#### ✅ Option 2: *Using Project Structure*
+1. ⚙️ Go to **File** → **Project Structure** (or press `Ctrl+Alt+Shift+S`).
+2. 🧩 In the left pane, select **Modules**.
+3. 📂 Under the **Sources** tab, locate and **click the `resources` folder** in the directory tree.
+4. 🏷️ At the top of the window, click the **"Resources"** button in the **Mark as** section.
+5. 💾 Click **Apply**, then **OK**.
+
+✅ This tells IntelliJ to treat the `resources` folder as a classpath root for loading files like sound effects and images.
 
 ---
 
 ### 💡 Eclipse
 
-1. Right-click your project and choose **Properties**.
-2. Go to **Java Build Path** → **Source** tab.
-3. Click **Add Folder**, then check the `resources` folder.
-4. Click **OK** and **Apply and Close**.
+1. 🖱️ Right-click your project and choose **Properties**.
+2. 🧭 Go to **Java Build Path** → **Source** tab.
+3. ➕ Click **Add Folder**, then check the `resources` folder.
+4. ✅ Click **OK** and **Apply and Close**.
 
-✅ This adds the `resources` folder to your classpath.
+🗂️ This adds the `resources` folder to your classpath.
 
 ---
 
