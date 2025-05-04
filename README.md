@@ -99,10 +99,10 @@ A visual tour of the game features and interface:
 
 > Explore the map as a solo adventurer.
 
-**Two-Player Movement Demo**  
-<img src="Photos\Main photo for ReadMe\2Player_Movement.gif" alt="Two Player Movement" width="768">
+**Multiplayer Movement Demo**  
+<img src="Photos\Main photo for ReadMe\multiplayer.gif" alt="Multiplayer Movement" width="768">
 
-> Two players navigating the grid simultaneously. The game supports 1–4 players in total.
+> Multiple players navigating the grid. The game supports 1–4 player gameplay.
 
 **Picking Up Items**  
 <img src="Photos\Main photo for ReadMe\Picking_Up_Items.gif" alt="Picking Up Items" width="720">
