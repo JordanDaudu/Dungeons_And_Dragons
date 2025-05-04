@@ -19,8 +19,8 @@ public class SoundManager {
     private static Clip currentClip;
     private static final Map<String, Clip> musicTracks = new HashMap<>();
     private static final Map<String, String> soundEffects = new HashMap<>();
-    private static float musicVolume = 0.65f;
-    private static float sfxVolume = 0.65f;
+    private static float musicVolume = 0.5f;
+    private static float sfxVolume = 0.5f;
 
     // Methods
     /**

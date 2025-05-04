@@ -42,6 +42,9 @@ public class StartingScreenGUI extends JDialog {
         backgroundLabel.setLayout(new GridBagLayout()); // Allow centered overlay panel
         setContentPane(backgroundLabel);
 
+        // Force initial resize for correct scaling
+        SwingUtilities.invokeLater(this::resizeBackgroundImage);
+
         // Handle window closing: exit app completely if user closes this dialog
         addWindowListener(new WindowAdapter() {
             @Override

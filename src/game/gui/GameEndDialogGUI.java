@@ -12,7 +12,7 @@ import java.util.Objects;
 public abstract class GameEndDialogGUI extends JDialog {
 
     private JLabel titleLabel;
-    private JTextArea summaryTextArea;
+    private JPanel summaryScorePanel;
     private JScrollPane summaryScrollPane;
     private JButton exitButton;
     private final JPanel contentPanel;
@@ -53,35 +53,35 @@ public abstract class GameEndDialogGUI extends JDialog {
     private void setupSummaryArea(List<PlayerCharacter> players) {
         players.sort(Comparator.comparingInt(PlayerCharacter::getTreasurePoints).reversed());
 
-        JPanel scorePanel = new JPanel();
-        scorePanel.setOpaque(false);
-        scorePanel.setLayout(new GridLayout(players.size() + 1, 1, 10, 5));
-        scorePanel.setBorder(BorderFactory.createTitledBorder(
+        summaryScorePanel = new JPanel();
+        summaryScorePanel.setOpaque(false);
+        summaryScorePanel.setLayout(new GridLayout(players.size() + 1, 1, 10, 5));
+        summaryScorePanel.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createLineBorder(Color.WHITE, 2),
                 "Final Scores", 0, 0, new Font("Arial", Font.BOLD, 20), Color.WHITE));
-        scorePanel.setBackground(new Color(0, 0, 0, 150));
-        scorePanel.setPreferredSize(new Dimension(350, players.size() * 40 + 60));
+        summaryScorePanel.setBackground(new Color(0, 0, 0, 150));
+        summaryScorePanel.setPreferredSize(new Dimension(350, players.size() * 40 + 60));
 
         int rank = 1;
         for (PlayerCharacter p : players) {
             JLabel label = new JLabel(String.format("%d. %-12s - %3d pts", rank++, p.getName(), p.getTreasurePoints()), SwingConstants.CENTER);
             label.setFont(new Font("Monospaced", Font.BOLD, 18));
             label.setForeground(Color.WHITE);
-            scorePanel.add(label);
+            summaryScorePanel.add(label);
         }
 
         JPanel wrapperPanel = new JPanel(new GridBagLayout());
         wrapperPanel.setOpaque(false);
-        wrapperPanel.add(scorePanel);
+        wrapperPanel.add(summaryScorePanel);
 
         // Making it scrollable
-        JScrollPane scrollPane = new JScrollPane(wrapperPanel);
-        scrollPane.setOpaque(false);
-        scrollPane.getViewport().setOpaque(false);
-        scrollPane.setBorder(BorderFactory.createEmptyBorder());
-        scrollPane.setPreferredSize(new Dimension(400, 250)); // Adjust as needed
+        summaryScrollPane = new JScrollPane(wrapperPanel);
+        summaryScrollPane.setOpaque(false);
+        summaryScrollPane.getViewport().setOpaque(false);
+        summaryScrollPane.setBorder(BorderFactory.createEmptyBorder());
+        summaryScrollPane.setPreferredSize(new Dimension(400, 250)); // Adjust as needed
 
-        contentPanel.add(scrollPane, BorderLayout.CENTER);
+        contentPanel.add(summaryScrollPane, BorderLayout.CENTER);
 
     }
 

@@ -13,7 +13,7 @@ public class CongratulationsGUI extends GameEndDialogGUI {
 
     @Override
     protected String getDialogTitle() {
-        return "★ CONGRATULATIONS ★\n★ YOU WON ★"; // Title
+        return "<html>★ CONGRATULATIONS ★<br>★ YOU WON ★</html>"; // Title
     }
 
     @Override
