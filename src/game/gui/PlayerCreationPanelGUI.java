@@ -1,7 +1,7 @@
 package game.gui;
 
-import game.engine.ScreenAction;
-import game.engine.ScreenListener;
+import game.core.ScreenAction;
+import game.core.ScreenListener;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,7 +18,7 @@ import java.util.Objects;
  *
  * Displays itself in a modal dialog and exits the game if closed without starting.
  */
-public class PlayerCreationPanel extends JPanel {
+public class PlayerCreationPanelGUI extends JPanel {
 
     // Data Members
     private final JDialog dialog;
@@ -40,7 +40,7 @@ public class PlayerCreationPanel extends JPanel {
      *
      * @param listener the ScreenListener used to trigger game start events
      */
-    public PlayerCreationPanel(ScreenListener listener) {
+    public PlayerCreationPanelGUI(ScreenListener listener) {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setAlignmentX(Component.CENTER_ALIGNMENT);
         playerName = null;
@@ -114,7 +114,7 @@ public class PlayerCreationPanel extends JPanel {
                     listener.onAction(ScreenAction.START_GAME, playerName, selectedClass);
                     dialog.setVisible(false);
                 } else {
-                    JOptionPane.showMessageDialog(PlayerCreationPanel.this, "Please enter your name and select a class.", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(PlayerCreationPanelGUI.this, "Please enter your name and select a class.", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });

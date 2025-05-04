@@ -3,10 +3,10 @@ package game.gui;
 import javax.swing.*;
 import java.awt.*;
 
-public class HealthBarPanel extends JPanel {
+public class HealthBarPanelGUI extends JPanel {
     private final JProgressBar healthBar;
 
-    public HealthBarPanel(int currentHealth, int maxHealth) {
+    public HealthBarPanelGUI(int currentHealth, int maxHealth) {
         try {
             UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
         } catch (Exception e) {

@@ -1,6 +1,6 @@
 package game.gui;
 
-import game.core.GameSettings;
+import game.engine.GameSettings;
 
 import javax.swing.*;
 import java.awt.*;

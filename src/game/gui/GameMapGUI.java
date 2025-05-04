@@ -4,8 +4,8 @@ import game.characters.*;
 import game.combat.MagicAttacker;
 import game.core.GameEntity;
 import game.engine.GameController;
-import game.engine.ScreenAction;
-import game.engine.ScreenListener;
+import game.core.ScreenAction;
+import game.core.ScreenListener;
 import game.items.GameItem;
 import game.items.Interactable;
 import game.map.GameMap;
@@ -42,7 +42,7 @@ public class GameMapGUI extends JFrame implements ScreenListener{
     private final InputMap inputMap = getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
     private final ActionMap actionMap = getRootPane().getActionMap();
 
-    private InventoryPanel inventoryPanel;
+    private InventoryPanelGUI inventoryPanelGUI;
 
     private static final int ANIMATION_DELAY = 30; // ms between animation steps
     private static final float FADE_STEP = 0.1f;   // alpha step per tick
@@ -138,8 +138,8 @@ public class GameMapGUI extends JFrame implements ScreenListener{
                 PlayerCharacter currentPlayer = gameController.getCurrentPlayer();
                 if (currentPlayer != null) {
                     // Show inventory at center of the panel
-                    inventoryPanel = new InventoryPanel(GameMapGUI.this, gameController.getCurrentPlayer(), controllerListener);
-                    inventoryPanel.setVisible(true);  // Blocks until closed if modal
+                    inventoryPanelGUI = new InventoryPanelGUI(GameMapGUI.this, gameController.getCurrentPlayer(), controllerListener);
+                    inventoryPanelGUI.setVisible(true);  // Blocks until closed if modal
                 }
             }
         });
@@ -157,7 +157,7 @@ public class GameMapGUI extends JFrame implements ScreenListener{
             public void actionPerformed(ActionEvent e) {
                 PlayerCharacter currentPlayer = gameController.getCurrentPlayer();
                 if (currentPlayer != null) {
-                    PlayerStatusDialog statusDialog = new PlayerStatusDialog(GameMapGUI.this, currentPlayer);
+                    PlayerStatusDialogGUI statusDialog = new PlayerStatusDialogGUI(GameMapGUI.this, currentPlayer);
                     statusDialog.setVisible(true);  // modal dialog
                 }
             }
@@ -439,8 +439,8 @@ public class GameMapGUI extends JFrame implements ScreenListener{
         private void handleMiddleClick() {
             PlayerCharacter currentPlayer = gameController.getCurrentPlayer();
             if (currentPlayer != null) {
-                inventoryPanel = new InventoryPanel(GameMapGUI.this, currentPlayer, controllerListener);
-                inventoryPanel.setVisible(true);  // Blocks until closed if modal
+                inventoryPanelGUI = new InventoryPanelGUI(GameMapGUI.this, currentPlayer, controllerListener);
+                inventoryPanelGUI.setVisible(true);  // Blocks until closed if modal
             }
         }
 
@@ -538,7 +538,7 @@ public class GameMapGUI extends JFrame implements ScreenListener{
             JPanel healthPanel = new JPanel();
             healthPanel.setLayout(new BoxLayout(healthPanel, BoxLayout.X_AXIS));
             healthPanel.add(new JLabel("Health:"));
-            healthPanel.add(new HealthBarPanel(player.getHealth(), player.getMaxHealth()));
+            healthPanel.add(new HealthBarPanelGUI(player.getHealth(), player.getMaxHealth()));
             add(healthPanel); // Add to menu
         }
 
@@ -546,7 +546,7 @@ public class GameMapGUI extends JFrame implements ScreenListener{
             JPanel healthPanel = new JPanel();
             healthPanel.setLayout(new BoxLayout(healthPanel, BoxLayout.X_AXIS));
             healthPanel.add(new JLabel("Health:"));
-            healthPanel.add(new HealthBarPanel(enemy.getHealth(), enemy.getMaxHealth()));
+            healthPanel.add(new HealthBarPanelGUI(enemy.getHealth(), enemy.getMaxHealth()));
             add(healthPanel); // Add to menu
         }
     }

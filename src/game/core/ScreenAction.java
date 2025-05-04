@@ -1,4 +1,4 @@
-package game.engine;
+package game.core;
 
 public enum ScreenAction {
     START_GAME,

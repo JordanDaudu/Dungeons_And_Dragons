@@ -4,8 +4,8 @@ import game.characters.Archer;
 import game.characters.Dragon;
 import game.characters.Enemy;
 import game.characters.PlayerCharacter;
-import game.engine.ScreenAction;
-import game.engine.ScreenListener;
+import game.core.ScreenAction;
+import game.core.ScreenListener;
 import game.engine.SoundManager;
 
 import java.awt.*;

@@ -1,8 +1,8 @@
 package game.gui;
 
 import game.characters.PlayerCharacter;
-import game.engine.ScreenAction;
-import game.engine.ScreenListener;
+import game.core.ScreenAction;
+import game.core.ScreenListener;
 import game.items.Interactable;
 import game.items.Potion;
 import game.items.PowerPotion;
@@ -18,7 +18,7 @@ import java.util.*;
  * Allows the player to use items such as Potions and PowerPotions.
  * Notifies the controller when an item is used and the turn ends.
  */
-public class InventoryPanel extends JDialog {
+public class InventoryPanelGUI extends JDialog {
 
     // Data Members
     private final PlayerCharacter player;
@@ -35,7 +35,7 @@ public class InventoryPanel extends JDialog {
      * @param player             the player whose inventory is to be shown
      * @param controllerListener the listener to notify game state changes like ending turn
      */
-    public InventoryPanel(JFrame parent, PlayerCharacter player, ScreenListener controllerListener) {
+    public InventoryPanelGUI(JFrame parent, PlayerCharacter player, ScreenListener controllerListener) {
         super(parent, "Inventory - " + player.getName(), true);
         this.player = player;
         this.controllerListener = controllerListener;

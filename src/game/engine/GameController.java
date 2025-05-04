@@ -4,6 +4,8 @@ import game.characters.Enemy;
 import game.characters.PlayerCharacter;
 import game.combat.CombatSystem;
 import game.combat.RangedFighter;
+import game.core.ScreenAction;
+import game.core.ScreenListener;
 import game.gui.CongratulationsGUI;
 import game.gui.GameMapGUI;
 import game.gui.GameOverGUI;

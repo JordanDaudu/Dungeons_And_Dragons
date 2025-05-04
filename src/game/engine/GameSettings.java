@@ -1,4 +1,4 @@
-package game.core;
+package game.engine;
 
 public class GameSettings {
     private final int players;

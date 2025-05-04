@@ -1,8 +1,9 @@
 package game.engine;
 
 import game.characters.PlayerCharacter;
-import game.core.GameSettings;
-import game.gui.PlayerCreationPanel;
+import game.core.ScreenAction;
+import game.core.ScreenListener;
+import game.gui.PlayerCreationPanelGUI;
 import game.gui.StartingScreenGUI;
 import game.map.GameMap;
 
@@ -12,7 +13,7 @@ import javax.swing.*;
  * Entry point and core application manager for the game GUI.
  * Manages screen transitions, game initialization, and the main game loop.
  */
-public class GameApplication implements ScreenListener{
+public class GameApplication implements ScreenListener {
 
     // Data Members
     private final GameWorld game;
@@ -46,7 +47,7 @@ public class GameApplication implements ScreenListener{
         GameWorld game = GameWorld.getInstance();
 
         for(int i = 0; i < numberOfPlayers; i++) {
-            PlayerCreationPanel startScreen = new PlayerCreationPanel(gameApplication);
+            PlayerCreationPanelGUI startScreen = new PlayerCreationPanelGUI(gameApplication);
             startScreen.showModal();  // This will block until the user clicks "Start Game"
         }
 

@@ -5,7 +5,7 @@ import game.characters.PlayerCharacter;
 import java.util.List;
 import javax.swing.JFrame;
 
-public class CongratulationsGUI extends GameEndDialog {
+public class CongratulationsGUI extends GameEndDialogGUI {
 
     public CongratulationsGUI(JFrame parent, List<PlayerCharacter> players) {
         super(parent, players);

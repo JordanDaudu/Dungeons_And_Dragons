@@ -13,7 +13,7 @@ import java.awt.*;
  * This dialog is meant to be opened from the main game UI to show a snapshot
  * of the player's stats in a user-friendly interface.
  */
-public class PlayerStatusDialog extends JDialog {
+public class PlayerStatusDialogGUI extends JDialog {
 
     // Data Members
     private final JPanel mainPanel;
@@ -21,7 +21,7 @@ public class PlayerStatusDialog extends JDialog {
     private final JLabel nameLabel;
     private final JLabel typeLabel;
     private final JLabel healthLabel;
-    private final HealthBarPanel healthBar;
+    private final HealthBarPanelGUI healthBar;
     private final JLabel powerLabel;
     private final JLabel treasureLabel;
     private final JButton closeButton;
@@ -33,7 +33,7 @@ public class PlayerStatusDialog extends JDialog {
      * @param parentFrame the parent JFrame that owns this dialog
      * @param player the PlayerCharacter whose status should be displayed
      */
-    public PlayerStatusDialog(JFrame parentFrame, PlayerCharacter player) {
+    public PlayerStatusDialogGUI(JFrame parentFrame, PlayerCharacter player) {
         super(parentFrame, "Player Status", true); // modal
 
         try {
@@ -75,7 +75,7 @@ public class PlayerStatusDialog extends JDialog {
         mainPanel.add(Box.createVerticalStrut(10));
         mainPanel.add(healthLabel);
 
-        healthBar = new HealthBarPanel(player.getHealth(), player.getMaxHealth());
+        healthBar = new HealthBarPanelGUI(player.getHealth(), player.getMaxHealth());
         mainPanel.add(healthBar);
 
         // Power

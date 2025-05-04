@@ -6,7 +6,7 @@ import java.util.List;
 import javax.swing.JFrame;
 
 
-public class GameOverGUI extends GameEndDialog {
+public class GameOverGUI extends GameEndDialogGUI {
 
     public GameOverGUI(JFrame parent, List<PlayerCharacter> players) {
         super(parent, players);

@@ -9,7 +9,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
-public abstract class GameEndDialog extends JDialog {
+public abstract class GameEndDialogGUI extends JDialog {
 
     private JLabel titleLabel;
     private JTextArea summaryTextArea;
@@ -18,7 +18,7 @@ public abstract class GameEndDialog extends JDialog {
     private final JPanel contentPanel;
     private JPanel buttonPanel;
 
-    public GameEndDialog(JFrame parent, List<PlayerCharacter> players) {
+    public GameEndDialogGUI(JFrame parent, List<PlayerCharacter> players) {
         super(parent, "", true);
 
         Image backgroundImage = loadBackgroundImage(getBackgroundImagePath());
