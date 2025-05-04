@@ -133,7 +133,7 @@ public class CombatSystem {
     private void playRedDamagedBlinkAnimation(Combatant attacker, Combatant defender) {
         if (listener != null)
             if (attacker.getPositionModifier().distanceTo(defender.getPositionModifier()) <= attacker.getRangeModifier())
-                listener.onAction(ScreenAction.RECEIVEDDAMAGE, defender.getPosition().getRow(), defender.getPosition().getCol(), new Color(255, 0, 0, 120));
+                listener.onAction(ScreenAction.RECEIVEDDAMAGE, defender.getPosition().getRow(), defender.getPosition().getCol(), new Color(255, 0, 0, 192));
     }
 
     /**
@@ -145,7 +145,7 @@ public class CombatSystem {
     private void playGrayEvadedBlinkAnimation(Combatant attacker, Combatant defender) {
         if (listener != null)
             if (attacker.getPositionModifier().distanceTo(defender.getPositionModifier()) <= attacker.getRangeModifier())
-                listener.onAction(ScreenAction.RECEIVEDDAMAGE, defender.getPosition().getRow(), defender.getPosition().getCol(), new Color(128, 128, 128, 120));
+                listener.onAction(ScreenAction.RECEIVEDDAMAGE, defender.getPosition().getRow(), defender.getPosition().getCol(), new Color(128, 128, 128, 192));
     }
 
     /**

@@ -451,6 +451,11 @@ public class GameMapGUI extends JFrame implements ScreenListener{
          */
         @Override
         protected void paintComponent(Graphics g) {
+            Graphics2D g2d = (Graphics2D) g.create(); // Copy graphics context
+            g2d.setComposite(AlphaComposite.Clear); // Enable transparent clearing
+            g2d.fillRect(0, 0, getWidth(), getHeight()); // Clear old pixels
+            g2d.setComposite(AlphaComposite.SrcOver); // Restore normal drawing mode
+
             super.paintComponent(g);
             List<GameEntity> entitiesAtPos = map.getEntitiesAt(position);
 
@@ -460,7 +465,6 @@ public class GameMapGUI extends JFrame implements ScreenListener{
                 // I'm checking if it's alpha is greater than 0 instead of checking isVisible because
                 // I want to trigger the fade out animation and not immediately disappear
                 if (entityAlpha > 0f) {
-                    Graphics2D g2d = (Graphics2D) g.create();
                     g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, entityAlpha));
                     Image entityImage = entity.getDisplayImage();
 
