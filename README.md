@@ -68,5 +68,75 @@ If not set correctly, resources like sound files may fail to load at runtime.
 To better understand the class structure, relationships, and project flow, here's a visual representation of the game's architecture.<br>
 It includes core components of the game file.
 
-<p align="center"> <img src="Photos/Diagrams/Advanced Object Oriented Programming.jpg" alt="Architecture Diagram" width="768"> </p>
+<img src="Photos/Diagrams/Advanced Object Oriented Programming.jpg" alt="Architecture Diagram" width="768">
 
+---
+
+## 🎮 Gameplay Showcase
+
+A visual tour of the game features and interface:
+
+### 🧑‍💼 Starting the Game
+
+**Player & Grid Setup**
+
+<img src="Photos/Main photo for ReadMe/Starting_Screen.png" alt="Starting Screen" width="720">
+
+> Select the number of players and the grid size to begin your adventure.
+
+**Character Creation**
+
+<img src="Photos/Main photo for ReadMe/Character_Creation.png" alt="Character Creation" width="720">
+
+> Enter a character name and choose a class: Warrior, Mage, or Archer.
+
+---
+
+### 🎒 Exploring the World
+
+**Picking Up Items**  
+<img src="Photos/GIFs/pickup_items.gif" alt="Picking Up Items" width="720">
+
+> Collect potions, treasure, and useful items scattered across the map.
+
+**Showing Inventory**  
+<img src="Photos\Main photo for ReadMe\Picking_Up_Items.gif" alt="Inventory Screen" width="720">
+
+> View collected items and manage your inventory.
+
+---
+
+### ⚔️ Combat & Interaction
+
+**Attacking Enemies**  
+<img src="Photos\Main photo for ReadMe\Fight.gif" alt="Attacking Enemies" width="720">
+
+> Engage in turn-based combat using physical or magical attacks.
+
+**Player Status Window**  
+<img src="Photos\Main photo for ReadMe\Status_Panel.png" alt="Player Status" width="720">
+
+> View player stats, class type, and current treasure points.
+
+---
+
+### ⚙️ Game Options
+
+**Settings Menu**  
+<img src="Photos\Main photo for ReadMe\Settings.png" alt="Settings Menu" width="720">
+
+> Adjust music and sound effect volume or exit the game via the pause menu.
+
+---
+
+### 🏁 Endgame
+
+**Game Over Screen**  
+<img src="Photos\Main photo for ReadMe\GameOver.png" alt="Game Over" width="720">
+
+> Shown when all players are defeated. This will show the scores of each player in a descending order.
+
+**Victory Screen**  
+<img src="Photos\Main photo for ReadMe\Winning.png" alt="Victory Screen" width="720">
+
+> Displayed when players defeat all enemies. This will show the scores of each player in a descending order
