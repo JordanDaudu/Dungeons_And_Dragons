@@ -8,12 +8,23 @@ This repository contains a Java-based implementation of a Dungeons & Dragons-ins
 
 This project simulates a simplified turn-based role-playing game (RPG), where players and enemies take actions such as attacking, casting spells, and moving around a game map. The architecture follows object-oriented principles and leverages Java interfaces, inheritance, and polymorphism to define different character types and combat behaviors.
 
-Key features include:
-- 🧙‍♂️ Multiple character classes (e.g., Mage, Warrior, Archer, Goblin)
-- ⚔️ Turn-based combat system
-- 🌟 Magic and physical attacks with hit and evade mechanics
-- 🎵 Sound effects integration
-- 📦 Resource handling via a dedicated `resources` folder
+---
+
+## 🌟 Key Features
+
+- 🎮 **Up to 4-Player Local Co-op** – Team up and explore a grid-based world together.
+- 🛡️ **Character Creation** – Choose a name and class: Warrior, Mage, or Archer.
+- 🗺️ **Customizable Grid** – Start with a grid size of at least 10x10.
+- ⚔️ **Turn-Based Combat** – Strategically move, attack, or interact each turn.
+- 🌟 **Magic and physical attacks** – Each character class uses distinct attack types with hit chance and evade mechanics
+- 🧠 **Interactive Entities** – Right-click to inspect enemies, items, or players.
+- 🍾 **Item System** – Pick up potions, power potions, and treasure from defeated enemies.
+- 🎒 **Inventory & Status Panels** – Use E/middle mouse to manage items, Q for player stats.
+- 🧌 **Enemy Types** – Face off against Goblins, Orcs, and mighty Dragons.
+- 🔊 **Dynamic Sound & Music** – Audio reacts to combat events (e.g., low HP or dragon battles).
+- 🎨 **Customizable Settings** – Change SFX/music volume and grid colors on the fly.
+- 🏁 **Victory & Game Over Screens** – Endgame summary with a ranked treasure score list.
+- 📦 **Centralized Resource Management** - All sounds, images, and configuration files are organized in a dedicated resources folder
 
 ---
 
@@ -35,22 +46,47 @@ src/
 
 ---
 
+## 🚀 Getting Started
 
-## 📝 Setting Up the `resources` Folder in Your IDE
+To get a local copy of the project running on your machine, follow these steps:
 
-To ensure sound files and other resources load correctly, make sure your IDE recognizes the `resources` folder as a **Resources Root**.
+### 📥 Clone the repository
 
-### 🧠 Why?
-If not set correctly, resources like sound files may fail to load at runtime.
+Use the following command to clone the repository to your local machine:
+
+```bash
+git clone https://github.com/JordanDaudu/Dungeons_And_Dragons.git
+```
+
+### ⚙️ Setting up the environment
+
+Ensure you have **Java** installed on your machine. You can download it from [here](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html).
+
+For the IDE, you can use **IntelliJ IDEA** or **Eclipse**, which will automatically handle most of the setup for you.
+
+### 🛠️ Build & Run
+
+1. Open the project in your preferred IDE.
+2. Set the `resources` folder as a **Resources Root** (see the **Setting Up the `resources` Folder in Your IDE** section).
+3. Run the `GameApplication` class to start the game.
+
+---
+
+## 📝 Setting Up the resources Folder in Your IDE
+
+To ensure **sound files**, **images**, and other essential resources load correctly during runtime, it’s **crucial** that your IDE recognizes the resources folder as a **Resources Root**.
+
+### 🧠 Why is This Important?
+If the resources folder is not properly set, your game may fail to load crucial files like sound effects, images, or configuration files, causing errors or unexpected behavior during gameplay.
 
 ---
 
 ### 💡 IntelliJ IDEA
 
-There are **two ways** to mark the `resources` folder correctly:
+There are **two ways** to mark the resources folder correctly:
 
 #### ✅ Option 1: *Using Project View*
-1. 🖱️ In the **Project** tool window, right-click the `resources` folder.
+1. 🖱️ In the **Project** tool window, right-click the resources folder.
 2. 📁 Choose **Mark Directory as** → **Resources Root**.
 
 ⚡ This method is quick and convenient.
@@ -58,13 +94,13 @@ There are **two ways** to mark the `resources` folder correctly:
 ---
 
 #### ✅ Option 2: *Using Project Structure*
-1. ⚙️ Go to **File** → **Project Structure** (or press `Ctrl+Alt+Shift+S`).
+1. ⚙️ Go to **File** → **Project Structure** (or press Ctrl+Alt+Shift+S).
 2. 🧩 In the left pane, select **Modules**.
-3. 📂 Under the **Sources** tab, locate and **click the `resources` folder** in the directory tree.
+3. 📂 Under the **Sources** tab, locate and **click the resources folder** in the directory tree.
 4. 🏷️ At the top of the window, click the **"Resources"** button in the **Mark as** section.
 5. 💾 Click **Apply**, then **OK**.
 
-✅ This tells IntelliJ to treat the `resources` folder as a classpath root for loading files like sound effects and images.
+✅ This tells IntelliJ to treat the resources folder as a classpath root for loading files like sound effects and images.
 
 ---
 
@@ -72,10 +108,26 @@ There are **two ways** to mark the `resources` folder correctly:
 
 1. 🖱️ Right-click your project and choose **Properties**.
 2. 🧭 Go to **Java Build Path** → **Source** tab.
-3. ➕ Click **Add Folder**, then check the `resources` folder.
+3. ➕ Click **Add Folder**, then check the resources folder.
 4. ✅ Click **OK** and **Apply and Close**.
 
-🗂️ This adds the `resources` folder to your classpath.
+🗂️ This adds the resources folder to your classpath.
+
+---
+
+## 🖥️ Technologies Used
+
+| Tool / Concept       | Purpose                                                              |
+|----------------------|----------------------------------------------------------------------|
+| Java                 | Core game logic and backend                                           |
+| Java Swing           | GUI components (windows, buttons, panels)                            |
+| OOP Principles       | Inheritance, interfaces, and polymorphism for scalable design        |
+| Threads              | Enable concurrent character actions and smoother game flow           |
+| Locks (Synchronization) | Manage thread safety during shared resource access (e.g., inventory, combat) |
+| Design Patterns      | Applied patterns like Singleton, MVC, and Observer               |
+| Custom Audio Engine  | Handles dynamic sound effects and adaptive background music           |
+| IntelliJ / Eclipse   | Development environment and debugging support                         |
+
 
 ---
 
@@ -84,6 +136,19 @@ To better understand the class structure, relationships, and project flow, here'
 It includes core components of the game file.
 
 <img src="Photos/Diagrams/Advanced Object Oriented Programming.jpg" alt="Architecture Diagram" width="768">
+
+---
+
+## ⌨️ Controls & Shortcuts
+
+| Key / Action              | Function                                                             |
+|---------------------------|----------------------------------------------------------------------|
+| **W / A / S / D**         | Move your character                                                  |
+| **Left Click**            | Move to the clicked tile                                             |
+| **E** or **Middle Click** | Open the inventory to use potions and items                          |
+| **Right Click**           | Inspect any entity (player, enemy, or item) for detailed info        |
+| **Q**                     | View player status panel with stats and treasure points              |
+| **ESC**                   | Open settings menu (adjust volume, background color, or exit game)   |
 
 ---
 
@@ -124,8 +189,14 @@ A visual tour of the game features and interface:
 
 > Collect potions, treasure, and useful items scattered across the map.
 
+**Right-Click to Inspect**
+
+<img src="Photos\Main photo for ReadMe\Entity_Popup_Menu.gif" alt="Entity Popup Menu" width="720">
+
+> Right-clicking on any entity—player, enemy, or item—displays a popup with detailed information including stats, health, and item details. This helps players make more informed decisions during gameplay.
+
 **Showing Inventory**  
-<img src="Photos\Main photo for ReadMe\Picking_Up_Items.gif" alt="Inventory Screen" width="720">
+<img src="Photos\Main photo for ReadMe\Inventory.gif" alt="Inventory Screen" width="720">
 
 > View collected items and manage your inventory.
 
@@ -148,9 +219,9 @@ A visual tour of the game features and interface:
 ### ⚙️ Game Options
 
 **Settings Menu**  
-<img src="Photos\Main photo for ReadMe\Settings.png" alt="Settings Menu" width="720">
+<img src="Photos\Main photo for ReadMe\Settings.gif" alt="Settings Menu" width="720">
 
-> Adjust music and sound effect volume or exit the game via the pause menu.
+> Adjust music and sound effect volume, change the grid background color using a dropdown menu, or exit the game via the pause menu.
 
 ---
 
@@ -165,3 +236,4 @@ A visual tour of the game features and interface:
 <img src="Photos\Main photo for ReadMe\Winning.png" alt="Victory Screen" width="720">
 
 > Displayed when players defeat all enemies. This will show the scores of each player in a descending order
+
