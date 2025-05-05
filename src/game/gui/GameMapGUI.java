@@ -44,6 +44,8 @@ public class GameMapGUI extends JFrame implements ScreenListener{
 
     private InventoryPanelGUI inventoryPanelGUI;
 
+    private TileColorBackgroundTheme currentColorTheme = TileColorBackgroundTheme.CLEAR;
+
     private static final int ANIMATION_DELAY = 30; // ms between animation steps
     private static final float FADE_STEP = 0.1f;   // alpha step per tick
 
@@ -318,6 +320,11 @@ public class GameMapGUI extends JFrame implements ScreenListener{
         };
     }
 
+    public void setTileBackgroundTheme(TileColorBackgroundTheme colorTheme) {
+        this.currentColorTheme = colorTheme;
+        repaint();
+    }
+
     /**
      * Represents a single tile cell on the game map.
      * Handles mouse input for interaction and renders game entities.
@@ -457,6 +464,12 @@ public class GameMapGUI extends JFrame implements ScreenListener{
             g2d.setComposite(AlphaComposite.SrcOver); // Restore normal drawing mode
 
             super.paintComponent(g);
+
+            if(currentColorTheme != null && currentColorTheme.getColor() != null) {
+                g2d.setColor(currentColorTheme.getColor());
+                g2d.fillRect(0, 0, getWidth(), getHeight());
+            }
+
             List<GameEntity> entitiesAtPos = map.getEntitiesAt(position);
 
             if (!entitiesAtPos.isEmpty()) {

@@ -19,8 +19,8 @@ public class SoundManager {
     private static Clip currentClip;
     private static final Map<String, Clip> musicTracks = new HashMap<>();
     private static final Map<String, String> soundEffects = new HashMap<>();
-    private static float musicVolume = 0.5f;
-    private static float sfxVolume = 0.5f;
+    private static float musicVolume = 0.6f;
+    private static float sfxVolume = 0.6f;
 
     // Methods
     /**
@@ -311,7 +311,8 @@ public class SoundManager {
 
             System.out.println("Crossfade initiated for track: " + name);
             timer.start();
-        } finally {
+        }
+        finally {
             musicLock.unlock();
         }
     }

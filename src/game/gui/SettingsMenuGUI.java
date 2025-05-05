@@ -20,10 +20,13 @@ public class SettingsMenuGUI extends JDialog {
     private JLabel sfxLabel;
     private JSlider musicSlider;
     private JSlider sfxSlider;
+    private JPanel colorThemePanel;
+    private JLabel colorThemeLabel;
+    private JComboBox<TileColorBackgroundTheme> colorThemeComboBox;
+    private static TileColorBackgroundTheme lastSelectedTheme = TileColorBackgroundTheme.CLEAR;
     private JPanel buttonPanel;
     private JButton backButton;
     private JButton quitButton;
-
     // Methods
     /**
      * Constructs a new SettingsMenuGUI dialog with sliders for audio volume settings
@@ -47,7 +50,7 @@ public class SettingsMenuGUI extends JDialog {
      * Initializes all UI components such as sliders, labels, and buttons.
      */
     private void initComponents() {
-        slidersPanel = new JPanel(new GridLayout(2, 1, 10, 10));
+        slidersPanel = new JPanel(new GridLayout(3, 1, 10, 10));
 
         musicPanel = new JPanel(new BorderLayout(10, 10));
         musicLabel = new JLabel("Music Volume:");
@@ -62,6 +65,11 @@ public class SettingsMenuGUI extends JDialog {
         sfxSlider.setMajorTickSpacing(25);
         sfxSlider.setPaintTicks(true);
         sfxSlider.setPaintLabels(true);
+
+        colorThemePanel = new JPanel(new BorderLayout(10, 10));
+        colorThemeLabel = new JLabel("Color Tile Background:");
+        colorThemeComboBox = new JComboBox<>(TileColorBackgroundTheme.values());
+        colorThemeComboBox.setSelectedItem(lastSelectedTheme);
 
         buttonPanel = new JPanel();
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
@@ -85,6 +93,10 @@ public class SettingsMenuGUI extends JDialog {
         slidersPanel.add(sfxPanel);
         add(slidersPanel, BorderLayout.CENTER);
 
+        colorThemePanel.add(colorThemeLabel, BorderLayout.WEST);
+        colorThemePanel.add(colorThemeComboBox, BorderLayout.CENTER);
+        slidersPanel.add(colorThemePanel);
+
         backButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         quitButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 
@@ -101,6 +113,14 @@ public class SettingsMenuGUI extends JDialog {
     private void attachListeners() {
         musicSlider.addChangeListener(e -> SoundManager.setMusicVolume(musicSlider.getValue() / 100f));
         sfxSlider.addChangeListener(e -> SoundManager.setSFXVolume(sfxSlider.getValue() / 100f));
+
+        colorThemeComboBox.addActionListener(e -> {
+            TileColorBackgroundTheme selectedColorTheme = (TileColorBackgroundTheme) colorThemeComboBox.getSelectedItem();
+            if (getParent() instanceof GameMapGUI gameMap) {
+                lastSelectedTheme = selectedColorTheme; // Save selection
+                gameMap.setTileBackgroundTheme(selectedColorTheme);
+            }
+        });
 
         backButton.addActionListener(e -> dispose());
         quitButton.addActionListener(e -> System.exit(0));
