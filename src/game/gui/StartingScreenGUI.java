@@ -20,31 +20,138 @@ public class StartingScreenGUI extends JDialog {
     private int selectedRows = 10;
     private int selectedCols = 10;
     private ImageIcon backgroundImage;
-    private final JLabel backgroundLabel;
+    private JLabel backgroundLabel;
+    private JSpinner playerSpinner, rowSpinner, colSpinner;
+    private JButton confirmButton;
 
-    // Methods
-    /**
-     * Private constructor for the StartingScreenGUI dialog.
-     * Initializes UI components including the background image,
-     * player count spinner, grid size spinners, and confirmation button.
-     *
-     * @param owner the parent Frame of this dialog (can be null)
-     */
+    // Constructor
     private StartingScreenGUI(Frame owner) {
         super(owner, "Select Number of Players", true); // Modal dialog
         setSize(600, 400);
         setLocationRelativeTo(owner);
         setLayout(new BorderLayout());
 
-        // Load and display the background image
+        initComponents();   // Initialize components
+        layoutComponents();  // Set up layout
+        resizeBackgroundImage();  // Resize background immediately after showing the dialog
+        attachListeners();  // Attach listeners
+    }
+
+    public static GameSettings askForSettings() {
+        StartingScreenGUI dialog = new StartingScreenGUI(null);
+        dialog.setVisible(true); // Blocks until user closes or confirms
+
+        // Return a new GameSettings object with all selected values
+        return new GameSettings(dialog.selectedPlayers, dialog.selectedRows, dialog.selectedCols);
+    }
+
+    // Initialize components (labels, spinners, buttons, etc.)
+    private void initComponents() {
         backgroundImage = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/Main photo.png")));
         backgroundLabel = new JLabel(backgroundImage);
-        backgroundLabel.setLayout(new GridBagLayout()); // Allow centered overlay panel
+        backgroundLabel.setLayout(new GridBagLayout());
         setContentPane(backgroundLabel);
 
-        // Force initial resize for correct scaling
-        SwingUtilities.invokeLater(this::resizeBackgroundImage);
+        // Initialize Spinners
+        playerSpinner = new JSpinner(new SpinnerNumberModel(1, 1, 4, 1));
+        rowSpinner = new JSpinner(new SpinnerNumberModel(10, 10, 100, 1));
+        colSpinner = new JSpinner(new SpinnerNumberModel(10, 10, 100, 1));
+    }
 
+    // Layout the components inside panels and content pane
+    private void layoutComponents() {
+        JPanel contentPanel = new JPanel();
+        contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
+        contentPanel.setPreferredSize(new Dimension(350, 200));
+        contentPanel.setBackground(new Color(0, 0, 0, 150));
+        contentPanel.setBorder(BorderFactory.createTitledBorder(
+                BorderFactory.createLineBorder(Color.WHITE, 2),
+                "Game Setup", 0, 0, null, Color.WHITE));
+
+        // === Player selection ===
+        JPanel playerSelectionPanel = createPlayerSelectionPanel();
+
+        // === Row and Column selection ===
+        JPanel rowColPanel = createRowColSelectionPanel();
+
+        // === Confirm Button ===
+        JButton confirmButton = createConfirmButton();
+
+        // === Adding everything to contentPanel ===
+        contentPanel.add(Box.createVerticalStrut(10));
+        contentPanel.add(playerSelectionPanel);
+        contentPanel.add(Box.createVerticalStrut(10));
+        contentPanel.add(rowColPanel);
+        contentPanel.add(Box.createVerticalStrut(15));
+        contentPanel.add(confirmButton);
+        contentPanel.add(Box.createVerticalStrut(10));
+
+        // Add content panel to center of background label
+        backgroundLabel.add(contentPanel);
+    }
+
+    // Create and return player selection panel
+    private JPanel createPlayerSelectionPanel() {
+        JPanel playerSelectionPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        playerSelectionPanel.setOpaque(false);
+
+        JLabel playerLabel = new JLabel("How many players?");
+        playerLabel.setForeground(Color.WHITE);
+        playerLabel.setFont(new Font("Arial", Font.BOLD, 16));
+
+        playerSelectionPanel.add(playerLabel);
+        playerSelectionPanel.add(playerSpinner);
+        playerSelectionPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        return playerSelectionPanel;
+    }
+
+    // Create and return row/column selection panel
+    private JPanel createRowColSelectionPanel() {
+        JPanel rowColPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        rowColPanel.setOpaque(false);
+
+        JLabel rowLabel = new JLabel("Rows:");
+        rowLabel.setForeground(Color.WHITE);
+        rowLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        rowColPanel.add(rowLabel);
+        rowColPanel.add(rowSpinner);
+
+        JLabel colLabel = new JLabel("Columns:");
+        colLabel.setForeground(Color.WHITE);
+        colLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        rowColPanel.add(Box.createHorizontalStrut(20)); // Space between row and col
+        rowColPanel.add(colLabel);
+        rowColPanel.add(colSpinner);
+        rowColPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        return rowColPanel;
+    }
+
+    // Create and return the confirm button
+    private JButton createConfirmButton() {
+        confirmButton = new JButton("Start Game");
+        confirmButton.setFont(new Font("Arial", Font.BOLD, 16));
+        confirmButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        return confirmButton;
+    }
+
+    // Rescale and update the background image
+    private void resizeBackgroundImage() {
+        if (backgroundImage == null) return;
+
+        int width = getWidth();
+        int height = getHeight();
+
+        Image originalImage = new ImageIcon(Objects.requireNonNull(
+                getClass().getResource("/images/Main photo.png"))).getImage();
+        Image scaledImage = originalImage.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+        backgroundImage = new ImageIcon(scaledImage);
+        backgroundLabel.setIcon(backgroundImage);
+    }
+
+    // Attach listeners (e.g., button actions, window listeners)
+    private void attachListeners() {
         // Handle window closing: exit app completely if user closes this dialog
         addWindowListener(new WindowAdapter() {
             @Override
@@ -60,133 +167,16 @@ public class StartingScreenGUI extends JDialog {
             }
         });
 
-        // === Main content panel ===
-        JPanel contentPanel = new JPanel();
-        contentPanel.setPreferredSize(new Dimension(350, 150));
-        contentPanel.setBackground(new Color(0, 0, 0, 150)); // Semi-transparent black
-        contentPanel.setBorder(BorderFactory.createTitledBorder(
-                BorderFactory.createLineBorder(Color.WHITE, 2),
-                "Choose Players", 0, 0, null, Color.WHITE));
-        contentPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-
-        // === Player selection ===
-        JPanel playerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        playerPanel.setOpaque(false); // Transparent background
-
-        // Label for the player selection
-        JLabel playerLabel = new JLabel("How many players?");
-        playerLabel.setForeground(Color.WHITE);
-        playerLabel.setFont(new Font("Arial", Font.BOLD, 16)); // Same font size as rows and columns
-
-        // Spinner for player selection
-        JSpinner playerSpinner = new JSpinner(new SpinnerNumberModel(1, 1, 4, 1));
-        playerSpinner.setFont(new Font("Arial", Font.BOLD, 16)); // Same font size as rows and columns
-
-        // Add label and spinner to the panel
-        playerPanel.add(playerLabel);
-        playerPanel.add(playerSpinner);
-
-        // Add player panel to content panel
-        contentPanel.add(playerPanel);
-        contentPanel.add(Box.createVerticalStrut(10)); // Added vertical space
-
-        // === Grid row selection ===
-        JPanel rowPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        rowPanel.setOpaque(false); // Transparent background
-        JLabel rowLabel = new JLabel("Rows:");
-        rowLabel.setForeground(Color.WHITE);
-        rowLabel.setFont(new Font("Arial", Font.BOLD, 16)); // Same font size as player spinner
-        JSpinner rowSpinner = new JSpinner(new SpinnerNumberModel(10, 10, 100, 1));
-        rowSpinner.setFont(new Font("Arial", Font.BOLD, 16)); // Same font size as player spinner
-        rowPanel.add(rowLabel);
-        rowPanel.add(rowSpinner);
-
-        contentPanel.add(rowPanel);
-        contentPanel.add(Box.createVerticalStrut(10)); // Added vertical space
-
-        // === Grid column selection ===
-        JPanel colPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        colPanel.setOpaque(false); // Transparent background
-        JLabel colLabel = new JLabel("Columns:");
-        colLabel.setForeground(Color.WHITE);
-        colLabel.setFont(new Font("Arial", Font.BOLD, 16)); // Same font size as player spinner
-        JSpinner colSpinner = new JSpinner(new SpinnerNumberModel(10, 10, 100, 1));
-        colSpinner.setFont(new Font("Arial", Font.BOLD, 16)); // Same font size as player spinner
-        colPanel.add(colLabel);
-        colPanel.add(colSpinner);
-
-        contentPanel.add(colPanel);
-        contentPanel.add(Box.createVerticalStrut(10)); // Added vertical space
-
-
-        // === Confirm Button ===
-        JButton confirmButton = new JButton("Start Game");
-        confirmButton.setFont(new Font("Arial", Font.BOLD, 16));
+        // Confirm Button ActionListener
         confirmButton.addActionListener(e -> {
             selectedPlayers = (int) playerSpinner.getValue();
             selectedRows = (int) rowSpinner.getValue();
             selectedCols = (int) colSpinner.getValue();
             dispose(); // Close the dialog
         });
-
-        contentPanel.add(confirmButton);
-
-        // Add content panel to center of background label
-        backgroundLabel.add(contentPanel);
     }
 
-    /**
-     * Displays the dialog and blocks until the user makes a selection or closes the window.
-     *
-     * @return number of players selected (1–4), or -1 if the dialog was closed
-     */
-    public static GameSettings askForSettings() {
-        StartingScreenGUI dialog = new StartingScreenGUI(null);
-        dialog.setVisible(true); // Blocks until user closes or confirms
-
-        // Return a new GameSettings object with all selected values
-        return new GameSettings(dialog.selectedPlayers, dialog.selectedRows, dialog.selectedCols);
-    }
-
-    /**
-     * Returns the number of rows selected by the user.
-     * Only valid if askForPlayers() returns a value >= 1.
-     */
-    public int getSelectedRows() {
-        return selectedRows;
-    }
-
-    /**
-     * Returns the number of columns selected by the user.
-     * Only valid if askForPlayers() returns a value >= 1.
-     */
-    public int getSelectedCols() {
-        return selectedCols;
-    }
-
-    /**
-     * Rescales and updates the background image to fit the current size of the dialog.
-     * Reloads from the original image each time to avoid progressive quality loss.
-     */
-    private void resizeBackgroundImage() {
-        if (backgroundImage == null) return;
-
-        int width = getWidth();
-        int height = getHeight();
-
-        Image originalImage = new ImageIcon(Objects.requireNonNull(
-                getClass().getResource("/images/Main photo.png"))).getImage();
-        Image scaledImage = originalImage.getScaledInstance(width, height, Image.SCALE_SMOOTH);
-        backgroundImage = new ImageIcon(scaledImage);
-        backgroundLabel.setIcon(backgroundImage);
-    }
-
-    /**
-     * Entry point for testing the dialog independently.
-     * Prints the selected number of players or a cancellation message to the console.
-     *
-     * @param args command-line arguments (not used)
-     */
+    // Entry point for testing the dialog independently
     public static void main(String[] args) {
         StartingScreenGUI gui = new StartingScreenGUI(null);
         gui.setVisible(true);
