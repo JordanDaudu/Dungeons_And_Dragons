@@ -155,6 +155,13 @@ public class GameMap {
         }
     }
 
+    /**
+     * Checks whether a blocking GameItem is at the specified position.
+     * A blocking item is one that prevents player movement.
+     *
+     * @param pos the position to check
+     * @return true if a blocking GameItem is present, false otherwise
+     */
     public boolean isGameItemBlocking(Position pos) {
         List<GameEntity> entities = getEntitiesAt(pos);
         if (entities == null)
@@ -165,6 +172,12 @@ public class GameMap {
         return false;
     }
 
+    /**
+     * Checks whether a PlayerCharacter is present at the specified position.
+     *
+     * @param pos the position to check
+     * @return true if a player is present, false otherwise
+     */
     public boolean isPlayerBlocking(Position pos) {
         List<GameEntity> entities = getEntitiesAt(pos);
         if (entities == null)
@@ -209,6 +222,12 @@ public class GameMap {
         return cols;
     }
 
+    /**
+     * Creates and places a PlayerCharacter on the map based on the given type.
+     *
+     * @param name the name of the player
+     * @param choice the character class: "Warrior", "Archer", or "Mage"
+     */
     public void createCharacter(String name, String choice) {
         PlayerCharacter player;
         switch (choice) {

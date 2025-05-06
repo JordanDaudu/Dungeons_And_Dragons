@@ -320,6 +320,12 @@ public class GameMapGUI extends JFrame implements ScreenListener{
         };
     }
 
+    /**
+     * Sets the current background color theme used for all tiles.
+     * Triggers a repaint to reflect the change visually.
+     *
+     * @param colorTheme the new tile color theme to apply
+     */
     public void setTileBackgroundTheme(TileColorBackgroundTheme colorTheme) {
         this.currentColorTheme = colorTheme;
         repaint();

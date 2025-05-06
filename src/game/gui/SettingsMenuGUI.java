@@ -27,6 +27,7 @@ public class SettingsMenuGUI extends JDialog {
     private JPanel buttonPanel;
     private JButton backButton;
     private JButton quitButton;
+
     // Methods
     /**
      * Constructs a new SettingsMenuGUI dialog with sliders for audio volume settings

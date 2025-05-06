@@ -24,7 +24,12 @@ public class StartingScreenGUI extends JDialog {
     private JSpinner playerSpinner, rowSpinner, colSpinner;
     private JButton confirmButton;
 
-    // Constructor
+    // Methods
+    /**
+     * Constructs the modal dialog and initializes its layout and components.
+     *
+     * @param owner the parent frame
+     */
     private StartingScreenGUI(Frame owner) {
         super(owner, "Select Number of Players", true); // Modal dialog
         setSize(600, 400);
@@ -37,6 +42,12 @@ public class StartingScreenGUI extends JDialog {
         attachListeners();  // Attach listeners
     }
 
+    /**
+     * Shows the dialog and returns a GameSettings object
+     * containing the values selected by the user.
+     *
+     * @return a GameSettings instance based on user input
+     */
     public static GameSettings askForSettings() {
         StartingScreenGUI dialog = new StartingScreenGUI(null);
         dialog.setVisible(true); // Blocks until user closes or confirms
@@ -45,7 +56,9 @@ public class StartingScreenGUI extends JDialog {
         return new GameSettings(dialog.selectedPlayers, dialog.selectedRows, dialog.selectedCols);
     }
 
-    // Initialize components (labels, spinners, buttons, etc.)
+    /**
+     * Initializes GUI components, including spinners and background.
+     */
     private void initComponents() {
         backgroundImage = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/Main photo.png")));
         backgroundLabel = new JLabel(backgroundImage);
@@ -58,7 +71,9 @@ public class StartingScreenGUI extends JDialog {
         colSpinner = new JSpinner(new SpinnerNumberModel(10, 10, 100, 1));
     }
 
-    // Layout the components inside panels and content pane
+    /**
+     * Lays out the GUI components using nested panels.
+     */
     private void layoutComponents() {
         JPanel contentPanel = new JPanel();
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
@@ -90,7 +105,11 @@ public class StartingScreenGUI extends JDialog {
         backgroundLabel.add(contentPanel);
     }
 
-    // Create and return player selection panel
+    /**
+     * Creates a panel for selecting the number of players.
+     *
+     * @return the player selection JPanel
+     */
     private JPanel createPlayerSelectionPanel() {
         JPanel playerSelectionPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         playerSelectionPanel.setOpaque(false);
@@ -106,7 +125,11 @@ public class StartingScreenGUI extends JDialog {
         return playerSelectionPanel;
     }
 
-    // Create and return row/column selection panel
+    /**
+     * Creates a panel for selecting grid rows and columns.
+     *
+     * @return the row and column selection JPanel
+     */
     private JPanel createRowColSelectionPanel() {
         JPanel rowColPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         rowColPanel.setOpaque(false);
@@ -128,7 +151,11 @@ public class StartingScreenGUI extends JDialog {
         return rowColPanel;
     }
 
-    // Create and return the confirm button
+    /**
+     * Creates the confirm/start button.
+     *
+     * @return the confirm JButton
+     */
     private JButton createConfirmButton() {
         confirmButton = new JButton("Start Game");
         confirmButton.setFont(new Font("Arial", Font.BOLD, 16));
@@ -136,7 +163,9 @@ public class StartingScreenGUI extends JDialog {
         return confirmButton;
     }
 
-    // Rescale and update the background image
+    /**
+     * Rescales and updates the background image based on current dialog size.
+     */
     private void resizeBackgroundImage() {
         if (backgroundImage == null) return;
 
@@ -150,7 +179,9 @@ public class StartingScreenGUI extends JDialog {
         backgroundLabel.setIcon(backgroundImage);
     }
 
-    // Attach listeners (e.g., button actions, window listeners)
+    /**
+     * Attaches event listeners to handle resizing, button click, and closing.
+     */
     private void attachListeners() {
         // Handle window closing: exit app completely if user closes this dialog
         addWindowListener(new WindowAdapter() {
@@ -176,7 +207,11 @@ public class StartingScreenGUI extends JDialog {
         });
     }
 
-    // Entry point for testing the dialog independently
+    /**
+     * Main method for testing the dialog independently.
+     *
+     * @param args command-line arguments (ignored)
+     */
     public static void main(String[] args) {
         StartingScreenGUI gui = new StartingScreenGUI(null);
         gui.setVisible(true);

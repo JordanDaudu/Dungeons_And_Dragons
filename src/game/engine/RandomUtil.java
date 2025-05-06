@@ -19,6 +19,8 @@ public class RandomUtil {
     private static final Random random = new Random();
 
     // Methods
+
+    // Default Constructor
     private RandomUtil() {}
 
     /**
