@@ -20,20 +20,7 @@ public class Treasure extends GameItem implements Interactable {
 
     // Methods
     /**
-     * Constructs a Treasure with a random value between 100 and 300.
-     *
-     * @param position        the position of the treasure
-     * @param blocksMovement  whether the treasure blocks movement on the map
-     * @param description     a short description of the treasure
-     */
-    public Treasure(Position position, boolean blocksMovement, String description) {
-        super(position, blocksMovement, description);
-        this.value = RandomUtil.getRandomInt(100, 301);
-        collected = false;
-    }
-
-    /**
-     * Constructs a Treasure with a fixed loot value.
+     * Constructs a Treasure with a fixed given loot value.
      *
      * @param position        the position of the treasure
      * @param blocksMovement  whether the treasure blocks movement on the map

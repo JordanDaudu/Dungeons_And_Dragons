@@ -16,7 +16,8 @@ This project simulates a simplified turn-based role-playing game (RPG), where pl
 - 🛡️ **Character Creation** – Choose a name and class: Warrior, Mage, or Archer.
 - 🗺️ **Customizable Grid** – Start with a grid size of at least 10x10.
 - ⚔️ **Turn-Based Combat** – Strategically move, attack, or interact each turn.
-- 🌟 **Magic and physical attacks** – Each character class uses distinct attack types with hit chance and evade mechanics
+- 💥️ **Magic and physical attacks** – Each character class uses distinct attack types with hit chance and evade mechanics
+- ✴️ **Floating Damage Numbers** – See color-coded damage values briefly appear above characters when hit, with distinct colors for magic and physical attacks.
 - 🧠 **Interactive Entities** – Right-click to inspect enemies, items, or players.
 - 🍾 **Item System** – Pick up potions, power potions, and treasure from defeated enemies.
 - 🎒 **Inventory & Status Panels** – Use E/middle mouse to manage items, Q for player stats.
@@ -175,28 +176,28 @@ A visual tour of the game features and interface:
 ### 🎒 Exploring the World
 
 **Single-Player Movement Demo**  
-<img src="Photos\Main photo for ReadMe\1Player_Movement.gif" alt="Single Player Movement" width="768">
+<img src="Photos/Main photo for ReadMe/1Player_Movement.gif" alt="Single Player Movement" width="768">
 
 > Explore the map as a solo adventurer.
 
 **Multiplayer Movement Demo**  
-<img src="Photos\Main photo for ReadMe\multiplayer.gif" alt="Multiplayer Movement" width="768">
+<img src="Photos/Main photo for ReadMe/multiplayer.gif" alt="Multiplayer Movement" width="768">
 
 > Multiple players navigating the grid. The game supports 1–4 player gameplay.
 
 **Picking Up Items**  
-<img src="Photos\Main photo for ReadMe\Picking_Up_Items.gif" alt="Picking Up Items" width="720">
+<img src="Photos/Main photo for ReadMe/Picking_Up_Items.gif" alt="Picking Up Items" width="720">
 
 > Collect potions, treasure, and useful items scattered across the map.
 
 **Right-Click to Inspect**
 
-<img src="Photos\Main photo for ReadMe\Entity_Popup_Menu.gif" alt="Entity Popup Menu" width="720">
+<img src="Photos/Main photo for ReadMe/Entity_Popup_Menu.gif" alt="Entity Popup Menu" width="720">
 
 > Right-clicking on any entity—player, enemy, or item—displays a popup with detailed information including stats, health, and item details. This helps players make more informed decisions during gameplay.
 
 **Showing Inventory**  
-<img src="Photos\Main photo for ReadMe\Inventory.gif" alt="Inventory Screen" width="720">
+<img src="Photos/Main photo for ReadMe/Inventory.gif" alt="Inventory Screen" width="720">
 
 > View collected items and manage your inventory.
 
@@ -205,12 +206,12 @@ A visual tour of the game features and interface:
 ### ⚔️ Combat & Interaction
 
 **Attacking Enemies**  
-<img src="Photos\Main photo for ReadMe\Fight.gif" alt="Attacking Enemies" width="720">
+<img src="Photos/Main photo for ReadMe/Fight.gif" alt="Attacking Enemies" width="720">
 
 > Engage in turn-based combat using physical or magical attacks.
 
 **Player Status Window**  
-<img src="Photos\Main photo for ReadMe\Status_Panel.png" alt="Player Status" width="720">
+<img src="Photos/Main photo for ReadMe/Status_Panel.png" alt="Player Status" width="720">
 
 > View player stats, class type, and current treasure points.
 
@@ -219,7 +220,7 @@ A visual tour of the game features and interface:
 ### ⚙️ Game Options
 
 **Settings Menu**  
-<img src="Photos\Main photo for ReadMe\Settings.gif" alt="Settings Menu" width="720">
+<img src="Photos/Main photo for ReadMe/Settings.gif" alt="Settings Menu" width="720">
 
 > Adjust music and sound effect volume, change the grid background color using a dropdown menu, or exit the game via the pause menu.
 
@@ -228,12 +229,23 @@ A visual tour of the game features and interface:
 ### 🏁 Endgame
 
 **Game Over Screen**  
-<img src="Photos\Main photo for ReadMe\GameOver.png" alt="Game Over" width="720">
+<img src="Photos/Main photo for ReadMe/GameOver.png" alt="Game Over" width="720">
 
 > Shown when all players are defeated. This will show the scores of each player in a descending order.
 
 **Victory Screen**  
-<img src="Photos\Main photo for ReadMe\Winning.png" alt="Victory Screen" width="720">
+<img src="Photos/Main photo for ReadMe/Winning.png" alt="Victory Screen" width="720">
 
 > Displayed when players defeat all enemies. This will show the scores of each player in a descending order
 
+---
+
+## ⚖️ Disclaimer & Copyright
+
+This project was developed as a **non-commercial, educational project** for the *Advanced Project Oriented Programming* course at [SCE - Shamoon College of Engineering](https://www.sce.ac.il/). It is intended to demonstrate object-oriented design, game architecture, and Java programming skills.
+
+### Audio & Asset Credits
+
+Some of the sound effects and music tracks used in this project were sourced from popular games such as **Octopath Traveler** and **Persona 5**. These assets are used solely for educational purposes to enhance the learning experience and are **not intended for redistribution, resale, or commercial use**.
+
+If you are the copyright holder of any asset and wish for it to be removed from this repository, please contact me and I will promptly comply.
