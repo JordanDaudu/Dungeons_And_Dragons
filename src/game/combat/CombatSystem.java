@@ -16,10 +16,11 @@ import java.awt.*;
  */
 public class CombatSystem {
 
+    // Data Members
     private static CombatSystem instance = null;
     private ScreenListener listener;
-    // Methods
 
+    // Methods
     /**
      * Constructs a new CombatSystem instance.
      */
@@ -27,6 +28,13 @@ public class CombatSystem {
         this.listener = screenListener;
     }
 
+    /**
+     * Returns the singleton instance of the CombatSystem.
+     * If the instance does not yet exist, it is created with a null ScreenListener.
+     * You should call {@link #setListener(ScreenListener)} afterward to assign a valid listener.
+     *
+     * @return the CombatSystem singleton instance
+     */
     public static CombatSystem getInstance() {
         if (instance == null)
             instance = new CombatSystem(null);
@@ -160,6 +168,14 @@ public class CombatSystem {
                 listener.onAction(ScreenAction.RECEIVEDDAMAGE, defender.getPosition(), new Color(128, 128, 128, 192));
     }
 
+    /**
+     * Displays a number pop-up animation to show damage dealt.
+     * Triggers only if the attacker is in range and the damage amount is greater than zero.
+     *
+     * @param attacker the combatant who dealt the damage
+     * @param defender the combatant who received the damage
+     * @param amount the amount of damage dealt
+     */
     private void playNumberPopUpAnimation(Combatant attacker, Combatant defender, int amount) {
         if(listener != null) {
             if (attacker.getPositionModifier().distanceTo(defender.getPositionModifier()) <= attacker.getRangeModifier() && amount > 0) {

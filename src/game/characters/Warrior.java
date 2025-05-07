@@ -83,7 +83,7 @@ public class Warrior extends PlayerCharacter implements MeleeFighter, PhysicalAt
     }
 
     /**
-     * Handles receiving damage from an attacker.
+     * Handles receiving damage from an attacker and updates the last damage amount received.
      * Damage is reduced based on the warrior's defense.
      *
      * @param amount the base amount of incoming damage

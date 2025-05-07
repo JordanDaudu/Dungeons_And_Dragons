@@ -4,12 +4,25 @@ import javax.swing.*;
 import java.awt.*;
 import javax.swing.Timer;
 
+/**
+ * A GUI component that displays a floating text popup animation.
+ * The text fades and moves upward over time, then disappears.
+ */
 public class FloatingTextPopupGUI extends JComponent {
 
+    // Data Members
     private final String text;
     private final Color color;
     private final int fontSize;
 
+    // Methods
+    /**
+     * Constructs a new FloatingTextPopupGUI with the specified text, color, and font size.
+     *
+     * @param text     the text to display
+     * @param color    the color of the text
+     * @param fontSize the size of the font
+     */
     public FloatingTextPopupGUI(String text, Color color, int fontSize) {
         this.text = text;
         this.color = color;
@@ -18,6 +31,12 @@ public class FloatingTextPopupGUI extends JComponent {
         setLayout(null); // Use absolute positioning
     }
 
+    /**
+     * Displays the floating text popup in the specified parent panel.
+     * The text appears, floats upward while fading out, and is then removed.
+     *
+     * @param parentPanel the panel on which to display the floating popup
+     */
     public void showFloatingTextPopup(JPanel parentPanel) {
         JLabel textLabel = new JLabel(text);
         textLabel.setFont(new Font("Arial", Font.BOLD, fontSize));

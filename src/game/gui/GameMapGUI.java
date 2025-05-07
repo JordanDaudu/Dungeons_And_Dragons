@@ -427,6 +427,13 @@ public class GameMapGUI extends JFrame implements ScreenListener{
             blinkTimer.start();
         }
 
+        /**
+         * Displays a floating popup above the tile showing the amount of damage taken.
+         * The popup is colored based on the type of damage (e.g., physical or magical according to the corresponding element).
+         *
+         * @param amount the amount of damage to display
+         * @param color  the color to use for the damage popup text
+         */
         public void showDamagePopup(int amount, Color color) {
             System.out.println("DAMAGE POP UP FOR " + position.getRow() + ", " + position.getCol());
             floatingTextPopup = new FloatingTextPopupGUI("-" + amount, color, 20);

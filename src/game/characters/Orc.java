@@ -83,6 +83,7 @@ public class Orc extends Enemy implements MeleeFighter, PhysicalAttacker {
 
     /**
      * Receives damage from a source, factoring in magic resistance if attack is a magic attacker.
+     * In addition, updates the last damage amount received.
      *
      * @param amount the raw damage amount
      * @param source the source of the attack

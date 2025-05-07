@@ -61,9 +61,9 @@ public class GameSettings {
     public static boolean checkSettings(GameSettings gameSettings) {
         if(gameSettings.getPlayers() < 1 || gameSettings.getPlayers() > 4)
             return false;
-        if(gameSettings.getRows() < 10 || gameSettings.getRows() > 100)
+        if(gameSettings.getRows() < 10 || gameSettings.getRows() > 50)
             return false;
-        if(gameSettings.getCols() < 10 || gameSettings.getCols() > 100)
+        if(gameSettings.getCols() < 10 || gameSettings.getCols() > 50)
             return false;
         return true;
     }

@@ -91,8 +91,18 @@ public abstract class AbstractCharacter implements Combatant, GameEntity {
         return 100;
     }
 
+    /**
+     * Gets the amount of damage the character received in the last attack.
+     * @return last damage received
+     */
     public int getLastDamageReceived() {return lastDamageReceived;}
 
+    /**
+     * Sets the last damage received by the character.
+     * Used for animation or feedback purposes.
+     * @param newLastDamageReceived the new damage amount
+     * @return true always
+     */
     public boolean setLastDamageReceived(int newLastDamageReceived) {
         this.lastDamageReceived = newLastDamageReceived;
         return true;
@@ -173,7 +183,7 @@ public abstract class AbstractCharacter implements Combatant, GameEntity {
     }
 
     /**
-     * Applies damage to the character from an attacker.
+     * Applies damage to the character from an attacker and updates the last damage amount received.
      * @param amount the amount of damage received
      * @param source the attacker who dealt the damage
      */

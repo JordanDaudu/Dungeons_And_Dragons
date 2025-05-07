@@ -133,7 +133,19 @@ public interface Combatant extends GameEntity {
      */
     default Position getPositionModifier() {return null;}
 
+    /**
+     * Gets the amount of damage this combatant received in the last attack.
+     *
+     * @return the last damage received (default: 0)
+     */
     default int getLastDamageReceived() {return 0;}
 
+    /**
+     * Sets the amount of damage this combatant received in the last attack.
+     * Can be used to store info for animations or effects.
+     *
+     * @param newLastDamageReceived the damage value to store
+     * @return true if the value was stored, false otherwise
+     */
     default boolean setLastDamageReceived(int newLastDamageReceived) {return false;}
 }

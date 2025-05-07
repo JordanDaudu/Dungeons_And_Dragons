@@ -12,6 +12,7 @@ import java.util.Objects;
  * A modal dialog that prompts the user to select the number of players
  * and the grid size (rows and columns) before starting the game.
  * Displays a resizable background image with a transparent input panel.
+ * Grid size is acceptable up to 50x50.
  */
 public class StartingScreenGUI extends JDialog {
 
@@ -67,8 +68,8 @@ public class StartingScreenGUI extends JDialog {
 
         // Initialize Spinners
         playerSpinner = new JSpinner(new SpinnerNumberModel(1, 1, 4, 1));
-        rowSpinner = new JSpinner(new SpinnerNumberModel(10, 10, 100, 1));
-        colSpinner = new JSpinner(new SpinnerNumberModel(10, 10, 100, 1));
+        rowSpinner = new JSpinner(new SpinnerNumberModel(10, 10, 50, 1));
+        colSpinner = new JSpinner(new SpinnerNumberModel(10, 10, 50, 1));
     }
 
     /**
