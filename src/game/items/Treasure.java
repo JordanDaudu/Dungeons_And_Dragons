@@ -101,7 +101,7 @@ public class Treasure extends GameItem implements Interactable {
                 int randomizer = RandomUtil.getRandomInt(0, 6);
                 if(randomizer >= 0 && randomizer <= 2) {
                     // ADD TREASURE POINTS
-                    if(c.updateTreasurePoint(value))
+                    if(c.updateTreasurePoints(value))
                         System.out.println(c.getName() + " gained " + getValue() + " treasure points!");
                 }
                 // Items in the inventory don't have a position on the map so we initialize as (-1, -1)

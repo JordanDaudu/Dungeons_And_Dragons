@@ -132,4 +132,8 @@ public interface Combatant extends GameEntity {
      * @return a new Position, or null if unchanged
      */
     default Position getPositionModifier() {return null;}
+
+    default int getLastDamageReceived() {return 0;}
+
+    default boolean setLastDamageReceived(int newLastDamageReceived) {return false;}
 }

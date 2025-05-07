@@ -1,7 +1,10 @@
 package game.gui;
 
 import game.characters.*;
+import game.combat.Combatant;
 import game.combat.MagicAttacker;
+import game.combat.MagicElement;
+import game.combat.PhysicalAttacker;
 import game.core.GameEntity;
 import game.engine.GameController;
 import game.core.ScreenAction;
@@ -225,14 +228,38 @@ public class GameMapGUI extends JFrame implements ScreenListener{
     public boolean onAction(ScreenAction action, Object... data) {
         switch (action) {
             case ScreenAction.RECEIVEDDAMAGE -> {
-                if (data[0] instanceof Integer && data[1] instanceof Integer && data[2] instanceof Color) {
-                    Position pos = new Position((int) data[0], (int) data[1]);
-                    TileCell tileCell = (TileCell) getCellAtPosition(pos);
+                if (data[0] instanceof Position position && data[1] instanceof Color color) {
+                    Position pos = new Position(position);
+                    TileCell tileCell = getCellAtPosition(pos);
                     if (tileCell != null) {
-                        tileCell.blink((Color) data[2]);
+                        tileCell.blink(color);
                     }
                     return true;
                 }
+            }
+            case ScreenAction.RECEIVEDAMAGETEXTANIMATION -> {
+                if(data[0] instanceof Combatant character && data[1] instanceof Position position && data[2] instanceof Integer amount) {
+                    Position pos = new Position(position);
+                    TileCell tileCell = getCellAtPosition(pos);
+                    if (tileCell != null) {
+                        if(character instanceof PhysicalAttacker && character.getPositionModifier().distanceTo(pos) <= 1)
+                            tileCell.showDamagePopup(amount, new Color(220, 220, 220)); // Gainsboro
+                        else if(character instanceof MagicAttacker) {
+                            if(character.getElementType() == MagicElement.ACID)
+                                tileCell.showDamagePopup(amount, new Color(173, 255, 47)); // Green-yellow (like chartreuse/lime)
+                            else if(character.getElementType() == MagicElement.ICE)
+                                tileCell.showDamagePopup(amount, new Color(135, 206, 250)); // Light sky blue
+                            else if(character.getElementType() == MagicElement.FIRE)
+                                tileCell.showDamagePopup(amount, new Color(255, 85, 0)); // Bright orange with a red tint
+                            else if(character.getElementType() == MagicElement.LIGHTNING)
+                                tileCell.showDamagePopup(amount, new Color(138, 43, 226)); // BlueViolet (rich purple tone)
+                            else
+                                tileCell.showDamagePopup(amount, new Color(220, 220, 220)); // Gainsboro
+                        }
+                    }
+                    return true;
+                }
+                return false;
             }
         }
         return false;
@@ -254,10 +281,9 @@ public class GameMapGUI extends JFrame implements ScreenListener{
      * @param pos the position to search for
      * @return the corresponding TileCell, or null if not found
      */
-    private Component getCellAtPosition(Position pos) {
+    private TileCell getCellAtPosition(Position pos) {
         for (Component comp : gridPanel.getComponents()) {
-            if (comp instanceof TileCell) {
-                TileCell tileCell = (TileCell) comp;
+            if (comp instanceof TileCell tileCell) {
                 if (tileCell.getPosition().equals(pos)) {
                     return tileCell;
                 }
@@ -340,6 +366,7 @@ public class GameMapGUI extends JFrame implements ScreenListener{
         // Data Members
         private final Position position;
         private final int tileSize = 64;
+        private FloatingTextPopupGUI floatingTextPopup;
 
         // Methods
         /**
@@ -398,6 +425,12 @@ public class GameMapGUI extends JFrame implements ScreenListener{
                 ((Timer) e.getSource()).stop();
             });
             blinkTimer.start();
+        }
+
+        public void showDamagePopup(int amount, Color color) {
+            System.out.println("DAMAGE POP UP FOR " + position.getRow() + ", " + position.getCol());
+            floatingTextPopup = new FloatingTextPopupGUI("-" + amount, color, 20);
+            floatingTextPopup.showFloatingTextPopup(this);
         }
 
         /**

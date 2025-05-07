@@ -17,8 +17,8 @@ public abstract class AbstractCharacter implements Combatant, GameEntity {
     private int health;
     private int power;
     private final double evasionChance = 0.25;
+    private int lastDamageReceived = 0; // Will be used for animations
     private boolean visible;
-
 
     // Methods
     /**
@@ -89,6 +89,13 @@ public abstract class AbstractCharacter implements Combatant, GameEntity {
      */
     public int getMaxHealth() {
         return 100;
+    }
+
+    public int getLastDamageReceived() {return lastDamageReceived;}
+
+    public boolean setLastDamageReceived(int newLastDamageReceived) {
+        this.lastDamageReceived = newLastDamageReceived;
+        return true;
     }
 
     /**
@@ -175,6 +182,7 @@ public abstract class AbstractCharacter implements Combatant, GameEntity {
         // Moved the evasion logic to CombatSystem for now
         setHealth(getHealth() - amount);
         System.out.println(getClass().getSimpleName() + " received " + amount + " damage!");
+        setLastDamageReceived(amount);
     }
 
     /**

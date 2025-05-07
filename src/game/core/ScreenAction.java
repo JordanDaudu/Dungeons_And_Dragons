@@ -27,6 +27,11 @@ public enum ScreenAction {
     RECEIVEDDAMAGE,
 
     /**
+     * Indicates that an entity needs to have a text animation
+     */
+    RECEIVEDAMAGETEXTANIMATION,
+
+    /**
      * Represents the action of picking up an item on the map.
      */
     PICKUP,

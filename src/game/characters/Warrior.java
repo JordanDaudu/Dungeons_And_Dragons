@@ -94,6 +94,7 @@ public class Warrior extends PlayerCharacter implements MeleeFighter, PhysicalAt
         int damage = (int) (source.getPower() * (1 - Math.min(0.6, defence / 200.0)));
         setHealth(getHealth() - damage);
         System.out.println(getClass().getSimpleName() + " received " + amount + " damage!");
+        setLastDamageReceived(damage);
     }
 
     /**

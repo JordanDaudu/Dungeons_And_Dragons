@@ -144,7 +144,7 @@ public abstract class PlayerCharacter extends AbstractCharacter implements Playe
      * @param amount amount to add
      * @return true always
      */
-    public boolean updateTreasurePoint(int amount) {
+    public boolean updateTreasurePoints(int amount) {
         treasurePoints += amount;
         System.out.println("Your total now is: " + getTreasurePoints());
         return true;

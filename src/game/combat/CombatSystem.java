@@ -75,22 +75,34 @@ public class CombatSystem {
      */
     private void executeCombatTurn(Combatant attacker, Combatant defender) {
         // Checks the Combatant type and tries to evade, damage calculation is inside attacking functions
+        int amountOfReceivedDamage = 0;
+        defender.setLastDamageReceived(0);
+
         if (attacker instanceof Archer) {
             if (defender.tryEvade(attacker.getAccuracyModifier())) {
                 System.out.println("Attack evaded!");
                 playGrayEvadedBlinkAnimation(attacker, defender);
                 return;
-            } else {
+            }
+            else {
                 attacker.fight(defender);
+                amountOfReceivedDamage = defender.getLastDamageReceived();
+                if(amountOfReceivedDamage > 0)
+                    playNumberPopUpAnimation(attacker, defender, amountOfReceivedDamage);
                 playAttackSound(attacker);
                 playRedDamagedBlinkAnimation(attacker, defender);
             }
-        } else if (defender.tryEvade()) {
+        }
+        else if (defender.tryEvade()) {
             System.out.println("Attack evaded!");
             playGrayEvadedBlinkAnimation(attacker, defender);
             return;
-        } else {
+        }
+        else {
             attacker.fight(defender);
+            amountOfReceivedDamage = defender.getLastDamageReceived();
+            if(amountOfReceivedDamage > 0)
+                playNumberPopUpAnimation(attacker, defender, amountOfReceivedDamage);
             playAttackSound(attacker);
             playRedDamagedBlinkAnimation(attacker, defender);
         }
@@ -133,7 +145,7 @@ public class CombatSystem {
     private void playRedDamagedBlinkAnimation(Combatant attacker, Combatant defender) {
         if (listener != null)
             if (attacker.getPositionModifier().distanceTo(defender.getPositionModifier()) <= attacker.getRangeModifier())
-                listener.onAction(ScreenAction.RECEIVEDDAMAGE, defender.getPosition().getRow(), defender.getPosition().getCol(), new Color(255, 0, 0, 192));
+                listener.onAction(ScreenAction.RECEIVEDDAMAGE, defender.getPosition(), new Color(255, 0, 0, 192));
     }
 
     /**
@@ -145,7 +157,18 @@ public class CombatSystem {
     private void playGrayEvadedBlinkAnimation(Combatant attacker, Combatant defender) {
         if (listener != null)
             if (attacker.getPositionModifier().distanceTo(defender.getPositionModifier()) <= attacker.getRangeModifier())
-                listener.onAction(ScreenAction.RECEIVEDDAMAGE, defender.getPosition().getRow(), defender.getPosition().getCol(), new Color(128, 128, 128, 192));
+                listener.onAction(ScreenAction.RECEIVEDDAMAGE, defender.getPosition(), new Color(128, 128, 128, 192));
+    }
+
+    private void playNumberPopUpAnimation(Combatant attacker, Combatant defender, int amount) {
+        if(listener != null) {
+            if (attacker.getPositionModifier().distanceTo(defender.getPositionModifier()) <= attacker.getRangeModifier() && amount > 0) {
+                System.out.println("TRYING POPUP ANIMATION");
+                listener.onAction(ScreenAction.RECEIVEDAMAGETEXTANIMATION, attacker, defender.getPosition(), amount);
+            }
+            else
+                System.out.println("ERROR NO POPUP");
+        }
     }
 
     /**
