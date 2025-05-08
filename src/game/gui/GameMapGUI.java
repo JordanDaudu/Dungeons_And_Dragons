@@ -244,6 +244,8 @@ public class GameMapGUI extends JFrame implements ScreenListener{
                     if (tileCell != null) {
                         if(character instanceof PhysicalAttacker && character.getPositionModifier().distanceTo(pos) <= 1)
                             tileCell.showDamagePopup(amount, new Color(220, 220, 220)); // Gainsboro
+                        else if(character instanceof PhysicalAttacker && !(character instanceof MagicAttacker))
+                            tileCell.showDamagePopup(amount, new Color(220, 220, 220)); // Gainsboro
                         else if(character instanceof MagicAttacker) {
                             if(character.getElementType() == MagicElement.ACID)
                                 tileCell.showDamagePopup(amount, new Color(173, 255, 47)); // Green-yellow (like chartreuse/lime)

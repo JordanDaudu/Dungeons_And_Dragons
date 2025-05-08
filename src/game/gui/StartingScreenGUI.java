@@ -207,22 +207,4 @@ public class StartingScreenGUI extends JDialog {
             dispose(); // Close the dialog
         });
     }
-
-    /**
-     * Main method for testing the dialog independently.
-     *
-     * @param args command-line arguments (ignored)
-     */
-    public static void main(String[] args) {
-        StartingScreenGUI gui = new StartingScreenGUI(null);
-        gui.setVisible(true);
-
-        if (gui.selectedPlayers != -1) {
-            System.out.println("Players: " + gui.selectedPlayers);
-            System.out.println("Rows: " + gui.selectedRows);
-            System.out.println("Cols: " + gui.selectedCols);
-        } else {
-            System.out.println("User cancelled.");
-        }
-    }
 }

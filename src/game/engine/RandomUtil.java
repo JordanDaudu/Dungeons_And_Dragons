@@ -24,15 +24,6 @@ public class RandomUtil {
     private RandomUtil() {}
 
     /**
-     * Returns the shared {@link Random} instance.
-     *
-     * @return the shared random number generator.
-     */
-    public static Random getRandomInstance() {
-        return random;
-    }
-
-    /**
      * Returns a random integer between 0 (inclusive) and the specified bound (exclusive).
      *
      * @param bound the upper bound (exclusive). Must be positive.
