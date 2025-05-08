@@ -28,7 +28,7 @@ public class FloatingTextPopupGUI extends JComponent {
         this.color = color;
         this.fontSize = fontSize;
         setPreferredSize(new Dimension(200, 50));
-        setLayout(null); // Use absolute positioning
+        setLayout(null); // Uses absolute positioning allows free movement of components
     }
 
     /**
@@ -38,6 +38,7 @@ public class FloatingTextPopupGUI extends JComponent {
      * @param parentPanel the panel on which to display the floating popup
      */
     public void showFloatingTextPopup(JPanel parentPanel) {
+        // Creating the label with the given text and styling
         JLabel textLabel = new JLabel(text);
         textLabel.setFont(new Font("Arial", Font.BOLD, fontSize));
         textLabel.setForeground(color);
@@ -46,22 +47,23 @@ public class FloatingTextPopupGUI extends JComponent {
         textLabel.setVerticalAlignment(SwingConstants.CENTER);
         textLabel.setOpaque(false);
 
-        parentPanel.setLayout(null);
-        parentPanel.add(textLabel, 0);
-        textLabel.setLocation(parentPanel.getWidth() / 4, parentPanel.getHeight() / 4);
 
-        Timer timer = new Timer(30, null);
-        final int totalSteps = 20;
+        parentPanel.setLayout(null); // Ensure parent uses absolute positioning so we can move label freely
+        parentPanel.add(textLabel, 0); // Adding the label to the parent panel, on top
+        textLabel.setLocation(parentPanel.getWidth() / 4, parentPanel.getHeight() / 4); // Initial position
+
+        Timer timer = new Timer(30, null); // Fires every 30 milliseconds
+        final int totalSteps = 20; // Animation frames
         final int[] currentStep = {0};
 
         timer.addActionListener(e -> {
             currentStep[0]++;
             float alpha = Math.max(1.0f - (currentStep[0] / (float) totalSteps), 0f);
 
-            // Move the label upwards
+            // Moving the label upwards
             textLabel.setLocation(textLabel.getX(), textLabel.getY() - 1);
 
-            // Adjust color transparency dynamically
+            // Adjusting color transparency dynamically
             textLabel.setForeground(new Color(
                     color.getRed(),
                     color.getGreen(),
@@ -69,6 +71,7 @@ public class FloatingTextPopupGUI extends JComponent {
                     (int) (alpha * 255) // Apply alpha to transparency
             ));
 
+            // Stop the animation and clean up once done
             if (currentStep[0] >= totalSteps) {
                 parentPanel.remove(textLabel);
                 parentPanel.repaint();
