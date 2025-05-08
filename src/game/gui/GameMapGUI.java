@@ -435,7 +435,6 @@ public class GameMapGUI extends JFrame implements ScreenListener{
          * @param color  the color to use for the damage popup text
          */
         public void showDamagePopup(int amount, Color color) {
-            System.out.println("DAMAGE POP UP FOR " + position.getRow() + ", " + position.getCol());
             floatingTextPopup = new FloatingTextPopupGUI("-" + amount, color, 20);
             floatingTextPopup.showFloatingTextPopup(this);
         }

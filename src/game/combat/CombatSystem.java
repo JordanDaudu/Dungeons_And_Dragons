@@ -178,12 +178,8 @@ public class CombatSystem {
      */
     private void playNumberPopUpAnimation(Combatant attacker, Combatant defender, int amount) {
         if(listener != null) {
-            if (attacker.getPositionModifier().distanceTo(defender.getPositionModifier()) <= attacker.getRangeModifier() && amount > 0) {
-                System.out.println("TRYING POPUP ANIMATION");
+            if (attacker.getPositionModifier().distanceTo(defender.getPositionModifier()) <= attacker.getRangeModifier() && amount > 0)
                 listener.onAction(ScreenAction.RECEIVEDAMAGETEXTANIMATION, attacker, defender.getPosition(), amount);
-            }
-            else
-                System.out.println("ERROR NO POPUP");
         }
     }
 
