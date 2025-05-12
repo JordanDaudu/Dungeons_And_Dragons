@@ -78,4 +78,23 @@ public class RandomUtil {
             }
         }
     }
+
+    /**
+     * Returns a new position one tile away from the given position in a random cardinal direction.
+     *
+     * @param current the current position
+     * @return a new position one step up, down, left, or right
+     */
+    public static Position getRandomAdjacentPosition(Position current) {
+        int[][] directions = {
+                {-1, 0}, // up
+                {1, 0},  // down
+                {0, -1}, // left
+                {0, 1}   // right
+        };
+
+        int[] dir = directions[getRandomInt(4)];
+        return new Position(current.getRow() + dir[0], current.getCol() + dir[1]);
+    }
+
 }

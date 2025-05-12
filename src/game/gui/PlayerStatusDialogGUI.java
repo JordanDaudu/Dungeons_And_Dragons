@@ -52,7 +52,8 @@ public class PlayerStatusDialogGUI extends JDialog {
 
         // Player image
         Image image = player.getDisplayImage();
-        ImageIcon icon = new ImageIcon(image);
+        Image scaledImage = image.getScaledInstance(300, 300, Image.SCALE_SMOOTH);
+        ImageIcon icon = new ImageIcon(scaledImage);
         imageLabel = new JLabel(icon);
         imageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         mainPanel.add(imageLabel);

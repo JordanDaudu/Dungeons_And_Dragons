@@ -1,6 +1,8 @@
 package game.characters;
 
 import game.combat.Combatant;
+import game.core.ScreenAction;
+import game.core.ScreenListener;
 import game.engine.RandomUtil;
 import game.items.Treasure;
 import game.map.GameMap;
@@ -13,6 +15,7 @@ public abstract class Enemy extends AbstractCharacter {
 
     // Data Members
     private final int loot;
+    private ScreenListener screenListener = null;
 
     // Methods
     /**
@@ -73,6 +76,11 @@ public abstract class Enemy extends AbstractCharacter {
         return 50;
     }
 
+    public boolean setScreenListener(ScreenListener screenListener) {
+        this.screenListener = screenListener;
+        return true;
+    }
+
     /**
      * Returns the symbol used to display this enemy on the game map.
      *
@@ -125,5 +133,11 @@ public abstract class Enemy extends AbstractCharacter {
     @Override
     public void fight(Combatant target) {
         System.out.println("Choose a enemy type to be able to fight");
+    }
+
+    public void threadAction() {
+        if(screenListener != null) {
+            screenListener.onAction(ScreenAction.ENEMY_ACTION, this);
+        }
     }
 }

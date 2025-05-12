@@ -227,7 +227,7 @@ public class GameMapGUI extends JFrame implements ScreenListener{
     @Override
     public boolean onAction(ScreenAction action, Object... data) {
         switch (action) {
-            case ScreenAction.RECEIVEDDAMAGE -> {
+            case ScreenAction.RECEIVED_DAMAGE -> {
                 if (data[0] instanceof Position position && data[1] instanceof Color color) {
                     Position pos = new Position(position);
                     TileCell tileCell = getCellAtPosition(pos);
@@ -237,7 +237,7 @@ public class GameMapGUI extends JFrame implements ScreenListener{
                     return true;
                 }
             }
-            case ScreenAction.RECEIVEDAMAGETEXTANIMATION -> {
+            case ScreenAction.RECEIVE_DAMAGE_TEXT_ANIMATION -> {
                 if(data[0] instanceof Combatant character && data[1] instanceof Position position && data[2] instanceof Integer amount) {
                     Position pos = new Position(position);
                     TileCell tileCell = getCellAtPosition(pos);
@@ -463,7 +463,7 @@ public class GameMapGUI extends JFrame implements ScreenListener{
             else {
                 GameEntity topEntity = entitiesAtPos.getFirst();
                 if (topEntity instanceof Enemy) {
-                    controllerListener.onAction(ScreenAction.ATTACK, topEntity);
+                    controllerListener.onAction(ScreenAction.PLAYER_ATTACK, topEntity);
                 }
                 else if (topEntity instanceof Interactable) {
                     if(controllerListener.onAction(ScreenAction.PICKUP, position))

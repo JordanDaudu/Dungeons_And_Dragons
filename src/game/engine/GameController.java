@@ -15,7 +15,9 @@ import game.items.Treasure;
 import game.map.GameMap;
 import game.map.Position;
 
+import java.util.List;
 import java.util.Scanner;
+import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * Controls the game logic by mediating between the game world and the GUI.
@@ -30,6 +32,7 @@ public class GameController implements ScreenListener {
     private final CombatSystem combatSystem = CombatSystem.getInstance();
     private final GameMapGUI gameMapGUI;
     private boolean endTurn = false;
+    private ScheduledExecutorService enemyScheduler;
     private static final Scanner scanner = new Scanner(System.in);
 
     // Methods
@@ -86,6 +89,17 @@ public class GameController implements ScreenListener {
         return gameWorld.getCurrentPlayer();
     }
 
+    public boolean setEnemyScheduler(ScheduledExecutorService scheduler) {
+        this.enemyScheduler = scheduler;
+        return true;
+    }
+
+    public void shutdownEnemyScheduler() {
+        if (enemyScheduler != null && !enemyScheduler.isShutdown()) {
+            enemyScheduler.shutdown();
+        }
+    }
+
     /**
      * Checks if the specified position is within 2 tiles of the current player.
      *
@@ -122,6 +136,8 @@ public class GameController implements ScreenListener {
         return null;
     }
 
+
+
     /**
      * Handles actions triggered by the GUI or game loop.
      * Supports movement, attacking, picking up items, ending turns, and exiting the game.
@@ -144,7 +160,7 @@ public class GameController implements ScreenListener {
                     }
                 }
             }
-            case ScreenAction.ATTACK -> {
+            case ScreenAction.PLAYER_ATTACK -> {
                 // Getting player position and attack range
                 Enemy target;
                 if(data[0] instanceof Enemy enemy)
@@ -206,6 +222,85 @@ public class GameController implements ScreenListener {
                 endTurn = true;
                 map.updatePlayerView(gameWorld.getCurrentPlayer().getPosition());
             }
+            case ScreenAction.ENEMY_ACTION -> {
+                if(data[0] instanceof Enemy enemy) {
+                    Position currentEnemyPosition = enemy.getPosition();
+                    if(currentEnemyPosition.distanceTo(gameWorld.getCurrentPlayer().getPosition()) <= 1) {
+                        onAction(ScreenAction.ENEMY_ATTACK, enemy);
+                        return true;
+                    }
+                    else if(currentEnemyPosition.distanceTo(gameWorld.getCurrentPlayer().getPosition()) <= 2) {
+                        int range = 1;
+                        if(enemy instanceof RangedFighter) {
+                            range = enemy.getRangeModifier();
+                            if(range <= 2) {
+                                onAction(ScreenAction.ENEMY_ATTACK, enemy);
+                                return true;
+                            }
+                        }
+                        else {
+                            // Move toward player
+                            List<Position> possibleMoves = gameWorld.getAdjacentFreePositions(currentEnemyPosition);
+                            Position bestMove = null;
+                            int minDistance = Integer.MAX_VALUE;
+
+                            for (Position pos : possibleMoves) {
+                                int distance = pos.distanceTo(gameWorld.getCurrentPlayer().getPosition());
+                                if (distance < minDistance) {
+                                    minDistance = distance;
+                                    bestMove = pos;
+                                }
+                            }
+
+                            if (bestMove != null) {
+                                gameWorld.getMap().moveEnemy(enemy, bestMove);
+                                return true;
+                            }
+                        }
+                    }
+                    else if(RandomUtil.getRandomDouble() < 20) {
+                        Position newEnemyPosition = RandomUtil.getRandomAdjacentPosition(enemy.getPosition());
+                        if(map.tryMoveEnemyRandomly(enemy, newEnemyPosition)) {
+                            map.updatePlayerView(gameWorld.getCurrentPlayer().getPosition());
+                            getGameMapGUI().repaint(); // repaint necessary for player view to update correctly
+                            return true;
+                        }
+                    }
+                }
+            }
+            case ScreenAction.ENEMY_ATTACK -> {
+                // Getting player position and attack range
+                Enemy sourceEnemy;
+                if(data[0] instanceof Enemy enemy)
+                    sourceEnemy = enemy;
+                else {
+                    System.out.println("Tried to fight not an enemy");
+                    return false;
+                }
+
+                PlayerCharacter player = gameWorld.getCurrentPlayer();
+                if(player.isDead())
+                    return false;
+                int range = 1; // default
+                if (sourceEnemy instanceof RangedFighter)
+                    range = ((RangedFighter) player).getRange();
+
+                if(sourceEnemy.getPosition().distanceTo(player.getPosition()) <= range) {
+                    // Combat resolution
+                    combatSystem.resolveCombat(sourceEnemy, player);
+                    // Handle death for map entity
+                    if (sourceEnemy.isDead()) {
+                        System.out.println("You defeated the " + sourceEnemy.getClass().getSimpleName() + "!");
+                        gameWorld.removeEnemy(sourceEnemy);
+                    }
+                    if(player.isDead()) {
+                        gameWorld.removePlayerFromMap(player);
+                        onAction(ScreenAction.END_TURN, (Object) null);
+                    }
+                    map.updatePlayerView(gameWorld.getCurrentPlayer().getPosition());
+                    return true; // End turn after successful attack
+                }
+            }
             case ScreenAction.EXIT_GAME -> {
                 boolean gameIsOver = true;
                 boolean gameIsWon = false;
@@ -220,6 +315,7 @@ public class GameController implements ScreenListener {
                     gameIsWon = true;
 
                 if(gameIsOver) {
+                    shutdownEnemyScheduler();
                     GameOverGUI gameOver = new GameOverGUI(gameMapGUI, gameWorld.getPlayers());
                     gameOver.showDialog();
                     gameOver.setVisible(true);  // blocks until closed
@@ -229,6 +325,7 @@ public class GameController implements ScreenListener {
                     System.exit(0);
                 }
                 else if(gameIsWon) {
+                    shutdownEnemyScheduler();
                     CongratulationsGUI congratulationsGUI = new CongratulationsGUI(gameMapGUI, gameWorld.getPlayers());
                     congratulationsGUI.showDialog();
                     congratulationsGUI.setVisible(true);

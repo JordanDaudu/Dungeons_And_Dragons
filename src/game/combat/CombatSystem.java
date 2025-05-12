@@ -153,7 +153,7 @@ public class CombatSystem {
     private void playRedDamagedBlinkAnimation(Combatant attacker, Combatant defender) {
         if (listener != null)
             if (attacker.getPositionModifier().distanceTo(defender.getPositionModifier()) <= attacker.getRangeModifier())
-                listener.onAction(ScreenAction.RECEIVEDDAMAGE, defender.getPosition(), new Color(255, 0, 0, 192));
+                listener.onAction(ScreenAction.RECEIVED_DAMAGE, defender.getPosition(), new Color(255, 0, 0, 192));
     }
 
     /**
@@ -165,7 +165,7 @@ public class CombatSystem {
     private void playGrayEvadedBlinkAnimation(Combatant attacker, Combatant defender) {
         if (listener != null)
             if (attacker.getPositionModifier().distanceTo(defender.getPositionModifier()) <= attacker.getRangeModifier())
-                listener.onAction(ScreenAction.RECEIVEDDAMAGE, defender.getPosition(), new Color(128, 128, 128, 192));
+                listener.onAction(ScreenAction.RECEIVED_DAMAGE, defender.getPosition(), new Color(128, 128, 128, 192));
     }
 
     /**
@@ -179,7 +179,7 @@ public class CombatSystem {
     private void playNumberPopUpAnimation(Combatant attacker, Combatant defender, int amount) {
         if(listener != null) {
             if (attacker.getPositionModifier().distanceTo(defender.getPositionModifier()) <= attacker.getRangeModifier() && amount > 0)
-                listener.onAction(ScreenAction.RECEIVEDAMAGETEXTANIMATION, attacker, defender.getPosition(), amount);
+                listener.onAction(ScreenAction.RECEIVE_DAMAGE_TEXT_ANIMATION, attacker, defender.getPosition(), amount);
         }
     }
 

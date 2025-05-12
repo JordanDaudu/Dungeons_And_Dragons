@@ -8,6 +8,8 @@ import game.gui.StartingScreenGUI;
 import game.map.GameMap;
 
 import javax.swing.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * Entry point and core application manager for the game GUI.
@@ -51,11 +53,16 @@ public class GameApplication implements ScreenListener {
             startScreen.showModal();  // This will block until the user clicks "Start Game"
         }
 
+        // Collecting and populating the map
         game.collectPlayersFromMap();
         game.getMap().populateRandomEntities();
-
         game.collectEnemiesFromMap();
         game.collectItemsFromMap();
+
+        // Adding enemies to a thread pool so they can move in game
+        ScheduledExecutorService enemyScheduler = Executors.newScheduledThreadPool(3);
+        game.attachGameControllerToEnemies(gameApplication.controller, enemyScheduler);
+        gameApplication.controller.setEnemyScheduler(enemyScheduler); // Add to the controller the thread pool of enemies
 
         // After creating the character, move to the map screen:
         SoundManager.crossfadeTo("battle1", true);

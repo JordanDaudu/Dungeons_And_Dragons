@@ -2,11 +2,15 @@ package game.engine;
 
 import game.characters.*;
 import game.core.GameEntity;
+import game.core.ScreenListener;
 import game.items.GameItem;
 import game.map.GameMap;
+import game.map.Position;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Main class for running the Dungeons & Dragons-like game.
@@ -193,5 +197,41 @@ public class GameWorld {
             }
         }
     }
+
+    public void attachGameControllerToEnemies(ScreenListener gameController, ScheduledExecutorService enemyScheduler) {
+        for(Enemy enemy : enemies) {
+            enemy.setScreenListener(gameController);
+            enemyScheduler.schedule(new EnemyTask(enemy, enemyScheduler), 1, TimeUnit.SECONDS);
+        }
+    }
+
+    /**
+     * Returns a list of walkable (non-occupied, in-bounds) adjacent positions around the given position.
+     *
+     * @param center the position to check from
+     * @return list of valid adjacent positions
+     */
+    public List<Position> getAdjacentFreePositions(Position center) {
+        List<Position> positions = new ArrayList<>();
+
+        int row = center.getRow();
+        int col = center.getCol();
+
+        Position[] candidates = {
+                new Position(row - 1, col), // Up
+                new Position(row + 1, col), // Down
+                new Position(row, col - 1), // Left
+                new Position(row, col + 1)  // Right
+        };
+
+        for (Position pos : candidates) {
+            if (map.isValidPosition(pos) && map.getEntityGameItemAt(pos) == null) {
+                positions.add(pos);
+            }
+        }
+
+        return positions;
+    }
+
 }
 

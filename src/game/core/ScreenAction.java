@@ -19,17 +19,17 @@ public enum ScreenAction {
     /**
      * Represents a combat action where an entity performs an attack.
      */
-    ATTACK,
+    PLAYER_ATTACK,
 
     /**
      * Indicates that an entity has received damage.
      */
-    RECEIVEDDAMAGE,
+    RECEIVED_DAMAGE,
 
     /**
      * Indicates that an entity needs to have a text animation
      */
-    RECEIVEDAMAGETEXTANIMATION,
+    RECEIVE_DAMAGE_TEXT_ANIMATION,
 
     /**
      * Represents the action of picking up an item on the map.
@@ -40,6 +40,10 @@ public enum ScreenAction {
      * Marks the end of a player's or enemy's turn.
      */
     END_TURN,
+
+    ENEMY_ACTION,
+
+    ENEMY_ATTACK,
 
     /**
      * Exits the game and closes the application.
