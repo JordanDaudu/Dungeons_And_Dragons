@@ -29,8 +29,7 @@ public class GlobalEventManager {
     private void scheduleNextEvent() {
         if (!running) return;
 
-        //int delayMillis = RandomUtil.getRandomInt(30_000, 90_000); // 30s to 90s
-        int delayMillis = RandomUtil.getRandomInt(1500, 5000); // 30s to 90s
+        int delayMillis = RandomUtil.getRandomInt(30_000, 90_000); // 30s to 90s
         scheduler.schedule(() -> {
             if (!running) return;
 
