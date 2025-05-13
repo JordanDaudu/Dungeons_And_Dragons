@@ -43,7 +43,7 @@ public abstract class GameEndDialogGUI extends JDialog {
         setSize(600, 450);
         setLocationRelativeTo(parent);
 
-        SoundManager.playMusic(getMusicTrack(), false);
+        SoundManager.playMusic(getMusicTrack(), true);
 
         setupTitleLabel();
         setupSummaryArea(players);

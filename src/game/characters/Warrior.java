@@ -91,10 +91,11 @@ public class Warrior extends PlayerCharacter implements MeleeFighter, PhysicalAt
      */
     @Override
     public void receiveDamage(int amount, Combatant source) {
-        int damage = (int) (source.getPower() * (1 - Math.min(0.6, defence / 200.0)));
-        setHealth(getHealth() - damage);
+        if(source != null)
+            amount = (int) (source.getPower() * (1 - Math.min(0.6, defence / 200.0)));
+        setHealth(getHealth() - amount);
         System.out.println(getClass().getSimpleName() + " received " + amount + " damage!");
-        setLastDamageReceived(damage);
+        setLastDamageReceived(amount);
     }
 
     /**

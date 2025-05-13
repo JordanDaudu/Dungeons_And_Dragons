@@ -8,6 +8,7 @@ import game.items.*;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Singleton class that represents the 2D grid-based game map.
@@ -26,9 +27,11 @@ public class GameMap {
 
     // Data Members
     private final ConcurrentMap<Position, List<GameEntity>> grid;
+    private final ConcurrentMap<Position, ReentrantLock> locks;
     private int rows;
     private int cols;
     private static GameMap instance = null;
+    private final ReentrantLock mapLock = new ReentrantLock(); // Universal lock used only when updating the player view
 
     // Methods
     /**
@@ -37,6 +40,7 @@ public class GameMap {
      */
     private GameMap() {
         grid = new ConcurrentHashMap<>();
+        locks = new ConcurrentHashMap<>();
     }
 
     /**
@@ -51,9 +55,16 @@ public class GameMap {
         if (rows < 10 || cols < 10)
             throw new IllegalArgumentException("Grid size must be at least 10x10");
 
-        this.rows = rows;
-        this.cols = cols;
-        grid.clear();
+        mapLock.lock();
+        try {
+            this.rows = rows;
+            this.cols = cols;
+            grid.clear();
+            locks.clear();
+        }
+        finally {
+            mapLock.unlock();
+        }
     }
 
     /**
@@ -66,6 +77,11 @@ public class GameMap {
         if(instance == null)
             instance = new GameMap();
         return instance;
+    }
+
+    // Add a ReentrantLock for each position in the grid
+    private ReentrantLock getLockForPosition(Position pos) {
+        return locks.computeIfAbsent(pos, k -> new ReentrantLock());
     }
 
     /**
@@ -83,12 +99,19 @@ public class GameMap {
           All compound actions (like iteration, multiple-step logic) on these lists
           are additionally guarded with synchronized blocks for full thread safety.
          */
-        entity.setVisible(false);
         Position pos = entity.getPosition();
-        grid.putIfAbsent(pos, Collections.synchronizedList(new ArrayList<>()));
-        List<GameEntity> list = grid.get(pos);
-        synchronized (list) {
-            list.add(entity);
+        ReentrantLock lock = getLockForPosition(pos);
+        lock.lock(); // Lock the position
+        try {
+            entity.setVisible(false);
+            grid.putIfAbsent(pos, Collections.synchronizedList(new ArrayList<>()));
+            List<GameEntity> list = grid.get(pos);
+            synchronized (list) {
+                list.add(entity);
+            }
+        }
+        finally {
+            lock.unlock(); // Always unlock after operation
         }
     }
 
@@ -99,11 +122,18 @@ public class GameMap {
      */
     public void removeEntity(GameEntity entity) {
         Position pos = entity.getPosition();
-        List<GameEntity> list = grid.get(pos);
-        if (list != null) {
-            synchronized (list) {
-                list.remove(entity);
+        ReentrantLock lock = getLockForPosition(pos);
+        lock.lock(); // Lock the position
+        try {
+            List<GameEntity> list = grid.get(pos);
+            if (list != null) {
+                synchronized (list) {
+                    list.remove(entity);
+                }
             }
+        }
+        finally {
+            lock.unlock(); // Always unlock after operation
         }
     }
 
@@ -293,6 +323,16 @@ public class GameMap {
         return all;
     }
 
+    public Set<Position> getAllPositions() {
+        mapLock.lock();
+        try {
+            return new HashSet<>(grid.keySet()); // Snapshot copy to prevent external modification
+        } finally {
+            mapLock.unlock();
+        }
+    }
+
+
     /**
      * Populates the grid randomly with enemies, items, and walls.
      * Uses fixed probabilities for each type.
@@ -337,28 +377,34 @@ public class GameMap {
      * @param playerPos the player's current position
      */
     public void updatePlayerView(Position playerPos) {
-        for (List<GameEntity> list : grid.values()) {
-            synchronized (list) {
-                for (GameEntity entity : list) {
-                    entity.setVisible(false);
+        mapLock.lock();
+        try {
+            for (List<GameEntity> list : grid.values()) {
+                synchronized (list) {
+                    for (GameEntity entity : list) {
+                        entity.setVisible(false);
+                    }
                 }
             }
-        }
 
-        for (int row = 0; row < rows; row++) {
-            for (int col = 0; col < cols; col++) {
-                Position pos = new Position(row, col);
-                if (playerPos.distanceTo(pos) <= 2) {
-                    List<GameEntity> list = grid.get(pos);
-                    if (list != null) {
-                        synchronized (list) {
-                            for (GameEntity entity : list) {
-                                entity.setVisible(true);
+            for (int row = 0; row < rows; row++) {
+                for (int col = 0; col < cols; col++) {
+                    Position pos = new Position(row, col);
+                    if (playerPos.distanceTo(pos) <= 2) {
+                        List<GameEntity> list = grid.get(pos);
+                        if (list != null) {
+                            synchronized (list) {
+                                for (GameEntity entity : list) {
+                                    entity.setVisible(true);
+                                }
                             }
                         }
                     }
                 }
             }
+        }
+        finally {
+            mapLock.unlock();
         }
     }
 
@@ -370,7 +416,7 @@ public class GameMap {
      * @param newPos new enemy position if possible to move there
      * @return true if the move was successful, false otherwise
      */
-    public boolean tryMoveEnemyRandomly(Enemy enemy, Position newPos) {
+    public boolean tryMoveEnemy(Enemy enemy, Position newPos) {
         Position currentPos = enemy.getPosition();
 
         if (!isValidPosition(newPos) || isGameItemBlocking(newPos) || isPlayerBlocking(newPos) || isEnemyBlocking(newPos)) {
@@ -386,14 +432,6 @@ public class GameMap {
         addEntity(enemy);
         return true;
     }
-
-    public boolean moveEnemy(Enemy enemy, Position position) {
-        removeEntity(enemy);
-        enemy.setPosition(position);
-        addEntity(enemy);
-        return true;
-    }
-
 
     /**
      * Retrieves all entities currently marked as visible.

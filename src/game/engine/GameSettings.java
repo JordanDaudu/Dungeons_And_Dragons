@@ -1,5 +1,8 @@
 package game.engine;
 
+import game.characters.PlayerCharacter;
+import game.logging.GameLogger;
+
 /**
  * Encapsulates configuration settings for initializing the game, including
  * the number of players and the map dimensions (rows and columns).
@@ -67,4 +70,5 @@ public class GameSettings {
             return false;
         return true;
     }
+
 }

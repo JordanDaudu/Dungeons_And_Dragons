@@ -67,6 +67,9 @@ public class GameApplication implements ScreenListener {
         // After creating the character, move to the map screen:
         SoundManager.crossfadeTo("battle1", true);
 
+        // Starting the global events in the map
+        gameApplication.controller.startManagerEvent();
+
         // Ensure the map is fully drawn and refreshed
         gameApplication.controller.getGameMapGUI().setVisible(true);
         gameApplication.controller.getGameMapGUI().revalidate();
@@ -147,5 +150,4 @@ public class GameApplication implements ScreenListener {
         });
         turnTimer.start();
     }
-
 }

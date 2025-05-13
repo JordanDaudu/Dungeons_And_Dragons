@@ -23,7 +23,7 @@ public class EnemyTask implements Runnable {
 
         enemy.threadAction(); // Defined in enemy
 
-        int nextDelayMillis = RandomUtil.getRandomInt(500, 1501); // Random between 500 (inclusive) and 1500 (inclusive)
+        int nextDelayMillis = RandomUtil.getRandomInt(1500, 3001); // Random between 1500 (inclusive) and 3000 (inclusive)
         scheduler.schedule(new EnemyTask(enemy, scheduler), nextDelayMillis, TimeUnit.MILLISECONDS);
     }
 }

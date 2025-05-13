@@ -3,7 +3,10 @@ out/
 !**/src/main/**/out/
 !**/src/test/**/out/
 .idea/
+
+### Project Specific ###
 Dungeons_And_Dragons.iml
+src/game/logging/game.log
 
 ### Eclipse ###
 .apt_generated

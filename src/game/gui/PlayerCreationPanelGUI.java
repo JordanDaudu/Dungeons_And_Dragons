@@ -2,6 +2,7 @@ package game.gui;
 
 import game.core.ScreenAction;
 import game.core.ScreenListener;
+import game.logging.GameLogger;
 
 import javax.swing.*;
 import java.awt.*;
@@ -109,11 +110,19 @@ public class PlayerCreationPanelGUI extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 playerName = nameField.getText();
                 if (selectedClass != null && !playerName.trim().isEmpty()) {
-                    System.out.println("Player Name: " + playerName);
-                    System.out.println("Chosen Class: " + selectedClass);
+                    try {
+                        GameLogger.getInstance().log("Created new player: " + playerName + ", class: " + selectedClass);
+                    }
+                    catch (Exception ex) {
+                        ex.printStackTrace(); // Print to console to see the cause
+                        JOptionPane.showMessageDialog(PlayerCreationPanelGUI.this,
+                                "Logging failed: " + ex.getMessage(), "Log Error", JOptionPane.ERROR_MESSAGE);
+                    }
+
                     listener.onAction(ScreenAction.START_GAME, playerName, selectedClass);
                     dialog.setVisible(false);
-                } else {
+                }
+                else {
                     JOptionPane.showMessageDialog(PlayerCreationPanelGUI.this, "Please enter your name and select a class.", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }

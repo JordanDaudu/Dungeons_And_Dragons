@@ -2,6 +2,7 @@ package game.items;
 
 import game.characters.PlayerCharacter;
 import game.engine.RandomUtil;
+import game.engine.SoundManager;
 import game.map.Position;
 
 import java.awt.Image;
@@ -85,6 +86,7 @@ public class Treasure extends GameItem implements Interactable {
         if(c.getPosition().distanceTo(getPosition()) == 1) {
             if(!collected) {
                 collected = true;
+                SoundManager.playEffect("interactTreasure");
                 int randomizer = RandomUtil.getRandomInt(0, 6);
                 if(randomizer >= 0 && randomizer <= 2) {
                     // ADD TREASURE POINTS

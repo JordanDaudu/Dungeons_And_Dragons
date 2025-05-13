@@ -43,7 +43,7 @@ public enum ScreenAction {
 
     ENEMY_ACTION,
 
-    ENEMY_ATTACK,
+    GLOBAL_EVENT,
 
     /**
      * Exits the game and closes the application.

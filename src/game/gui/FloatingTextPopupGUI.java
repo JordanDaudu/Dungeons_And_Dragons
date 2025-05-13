@@ -52,8 +52,50 @@ public class FloatingTextPopupGUI extends JComponent {
         parentPanel.add(textLabel, 0); // Adding the label to the parent panel, on top
         textLabel.setLocation(parentPanel.getWidth() / 4, parentPanel.getHeight() / 4); // Initial position
 
+        animateFloatingText(textLabel, parentPanel, 20);
+    }
+
+    /**
+     * Displays the floating text popup on the content pane of a JFrame.
+     *
+     * @param frame the JFrame to show the floating text on
+     */
+    public void showFloatingTextPopup(JFrame frame) {
+        Container contentPane = frame.getContentPane();
+
+        // Create a transparent overlay panel for the floating text
+        JPanel overlayPanel = new JPanel(null); // Use null layout for absolute positioning
+        overlayPanel.setOpaque(false); // Let the background show through
+        overlayPanel.setSize(contentPane.getSize());
+        overlayPanel.setLocation(0, 0);
+
+        // Add the overlay to the content pane
+        contentPane.setLayout(null); // Needed to position the overlay
+        contentPane.add(overlayPanel, 0); // Add it at the top of the Z-order
+
+        // Create and position the label
+        JLabel textLabel = new JLabel(text);
+        textLabel.setFont(new Font("Arial", Font.BOLD, fontSize));
+        textLabel.setForeground(color);
+
+        Dimension labelSize = textLabel.getPreferredSize();
+        textLabel.setSize(labelSize);
+        textLabel.setLocation(
+                (overlayPanel.getWidth() - labelSize.width) / 2,
+                overlayPanel.getHeight() / 4
+        );
+
+        overlayPanel.add(textLabel);
+        overlayPanel.repaint();
+
+        // Start the animation
+        animateFloatingText(textLabel, overlayPanel, 60);
+    }
+
+
+    private void animateFloatingText(JLabel textLabel, JPanel parentPanel, final int totalSteps) {
+        // totalSteps = Animation frames
         Timer timer = new Timer(30, null); // Fires every 30 milliseconds
-        final int totalSteps = 20; // Animation frames
         final int[] currentStep = {0};
 
         timer.addActionListener(e -> {

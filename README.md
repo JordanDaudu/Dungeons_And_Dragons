@@ -118,16 +118,16 @@ There are **two ways** to mark the resources folder correctly:
 
 ## 🖥️ Technologies Used
 
-| Tool / Concept       | Purpose                                                              |
-|----------------------|----------------------------------------------------------------------|
-| Java                 | Core game logic and backend                                           |
-| Java Swing           | GUI components (windows, buttons, panels)                            |
-| OOP Principles       | Inheritance, interfaces, and polymorphism for scalable design        |
-| Threads              | Enable concurrent character actions and smoother game flow           |
-| Locks (Synchronization) | Manage thread safety during shared resource access (e.g., inventory, combat) |
-| Design Patterns      | Applied patterns like Singleton, MVC, and Observer               |
-| Custom Audio Engine  | Handles dynamic sound effects and adaptive background music           |
-| IntelliJ / Eclipse   | Development environment and debugging support                         |
+| Tool / Concept       | Purpose                                                                           |
+|----------------------|-----------------------------------------------------------------------------------|
+| Java                 | Core game logic and backend                                                       |
+| Java Swing           | GUI components (windows, buttons, panels)                                         |
+| OOP Principles       | Inheritance, interfaces, and polymorphism for scalable design                     |
+| Threads              | Enable concurrent character actions and smoother game flow                        |
+| Locks (Synchronization) | Manage thread safety during shared resource access (e.g., inventory, combat, map) |
+| Design Patterns      | Applied patterns like Singleton, MVC, ThreadPool and Observer                     |
+| Custom Audio Engine  | Handles dynamic sound effects and adaptive background music                       |
+| IntelliJ / Eclipse   | Development environment and debugging support                                     |
 
 
 ---

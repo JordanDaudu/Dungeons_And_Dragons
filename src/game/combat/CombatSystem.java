@@ -7,8 +7,11 @@ import game.characters.PlayerCharacter;
 import game.core.ScreenAction;
 import game.core.ScreenListener;
 import game.engine.SoundManager;
+import game.logging.GameLogger;
 
 import java.awt.*;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * The CombatSystem class handles combat resolution between two Combatants.
@@ -19,6 +22,7 @@ public class CombatSystem {
     // Data Members
     private static CombatSystem instance = null;
     private ScreenListener listener;
+    private static final Lock combatLock = new ReentrantLock(true); // Fair lock, FIFO order
 
     // Methods
     /**
@@ -51,14 +55,24 @@ public class CombatSystem {
      * @param defender the target of the attack
      */
     public void resolveCombat(Combatant attacker, Combatant defender) {
-        System.out.println("Attacker: " + attacker);
-        System.out.println("Defender: " + defender);
-        executeCombatTurn(attacker, defender);
+        combatLock.lock();
+        try {
+            System.out.println("Attacker: " + attacker);
+            System.out.println("Defender: " + defender);
+            executeCombatTurn(attacker, defender);
 
-        if (!defender.isDead()) {
-            System.out.println("Attacker: " + defender);
-            System.out.println("Defender: " + attacker);
-            executeCombatTurn(defender, attacker);
+            if (!defender.isDead()) {
+                System.out.println("Attacker: " + defender);
+                System.out.println("Defender: " + attacker);
+                executeCombatTurn(defender, attacker);
+            }
+        }
+        catch (Exception e) {
+            // Handle any specific exceptions that might be thrown during combat
+            e.printStackTrace();
+        }
+        finally {
+            combatLock.unlock();  // Ensure lock is always released
         }
     }
 
@@ -89,12 +103,14 @@ public class CombatSystem {
         if (attacker instanceof Archer) {
             if (defender.tryEvade(attacker.getAccuracyModifier())) {
                 System.out.println("Attack evaded!");
+                logEvade(attacker, defender); // LOGGING HERE
                 playGrayEvadedBlinkAnimation(attacker, defender);
                 return;
             }
             else {
                 attacker.fight(defender);
                 amountOfReceivedDamage = defender.getLastDamageReceived();
+                logAttack(attacker, defender, amountOfReceivedDamage); // LOGGING HERE
                 if(amountOfReceivedDamage > 0)
                     playNumberPopUpAnimation(attacker, defender, amountOfReceivedDamage);
                 playAttackSound(attacker);
@@ -103,12 +119,14 @@ public class CombatSystem {
         }
         else if (defender.tryEvade()) {
             System.out.println("Attack evaded!");
+            logEvade(attacker, defender); // LOGGING HERE
             playGrayEvadedBlinkAnimation(attacker, defender);
             return;
         }
         else {
             attacker.fight(defender);
             amountOfReceivedDamage = defender.getLastDamageReceived();
+            logAttack(attacker, defender, amountOfReceivedDamage); // LOGGING HERE
             if(amountOfReceivedDamage > 0)
                 playNumberPopUpAnimation(attacker, defender, amountOfReceivedDamage);
             playAttackSound(attacker);
@@ -213,4 +231,29 @@ public class CombatSystem {
         if(attacker instanceof PlayerCharacter && attacker.getHealth() > 25)
             SoundManager.crossfadeTo("dragon1", true);
     }
+
+    private void logAttack(Combatant attacker, Combatant defender, int damage) {
+        String message = "";
+
+        if (attacker instanceof PlayerCharacter && defender instanceof Enemy) {
+            message = "Player: " + ((PlayerCharacter) attacker).getName() + " attacked Enemy " + defender.getClass().getSimpleName() + " and dealt " + damage + " damage.";
+        }
+        else if (attacker instanceof Enemy && defender instanceof PlayerCharacter) {
+            message = "Enemy: " + attacker.getClass().getSimpleName() + " attacked Player " + ((PlayerCharacter) defender).getName() + " and dealt " + damage + " damage.";
+        }
+        GameLogger.getInstance().log(message);
+    }
+
+    private void logEvade(Combatant attacker, Combatant defender) {
+        String message = "";
+
+        if (attacker instanceof PlayerCharacter && defender instanceof Enemy) {
+            message = "Enemy: " + defender.getClass().getSimpleName() + " evaded attack from Player: " + ((PlayerCharacter) attacker).getName() + ".";
+        } else if (attacker instanceof Enemy && defender instanceof PlayerCharacter) {
+            message = "Player: " + ((PlayerCharacter) defender).getName() + " evaded attack from Enemy " + attacker.getClass().getSimpleName() + ".";
+        }
+
+        GameLogger.getInstance().log(message);
+    }
+
 }

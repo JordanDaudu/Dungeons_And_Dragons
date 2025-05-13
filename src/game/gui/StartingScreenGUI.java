@@ -1,6 +1,7 @@
 package game.gui;
 
 import game.engine.GameSettings;
+import game.logging.GameLogger;
 
 import javax.swing.*;
 import java.awt.*;
@@ -52,11 +53,20 @@ public class StartingScreenGUI extends JDialog {
     public static GameSettings askForSettings() {
         StartingScreenGUI dialog = new StartingScreenGUI(null);
         dialog.setVisible(true); // Blocks until user closes or confirms
+        GameSettings settings = new GameSettings(dialog.selectedPlayers, dialog.selectedRows, dialog.selectedCols);
+        logStartingScreen(settings);
 
         // Return a new GameSettings object with all selected values
-        return new GameSettings(dialog.selectedPlayers, dialog.selectedRows, dialog.selectedCols);
+        return settings;
     }
 
+    private static void logStartingScreen(GameSettings settings) {
+        String message = "Game initialized with " +
+                settings.getPlayers() + " player(s), " +
+                settings.getRows() + " rows and " +
+                settings.getCols() + " columns.";
+        GameLogger.getInstance().log(message);
+    }
     /**
      * Initializes GUI components, including spinners and background.
      */

@@ -9,6 +9,7 @@ import game.core.GameEntity;
 import game.engine.GameController;
 import game.core.ScreenAction;
 import game.core.ScreenListener;
+import game.engine.RandomUtil;
 import game.items.GameItem;
 import game.items.Interactable;
 import game.map.GameMap;
@@ -41,6 +42,7 @@ public class GameMapGUI extends JFrame implements ScreenListener{
     private final GameController gameController;
     private final ScreenListener controllerListener;
     private JPanel gridPanel;
+    private FloatingTextPopupGUI floatingTextPopupGameMapGUI;
 
     private final InputMap inputMap = getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
     private final ActionMap actionMap = getRootPane().getActionMap();
@@ -48,6 +50,7 @@ public class GameMapGUI extends JFrame implements ScreenListener{
     private InventoryPanelGUI inventoryPanelGUI;
 
     private TileColorBackgroundTheme currentColorTheme = TileColorBackgroundTheme.CLEAR;
+    private Color temporaryOverrideColor = null;
 
     private static final int ANIMATION_DELAY = 30; // ms between animation steps
     private static final float FADE_STEP = 0.1f;   // alpha step per tick
@@ -238,7 +241,15 @@ public class GameMapGUI extends JFrame implements ScreenListener{
                 }
             }
             case ScreenAction.RECEIVE_DAMAGE_TEXT_ANIMATION -> {
-                if(data[0] instanceof Combatant character && data[1] instanceof Position position && data[2] instanceof Integer amount) {
+                if(data[0] == null && data[1] instanceof Position position && data[2] instanceof Integer amount) {
+                    Position pos = new Position(position);
+                    TileCell tileCell = getCellAtPosition(pos);
+                    if (tileCell != null) {
+                        tileCell.showDamagePopup(amount, new Color(255, 0, 0)); // Red
+                        return true;
+                    }
+                }
+                else if(data[0] instanceof Combatant character && data[1] instanceof Position position && data[2] instanceof Integer amount) {
                     Position pos = new Position(position);
                     TileCell tileCell = getCellAtPosition(pos);
                     if (tileCell != null) {
@@ -357,6 +368,76 @@ public class GameMapGUI extends JFrame implements ScreenListener{
     public void setTileBackgroundTheme(TileColorBackgroundTheme colorTheme) {
         this.currentColorTheme = colorTheme;
         repaint();
+    }
+
+    private Color getEffectiveTileBackgroundColor() {
+        return (temporaryOverrideColor != null) ? temporaryOverrideColor :
+                (currentColorTheme != null ? currentColorTheme.getColor() : null);
+    }
+
+
+    public void magicWaveAnimation() {
+        Set<Position> allPositions = map.getAllPositions();
+        // Purple magic wave flash
+        flashBackgroundEffect(new Color(138, 43, 226), 400);
+        // Optional rumble
+        rumbleWindow(5, 400);
+
+        for (Position pos : allPositions) {
+            List<GameEntity> entitiesAtPos = map.getEntitiesAt(pos);
+
+            for (GameEntity entity : entitiesAtPos) {
+                if (entity instanceof AbstractCharacter character && character.isVisible()) {
+                    int damage = 2;
+
+                    onAction(ScreenAction.RECEIVE_DAMAGE_TEXT_ANIMATION, null, pos, damage);
+                    break; // only one character per tile gets the effect
+                }
+            }
+        }
+        // Showing up on frame which event plays out
+        Timer delayTimer = new Timer(400, e -> {
+            floatingTextPopupGameMapGUI = new FloatingTextPopupGUI("*Magic Wave*", new Color(138, 43, 226), 40);
+            floatingTextPopupGameMapGUI.showFloatingTextPopup(this);
+        });
+        delayTimer.setRepeats(false); // Run only once
+        delayTimer.start();
+    }
+
+    private void flashBackgroundEffect(Color flashColor, int durationMillis) {
+        this.temporaryOverrideColor = flashColor;
+        repaint();
+
+        new Timer(durationMillis, e -> {
+            this.temporaryOverrideColor = null;
+            repaint();
+            ((Timer) e.getSource()).stop();
+        }).start();
+    }
+
+    private void rumbleWindow(int intensity, int durationMillis) {
+        Point originalLocation = this.getLocation();
+
+        Thread rumbleThread = new Thread(() -> {
+            long endTime = System.currentTimeMillis() + durationMillis;
+            while (System.currentTimeMillis() < endTime) {
+                int xOffset = RandomUtil.getRandomInt(intensity * 2 + 1) - intensity;
+                int yOffset = RandomUtil.getRandomInt(intensity * 2 + 1) - intensity;
+
+                SwingUtilities.invokeLater(() ->
+                        setLocation(originalLocation.x + xOffset, originalLocation.y + yOffset)
+                );
+
+                try {
+                    Thread.sleep(20); // Control rumble speed
+                } catch (InterruptedException ignored) {}
+            }
+
+            // Restore original position
+            SwingUtilities.invokeLater(() -> setLocation(originalLocation));
+        });
+
+        rumbleThread.start();
     }
 
     /**
@@ -512,8 +593,9 @@ public class GameMapGUI extends JFrame implements ScreenListener{
 
             super.paintComponent(g);
 
-            if(currentColorTheme != null && currentColorTheme.getColor() != null) {
-                g2d.setColor(currentColorTheme.getColor());
+            Color bgColor = getEffectiveTileBackgroundColor();
+            if (bgColor != null) {
+                g2d.setColor(bgColor);
                 g2d.fillRect(0, 0, getWidth(), getHeight());
             }
 

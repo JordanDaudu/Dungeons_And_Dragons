@@ -47,6 +47,7 @@ public class SoundManager {
         loadEffect("swordSwing", "sounds/effects/swordSwing.wav");
         loadEffect("bowShot", "sounds/effects/bow.wav");
         loadEffect("magicSpell", "sounds/effects/magic_spell.wav");
+        loadEffect("interactTreasure", "sounds/effects/interactTreasure.wav");
     }
 
     /**
