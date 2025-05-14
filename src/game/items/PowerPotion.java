@@ -2,6 +2,7 @@ package game.items;
 
 import game.characters.PlayerCharacter;
 import game.engine.RandomUtil;
+import game.logging.GameLogger;
 import game.map.Position;
 
 import java.awt.Image;
@@ -74,7 +75,7 @@ public class PowerPotion extends Potion {
         // The second condition is specially for items inside player inventory
         if(c.getPosition().distanceTo(getPosition()) == 1 || getPosition().equals(new Position(-1, -1))) {
             if(!getIsUsed()) {
-                System.out.println(c.getName() + " was powered up " + getIncreaseAmount() + "PP");
+                GameLogger.getInstance().log(c.getName() + " used a power potion and was powered up " + getIncreaseAmount() + "PP");
                 c.addPower(getIncreaseAmount());
                 setIsUsed(true);
             }

@@ -20,7 +20,7 @@ import java.util.concurrent.locks.ReentrantLock;
 public class CombatSystem {
 
     // Data Members
-    private static CombatSystem instance = null;
+    private static final CombatSystem instance = new CombatSystem(null);
     private ScreenListener listener;
     private static final Lock combatLock = new ReentrantLock(true); // Fair lock, FIFO order
 
@@ -40,8 +40,6 @@ public class CombatSystem {
      * @return the CombatSystem singleton instance
      */
     public static CombatSystem getInstance() {
-        if (instance == null)
-            instance = new CombatSystem(null);
         return instance;
     }
 
@@ -137,6 +135,7 @@ public class CombatSystem {
         if (defender.isDead()) {
             if (defender instanceof Enemy) {
                 defender.defeat();
+                GameLogger.getInstance().log(defender.getClass().getSimpleName() + "was defeated!");
                 changeBattleMusic(attacker, defender);
             } else {
                 defender.defeat();

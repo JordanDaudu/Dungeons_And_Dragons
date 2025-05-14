@@ -1,8 +1,10 @@
 package game.items;
 
 import game.characters.PlayerCharacter;
+import game.engine.GameController;
 import game.engine.RandomUtil;
 import game.engine.SoundManager;
+import game.logging.GameLogger;
 import game.map.Position;
 
 import java.awt.Image;
@@ -91,18 +93,18 @@ public class Treasure extends GameItem implements Interactable {
                 if(randomizer >= 0 && randomizer <= 2) {
                     // ADD TREASURE POINTS
                     if(c.updateTreasurePoints(value))
-                        System.out.println(c.getName() + " gained " + getValue() + " treasure points!");
+                        GameLogger.getInstance().log(c.getName() + " gained " + getValue() + " treasure points!");
                 }
                 // Items in the inventory don't have a position on the map so we initialize as (-1, -1)
                 else if(randomizer >= 3 && randomizer <= 4) {
                     // ADD TO INVENTORY POTION
                     if(c.addToInventory(new Potion(new Position(-1, -1), false, "Potion")))
-                        System.out.println("Potion added to " + c.getName() + "'s inventory!");
+                        GameLogger.getInstance().log("Potion added to " + c.getName() + "'s inventory!");
                 }
                 else {
                     // ADD TO INVENTORY POWER POTION
                     if(c.addToInventory(new PowerPotion(new Position(-1, -1), false, "Power Potion")))
-                        System.out.println("Power Potion added to " + c.getName() + "'s inventory!");
+                        GameLogger.getInstance().log("Power Potion added to " + c.getName() + "'s inventory!");
                 }
             }
         }

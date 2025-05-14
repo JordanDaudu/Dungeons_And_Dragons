@@ -111,6 +111,9 @@ public class SoundManager {
                 }
                 clip.start();
 
+                System.out.println("Play music completed. '" + name + "' is now active.");
+                System.out.println("Current track playing: " + (currentClip != null && currentClip.isRunning() ? name : "NOT PLAYING"));
+
                 // 🚨 Checking if clip is actually running
                 forceRestartIfNeeded(name);
             }

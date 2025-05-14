@@ -2,6 +2,7 @@ package game.items;
 
 import game.characters.PlayerCharacter;
 import game.engine.RandomUtil;
+import game.logging.GameLogger;
 import game.map.Position;
 
 import java.awt.Image;
@@ -110,7 +111,7 @@ public class Potion extends GameItem implements Interactable {
         // The second condition is specially for items inside player inventory
         if(c.getPosition().distanceTo(getPosition()) == 1 || getPosition().equals(new Position(-1, -1))) {
             if(!isUsed) {
-                System.out.println(c.getName() + " was healed " + getIncreaseAmount() + "HP");
+                GameLogger.getInstance().log(c.getName() + " used a potion and was healed " + getIncreaseAmount() + "HP");
                 c.heal(increaseAmount);
                 isUsed = true;
             }

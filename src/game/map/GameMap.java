@@ -30,7 +30,7 @@ public class GameMap {
     private final ConcurrentMap<Position, ReentrantLock> locks;
     private int rows;
     private int cols;
-    private static GameMap instance = null;
+    private static GameMap instance = new GameMap();
     private final ReentrantLock mapLock = new ReentrantLock(); // Universal lock used only when updating the player view
 
     // Methods
@@ -74,8 +74,6 @@ public class GameMap {
      * @return the single GameMap instance
      */
     public static GameMap getInstance() {
-        if(instance == null)
-            instance = new GameMap();
         return instance;
     }
 

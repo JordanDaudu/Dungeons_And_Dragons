@@ -6,6 +6,7 @@ import game.core.PlayerMovement;
 import game.items.Interactable;
 import game.items.Potion;
 import game.items.PowerPotion;
+import game.logging.GameLogger;
 import game.map.Position;
 
 /**
@@ -252,5 +253,7 @@ public abstract class PlayerCharacter extends AbstractCharacter implements Playe
         setVisible(false);
         System.out.println("\n||GAME OVER " + getName() + "!||\n");
         System.out.println(getName() + " you gained " + getTreasurePoints() + " treasure point(s) in total!\n");
+        GameLogger.getInstance().log("Player: " + this.getName() + " is dead");
+
     }
 }

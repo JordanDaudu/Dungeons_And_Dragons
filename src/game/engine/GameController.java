@@ -155,6 +155,9 @@ public class GameController implements ScreenListener {
         GameLogger.getInstance().log("Player: " + getCurrentPlayer().getName() + "successfully moved at position:" + getCurrentPlayer().getPosition());
     }
 
+    public void logTreasureLoot(){
+
+    }
 
     /**
      * Handles actions triggered by the GUI or game loop.
@@ -230,6 +233,8 @@ public class GameController implements ScreenListener {
                         // changing Position of Interactable to make sure it's usable afterward
                         chosen.setPosition(new Position(-1, -1));
                         player.addToInventory(interactable);
+                        // ✅ Log pickup of non-treasure item
+                        GameLogger.getInstance().log(player.getName() + " picked up a " + chosen.getClass().getSimpleName() + ".");
                     }
                     map.updatePlayerView(player.getPosition());
                     this.onAction(ScreenAction.END_TURN, (Object) null);

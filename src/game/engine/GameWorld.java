@@ -24,7 +24,7 @@ public class GameWorld {
     private final List<GameItem> items;
     private final GameMap map;
     private PlayerCharacter currentPlayer;
-    private static GameWorld instance = null;
+    private static volatile GameWorld instance = null;
 
     // Methods
     /**
@@ -50,7 +50,11 @@ public class GameWorld {
      */
     public static void initialize(int row, int col) {
         if (instance == null) {
-            instance = new GameWorld(row, col); // Create instance only once
+            synchronized (GameWorld.class) {
+                if(instance == null) {
+                    instance = new GameWorld(row, col); // Create instance only once
+                }
+            }
         }
         else {
             throw new IllegalStateException("GameWorld is already initialized.");
@@ -59,6 +63,7 @@ public class GameWorld {
 
     /**
      * Gets the singleton instance of the game world.
+     * Needs to initialize it before using getInstance()
      *
      * @return the GameWorld instance
      */
