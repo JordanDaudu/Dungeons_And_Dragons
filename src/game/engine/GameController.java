@@ -23,6 +23,7 @@ import javax.swing.*;
 import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Controls the game logic by mediating between the game world and the GUI.
@@ -38,6 +39,7 @@ public class GameController implements ScreenListener {
     private final GameMapGUI gameMapGUI;
     private boolean endTurn = false;
     private ScheduledExecutorService enemyScheduler;
+    private AtomicBoolean enemyRunningFlag = new AtomicBoolean(true);
     private static GlobalEventManager manager;
     private static final Scanner scanner = new Scanner(System.in);
 
@@ -72,6 +74,8 @@ public class GameController implements ScreenListener {
         return true;
     }
 
+    public AtomicBoolean getEnemyRunningFlag() {return enemyRunningFlag;}
+
     public void startManagerEvent() {
         manager = new GlobalEventManager(map, this);
         manager.start();
@@ -80,6 +84,18 @@ public class GameController implements ScreenListener {
     public void stopManagerEvent() {
         if (manager != null) {
             manager.stop();  // Stop the manager
+        }
+    }
+
+    public boolean setEnemyScheduler(ScheduledExecutorService scheduler) {
+        this.enemyScheduler = scheduler;
+        return true;
+    }
+
+    public void shutdownEnemyScheduler() {
+        if (enemyScheduler != null && !enemyScheduler.isShutdown()) {
+            enemyRunningFlag.set(false);
+            enemyScheduler.shutdown();
         }
     }
 
@@ -104,17 +120,6 @@ public class GameController implements ScreenListener {
      */
     public PlayerCharacter getCurrentPlayer() {
         return gameWorld.getCurrentPlayer();
-    }
-
-    public boolean setEnemyScheduler(ScheduledExecutorService scheduler) {
-        this.enemyScheduler = scheduler;
-        return true;
-    }
-
-    public void shutdownEnemyScheduler() {
-        if (enemyScheduler != null && !enemyScheduler.isShutdown()) {
-            enemyScheduler.shutdown();
-        }
     }
 
     /**

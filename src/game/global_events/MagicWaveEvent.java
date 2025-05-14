@@ -15,6 +15,6 @@ public class MagicWaveEvent implements GlobalEvent {
 
     @Override
     public String getName() {
-        return "Magic Wave - All entities take 2 damage!";
+        return "Magic Wave - All characters take 2 damage!";
     }
 }

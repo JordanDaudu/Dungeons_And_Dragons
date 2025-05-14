@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Main class for running the Dungeons & Dragons-like game.
@@ -203,10 +204,10 @@ public class GameWorld {
         }
     }
 
-    public void attachGameControllerToEnemies(ScreenListener gameController, ScheduledExecutorService enemyScheduler) {
+    public void attachGameControllerToEnemies(ScreenListener gameController, ScheduledExecutorService enemyScheduler, AtomicBoolean atomicBoolean) {
         for(Enemy enemy : enemies) {
             enemy.setScreenListener(gameController);
-            enemyScheduler.schedule(new EnemyTask(enemy, enemyScheduler), 1, TimeUnit.SECONDS);
+            enemyScheduler.schedule(new EnemyTask(enemy, enemyScheduler, atomicBoolean), 1, TimeUnit.SECONDS);
         }
     }
 

@@ -41,6 +41,6 @@ public class SandstormEvent implements GlobalEvent {
 
     @Override
     public String getName() {
-        return "Sandstorm - Entities shift 1 tile " + directionName + "!";
+        return "Sandstorm - Entities shift 1 tile " + directionName + " and characters receive 1 damage!";
     }
 }
