@@ -450,6 +450,70 @@ public class GameMap {
         return visible;
     }
 
+    public void applySandstorm(Position delta) {
+        System.out.println("Sandstorm pushing with delta: " + delta);
+
+        int startRow = 0, endRow = rows, stepRow = 1;
+        int startCol = 0, endCol = cols, stepCol = 1;
+
+        // Adjust iteration order based on delta direction
+        if (delta.getRow() > 0) {
+            startRow = rows - 1;
+            endRow = -1;
+            stepRow = -1;
+        } else if (delta.getRow() < 0) {
+            startRow = 0;
+            endRow = rows;
+            stepRow = 1;
+        }
+
+        if (delta.getCol() > 0) {
+            startCol = cols - 1;
+            endCol = -1;
+            stepCol = -1;
+        } else if (delta.getCol() < 0) {
+            startCol = 0;
+            endCol = cols;
+            stepCol = 1;
+        }
+
+        mapLock.lock();
+        try {
+            for (int row = startRow; row != endRow; row += stepRow) {
+                for (int col = startCol; col != endCol; col += stepCol) {
+                    Position current = new Position(row, col);
+                    List<GameEntity> entities = getEntitiesAt(current);
+
+                    if (entities.isEmpty()) continue;
+
+                    List<GameEntity> moved = new ArrayList<>();
+
+                    for (GameEntity entity : entities) {
+                        if (entity instanceof Wall) continue;
+
+                        Position target = new Position(row + delta.getRow(), col + delta.getCol());
+                        if (isValidPosition(target) &&
+                                !isGameItemBlocking(target) &&
+                                !isEnemyBlocking(target) &&
+                                !isPlayerBlocking(target)) {
+
+                            removeEntity(entity);
+                            entity.setPosition(target);
+                            moved.add(entity);
+                        }
+                    }
+                    for (GameEntity e : moved) {
+                        addEntity(e);
+                    }
+                }
+            }
+        }
+        finally {
+            mapLock.unlock();
+        }
+    }
+
+
     // For debugging only
     /**
      * Prints the player's view of the map.

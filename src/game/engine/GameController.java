@@ -7,6 +7,8 @@ import game.combat.RangedFighter;
 import game.core.ScreenAction;
 import game.core.ScreenListener;
 import game.global_events.GlobalEventManager;
+import game.global_events.MagicWaveEvent;
+import game.global_events.SandstormEvent;
 import game.gui.CongratulationsGUI;
 import game.gui.GameMapGUI;
 import game.gui.GameOverGUI;
@@ -152,11 +154,13 @@ public class GameController implements ScreenListener {
     }
 
     public void logMovements() {
-        GameLogger.getInstance().log("Player: " + getCurrentPlayer().getName() + "successfully moved at position:" + getCurrentPlayer().getPosition());
+        GameLogger.getInstance().log("Player: " + getCurrentPlayer().getName() + " successfully moved to position:" + getCurrentPlayer().getPosition());
     }
 
-    public void logTreasureLoot(){
-
+    private void shutDownThreads() {
+        shutdownEnemyScheduler();
+        stopManagerEvent();
+        GameLogger.getInstance().stop();
     }
 
     /**
@@ -195,7 +199,7 @@ public class GameController implements ScreenListener {
                 PlayerCharacter player = gameWorld.getCurrentPlayer();
                 int range = 1; // default
                 if (player instanceof RangedFighter)
-                    range = ((RangedFighter) player).getRange();
+                    range = player.getRangeModifier();
 
                 if(player.getPosition().distanceTo(enemy.getPosition()) <= range) {
                     // Combat resolution
@@ -261,6 +265,8 @@ public class GameController implements ScreenListener {
 
                         if (bestMove != null) {
                             if(gameWorld.getMap().tryMoveEnemy(enemy, bestMove)) {
+                                GameLogger.getInstance().log("Enemy: " + enemy.getClass().getSimpleName() +
+                                        " moved towards player to position " + bestMove + ".");
                                 map.updatePlayerView(gameWorld.getCurrentPlayer().getPosition());
                                 SwingUtilities.invokeLater(() -> getGameMapGUI().repaint());
                                 return true;
@@ -283,7 +289,13 @@ public class GameController implements ScreenListener {
                 }
             }
             case ScreenAction.GLOBAL_EVENT -> {
-                gameMapGUI.magicWaveAnimation();
+                if(data[0] instanceof MagicWaveEvent) {
+                    gameMapGUI.magicWaveAnimation();
+                }
+                else if(data[0] instanceof SandstormEvent) {
+                    gameMapGUI.sandstormAnimation();
+                    map.updatePlayerView(gameWorld.getCurrentPlayer().getPosition());
+                }
                 for(PlayerCharacter player : gameWorld.getPlayers()) {
                     if(player.isDead()) {
                         player.defeat();
@@ -316,8 +328,7 @@ public class GameController implements ScreenListener {
                     gameIsWon = true;
 
                 if(gameIsOver) {
-                    shutdownEnemyScheduler();
-                    stopManagerEvent();
+                    shutDownThreads();
                     GameOverGUI gameOver = new GameOverGUI(gameMapGUI, gameWorld.getPlayers());
                     gameOver.showDialog();
                     gameOver.setVisible(true);  // blocks until closed
@@ -327,8 +338,7 @@ public class GameController implements ScreenListener {
                     System.exit(0);
                 }
                 else if(gameIsWon) {
-                    shutdownEnemyScheduler();
-                    stopManagerEvent();
+                    shutDownThreads();
                     CongratulationsGUI congratulationsGUI = new CongratulationsGUI(gameMapGUI, gameWorld.getPlayers());
                     congratulationsGUI.showDialog();
                     congratulationsGUI.setVisible(true);

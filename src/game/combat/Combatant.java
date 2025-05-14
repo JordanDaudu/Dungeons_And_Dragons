@@ -148,4 +148,6 @@ public interface Combatant extends GameEntity {
      * @return true if the value was stored, false otherwise
      */
     default boolean setLastDamageReceived(int newLastDamageReceived) {return false;}
+
+    String getLogName();
 }

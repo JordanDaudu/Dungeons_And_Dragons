@@ -2,6 +2,7 @@ package game.global_events;
 
 import game.core.ScreenListener;
 import game.engine.RandomUtil;
+import game.logging.GameLogger;
 import game.map.GameMap;
 
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ public class GlobalEventManager {
         this.map = map;
         this.gameController = gameController;
         eventPool.add(new MagicWaveEvent());
-        // Add more events if needed
+        eventPool.add(new SandstormEvent());
     }
 
     public void start() {
@@ -35,8 +36,8 @@ public class GlobalEventManager {
 
             try {
                 GlobalEvent event = eventPool.get(RandomUtil.getRandomInt(eventPool.size()));
-                System.out.println("Global Event: " + event.getName());
                 event.execute(map, gameController);
+                GameLogger.getInstance().log("Global Event: " + event.getName());
             }
             catch (Exception e) {
                 e.printStackTrace(); // Log and continue

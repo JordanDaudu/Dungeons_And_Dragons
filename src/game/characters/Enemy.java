@@ -117,6 +117,11 @@ public abstract class Enemy extends AbstractCharacter {
         map.addEntity(new Treasure(getPosition(), true, "Loot", getLoot()));
     }
 
+    @Override
+    public String getLogName() {
+        return "Enemy: " + this.getClass().getSimpleName();
+    }
+
     /**
      * Gets the amount of loot the enemy holds.
      *

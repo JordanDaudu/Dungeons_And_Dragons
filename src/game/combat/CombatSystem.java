@@ -101,7 +101,7 @@ public class CombatSystem {
         if (attacker instanceof Archer) {
             if (defender.tryEvade(attacker.getAccuracyModifier())) {
                 System.out.println("Attack evaded!");
-                logEvade(attacker, defender); // LOGGING HERE
+                logEvade(defender); // LOGGING HERE
                 playGrayEvadedBlinkAnimation(attacker, defender);
                 return;
             }
@@ -117,7 +117,7 @@ public class CombatSystem {
         }
         else if (defender.tryEvade()) {
             System.out.println("Attack evaded!");
-            logEvade(attacker, defender); // LOGGING HERE
+            logEvade(defender); // LOGGING HERE
             playGrayEvadedBlinkAnimation(attacker, defender);
             return;
         }
@@ -232,26 +232,13 @@ public class CombatSystem {
     }
 
     private void logAttack(Combatant attacker, Combatant defender, int damage) {
-        String message = "";
-
-        if (attacker instanceof PlayerCharacter && defender instanceof Enemy) {
-            message = "Player: " + ((PlayerCharacter) attacker).getName() + " attacked Enemy " + defender.getClass().getSimpleName() + " and dealt " + damage + " damage.";
-        }
-        else if (attacker instanceof Enemy && defender instanceof PlayerCharacter) {
-            message = "Enemy: " + attacker.getClass().getSimpleName() + " attacked Player " + ((PlayerCharacter) defender).getName() + " and dealt " + damage + " damage.";
-        }
+        String message = attacker.getLogName() + " attacked " + defender.getLogName()
+                + " and dealt " + damage + " damage.";
         GameLogger.getInstance().log(message);
     }
 
-    private void logEvade(Combatant attacker, Combatant defender) {
-        String message = "";
-
-        if (attacker instanceof PlayerCharacter && defender instanceof Enemy) {
-            message = "Enemy: " + defender.getClass().getSimpleName() + " evaded attack from Player: " + ((PlayerCharacter) attacker).getName() + ".";
-        } else if (attacker instanceof Enemy && defender instanceof PlayerCharacter) {
-            message = "Player: " + ((PlayerCharacter) defender).getName() + " evaded attack from Enemy " + attacker.getClass().getSimpleName() + ".";
-        }
-
+    private void logEvade(Combatant defender) {
+        String message = defender.getLogName() + " evaded the attack!";
         GameLogger.getInstance().log(message);
     }
 

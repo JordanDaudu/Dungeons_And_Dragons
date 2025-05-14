@@ -256,4 +256,9 @@ public abstract class PlayerCharacter extends AbstractCharacter implements Playe
         GameLogger.getInstance().log("Player: " + this.getName() + " is dead");
 
     }
+
+    @Override
+    public String getLogName() {
+        return "Player: " + getName();
+    }
 }

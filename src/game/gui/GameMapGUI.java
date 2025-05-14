@@ -378,9 +378,7 @@ public class GameMapGUI extends JFrame implements ScreenListener{
 
     public void magicWaveAnimation() {
         Set<Position> allPositions = map.getAllPositions();
-        // Purple magic wave flash
         flashBackgroundEffect(new Color(138, 43, 226), 400);
-        // Optional rumble
         rumbleWindow(5, 400);
 
         for (Position pos : allPositions) {
@@ -389,7 +387,7 @@ public class GameMapGUI extends JFrame implements ScreenListener{
             for (GameEntity entity : entitiesAtPos) {
                 if (entity instanceof AbstractCharacter character && character.isVisible()) {
                     int damage = 2;
-
+                    character.receiveDamage(damage, null);
                     onAction(ScreenAction.RECEIVE_DAMAGE_TEXT_ANIMATION, null, pos, damage);
                     break; // only one character per tile gets the effect
                 }
@@ -398,6 +396,32 @@ public class GameMapGUI extends JFrame implements ScreenListener{
         // Showing up on frame which event plays out
         Timer delayTimer = new Timer(400, e -> {
             floatingTextPopupGameMapGUI = new FloatingTextPopupGUI("*Magic Wave*", new Color(138, 43, 226), 40);
+            floatingTextPopupGameMapGUI.showFloatingTextPopup(this);
+        });
+        delayTimer.setRepeats(false); // Run only once
+        delayTimer.start();
+    }
+
+    public void sandstormAnimation() {
+        Set<Position> allPositions = map.getAllPositions();
+        flashBackgroundEffect(new Color(194, 178, 128), 500);
+        rumbleWindow(6, 500);
+
+        for (Position pos : allPositions) {
+            List<GameEntity> entitiesAtPos = map.getEntitiesAt(pos);
+
+            for (GameEntity entity : entitiesAtPos) {
+                if (entity instanceof AbstractCharacter character && character.isVisible()) {
+                    int damage = 1;
+                    character.receiveDamage(damage, null);
+                    onAction(ScreenAction.RECEIVE_DAMAGE_TEXT_ANIMATION, null, pos, damage);
+                    break; // only one character per tile gets the effect
+                }
+            }
+        }
+        // Showing up on frame which event plays out
+        Timer delayTimer = new Timer(500, e -> {
+            floatingTextPopupGameMapGUI = new FloatingTextPopupGUI("*Sandstorm*", new Color(194, 178, 128), 40);
             floatingTextPopupGameMapGUI.showFloatingTextPopup(this);
         });
         delayTimer.setRepeats(false); // Run only once
