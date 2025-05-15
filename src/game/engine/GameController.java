@@ -236,6 +236,7 @@ public class GameController implements ScreenListener {
                 GameItem chosen = map.getEntityGameItemAt(pos);
                 if(chosen instanceof Interactable interactable) {
                     gameWorld.removeItem(chosen); // removing from map directly trough game world before changing Position
+                    SoundManager.playEffect("pickupInteractable");
                     if(interactable instanceof Treasure)
                         interactable.interact(player);
                     else {

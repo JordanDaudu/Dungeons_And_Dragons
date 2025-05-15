@@ -24,6 +24,9 @@ public class SettingsMenuGUI extends JDialog {
     private JLabel colorThemeLabel;
     private JComboBox<TileColorBackgroundTheme> colorThemeComboBox;
     private static TileColorBackgroundTheme lastSelectedTheme = TileColorBackgroundTheme.CLEAR;
+    private JCheckBox showHPBarCheckbox;
+    private static boolean showHPBar = true;
+    private static boolean lastSelectedHPBar = true; // default starting
     private JPanel buttonPanel;
     private JButton backButton;
     private JButton quitButton;
@@ -51,7 +54,7 @@ public class SettingsMenuGUI extends JDialog {
      * Initializes all UI components such as sliders, labels, and buttons.
      */
     private void initComponents() {
-        slidersPanel = new JPanel(new GridLayout(3, 1, 10, 10));
+        slidersPanel = new JPanel(new GridLayout(4, 1, 10, 10));
 
         musicPanel = new JPanel(new BorderLayout(10, 10));
         musicLabel = new JLabel("Music Volume:");
@@ -71,6 +74,9 @@ public class SettingsMenuGUI extends JDialog {
         colorThemeLabel = new JLabel("Color Tile Background:");
         colorThemeComboBox = new JComboBox<>(TileColorBackgroundTheme.values());
         colorThemeComboBox.setSelectedItem(lastSelectedTheme);
+
+        showHPBarCheckbox = new JCheckBox("Show HP Bar", showHPBar);
+        showHPBarCheckbox.setSelected(lastSelectedHPBar);
 
         buttonPanel = new JPanel();
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
@@ -98,6 +104,8 @@ public class SettingsMenuGUI extends JDialog {
         colorThemePanel.add(colorThemeComboBox, BorderLayout.CENTER);
         slidersPanel.add(colorThemePanel);
 
+        slidersPanel.add(showHPBarCheckbox);
+
         backButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         quitButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 
@@ -120,6 +128,14 @@ public class SettingsMenuGUI extends JDialog {
             if (getParent() instanceof GameMapGUI gameMap) {
                 lastSelectedTheme = selectedColorTheme; // Save selection
                 gameMap.setTileBackgroundTheme(selectedColorTheme);
+            }
+        });
+
+        showHPBarCheckbox.addActionListener(e -> {
+            showHPBar = showHPBarCheckbox.isSelected();
+            if (getParent() instanceof GameMapGUI gameMap) {
+                lastSelectedHPBar = showHPBarCheckbox.isSelected();
+                gameMap.setShowHPBar(showHPBar);
             }
         });
 

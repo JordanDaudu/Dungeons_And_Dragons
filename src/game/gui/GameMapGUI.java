@@ -55,6 +55,8 @@ public class GameMapGUI extends JFrame implements ScreenListener{
     private TileColorBackgroundTheme currentColorTheme = TileColorBackgroundTheme.CLEAR;
     private Color temporaryOverrideColor = null;
 
+    private boolean showHPBar = true;
+
     private static final int ANIMATION_DELAY = 30; // ms between animation steps
     private static final float FADE_STEP = 0.1f;   // alpha step per tick
 
@@ -224,7 +226,8 @@ public class GameMapGUI extends JFrame implements ScreenListener{
         this.setVisible(false);
     }
 
-    public void setAppIcon() {
+    private void setAppIcon() {
+        // TaskBar is for multiplatform support
         if (!Taskbar.isTaskbarSupported()) {
             GameLogger.getInstance().log("Taskbar API not supported on this platform. Skipping icon set.");
             return;
@@ -238,6 +241,7 @@ public class GameMapGUI extends JFrame implements ScreenListener{
                 GameLogger.getInstance().log("Icon image loaded is null. Check resource path.");
                 return;
             }
+            this.setIconImage(icon);
             taskbar.setIconImage(icon);
             GameLogger.getInstance().log("Application icon set successfully.");
         }
@@ -402,6 +406,17 @@ public class GameMapGUI extends JFrame implements ScreenListener{
      */
     public void setTileBackgroundTheme(TileColorBackgroundTheme colorTheme) {
         this.currentColorTheme = colorTheme;
+        repaint();
+    }
+
+    /**
+     * Sets if Combatants always have there HP shown on the map
+     * Triggers a repaint to reflect the change visually.
+     *
+     * @param showHPBar the new choice chosen to apply
+     */
+    public void setShowHPBar(boolean showHPBar) {
+        this.showHPBar = showHPBar;
         repaint();
     }
 
@@ -639,6 +654,99 @@ public class GameMapGUI extends JFrame implements ScreenListener{
         }
 
         /**
+         * Draws a modern, rounded health bar for the given entity directly onto the tile's graphics context.
+         * The bar fades with the entity's alpha and uses color to indicate health state:
+         * - Green for high health (>= 70%)
+         * - Yellow for mid-health (30% - 69%)
+         * - Red for low health (< 30%)
+         *
+         * @param g2d   The graphics context to draw on.
+         * @param entity The entity whose health bar should be drawn. Must be an AbstractCharacter and Combatant.
+         * @param alpha  The transparency level (0.0 - 1.0) to apply when rendering the bar.
+         */
+        private void drawHealthBar(Graphics2D g2d, GameEntity entity, float alpha) {
+            /*
+             * Note: We use a custom-painted health bar instead of Swing components like JProgressBar
+             * because each tile cell must be rendered manually and efficiently inside paintComponent().
+             * Embedding real Swing components (like JProgressBar) in each tile would:
+             * - Greatly reduce performance (many lightweight components per frame)
+             * - Not respect the tile's alpha/transparency animation (no fade in/out)
+             * - Introduce layout and rendering issues, especially in animations or scrolling
+             *
+             * Instead, we draw the health bar directly onto the Graphics2D context.
+             * This allows:
+             * - Full control over appearance
+             * - Seamless integration with tile rendering logic
+             * - Platform-independent modern visuals
+             */
+            if (!(entity instanceof AbstractCharacter character)) return;
+
+            int current = character.getHealth();
+            int max = character.getMaxHealth();
+            if (max <= 0) return;
+
+            float healthRatio = (float) current / max;
+
+            // Dimensions
+            int barWidth = getWidth() - 6;
+            int barHeight = 8;
+            int arc = 8; // corner roundness
+            int x = 3;
+            int y = getHeight() - barHeight - 4;
+
+            // Enable anti-aliasing for smoother shapes
+            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
+
+            // Background bar (track)
+            g2d.setColor(new Color(60, 60, 60, 200));
+            g2d.fillRoundRect(x, y, barWidth, barHeight, arc, arc);
+
+            // Determine foreground color
+            Color fgColor;
+            if (healthRatio < 0.3f) fgColor = new Color(220, 50, 47); // red
+            else if (healthRatio < 0.7f) fgColor = new Color(255, 204, 0); // yellow
+            else fgColor = new Color(76, 175, 80); // green
+
+            // Optional gradient for gloss effect
+            GradientPaint gradient = new GradientPaint(
+                    x, y,
+                    fgColor.brighter(),
+                    x, y + barHeight,
+                    fgColor.darker()
+            );
+
+            g2d.setPaint(gradient);
+            g2d.fillRoundRect(x, y, (int) (barWidth * healthRatio), barHeight, arc, arc);
+
+            // Border
+            g2d.setColor(new Color(0, 0, 0, 180));
+            g2d.drawRoundRect(x, y, barWidth, barHeight, arc, arc);
+
+            // Draw health text centered inside the bar
+            String healthText = current + "/" + max;
+            Font font = g2d.getFont().deriveFont(Font.BOLD, 10f);
+            g2d.setFont(font);
+
+            // Measure the text width and height
+            FontMetrics fm = g2d.getFontMetrics();
+            int textWidth = fm.stringWidth(healthText);
+            int textHeight = fm.getAscent();
+
+            int textX = x + (barWidth - textWidth) / 2;
+            int textY = y + (barHeight + textHeight) / 2 - 1; // Adjust vertical centering
+
+            // Choose a text color that stands out over the bar, e.g., black or white with shadow
+            g2d.setColor(Color.BLACK);
+            g2d.drawString(healthText, textX + 1, textY + 1); // shadow for readability
+
+            g2d.setColor(Color.WHITE);
+            g2d.drawString(healthText, textX, textY);
+        }
+
+
+        /**
          * Renders the cell, including entity sprite with alpha fading.
          *
          * @param g the Graphics context
@@ -675,6 +783,11 @@ public class GameMapGUI extends JFrame implements ScreenListener{
                     else {
                         g2d.setColor(Color.GRAY);
                         g2d.fillRect(0, 0, getWidth(), getHeight());
+                    }
+                    if(showHPBar) {
+                        if(entity instanceof AbstractCharacter character) {
+                            drawHealthBar(g2d, entity, entityAlpha);
+                        }
                     }
                     g2d.dispose();
                 }
