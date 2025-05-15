@@ -30,7 +30,7 @@ public class GameMap {
     private final ConcurrentMap<Position, ReentrantLock> locks;
     private int rows;
     private int cols;
-    private static GameMap instance = new GameMap();
+    private final static GameMap instance = new GameMap();
     private final ReentrantLock mapLock = new ReentrantLock(); // Universal lock used only when updating the player view
 
     // Methods
@@ -281,9 +281,7 @@ public class GameMap {
                 player = new Mage(name);
                 placePlayerRandomly(player);
             }
-            default -> {
-                System.err.println("Choice for player isn't available!");
-            }
+            default -> System.err.println("Choice for player isn't available!");
         }
     }
 
@@ -313,9 +311,16 @@ public class GameMap {
      */
     public List<GameEntity> getAllEntities() {
         List<GameEntity> all = new ArrayList<>();
-        for (List<GameEntity> list : grid.values()) {
-            synchronized (list) {
-                all.addAll(list);
+        for (Map.Entry<Position, List<GameEntity>> entry : grid.entrySet()) {
+            Position pos = entry.getKey();
+            ReentrantLock lock = locks.get(pos);
+            if (lock != null) {
+                lock.lock();
+                try {
+                    all.addAll(entry.getValue());
+                } finally {
+                    lock.unlock();
+                }
             }
         }
         return all;
@@ -378,10 +383,8 @@ public class GameMap {
         mapLock.lock();
         try {
             for (List<GameEntity> list : grid.values()) {
-                synchronized (list) {
-                    for (GameEntity entity : list) {
-                        entity.setVisible(false);
-                    }
+                for (GameEntity entity : list) {
+                    entity.setVisible(false);
                 }
             }
 
@@ -438,20 +441,28 @@ public class GameMap {
      */
     public Set<GameEntity> getVisibleEntities() {
         Set<GameEntity> visible = new HashSet<>();
-        for (List<GameEntity> list : grid.values()) {
-            synchronized (list) {
-                for (GameEntity entity : list) {
-                    if (entity.isVisible()) {
-                        visible.add(entity);
+        for (Map.Entry<Position, List<GameEntity>> entry : grid.entrySet()) {
+            Position pos = entry.getKey();
+            ReentrantLock lock = locks.get(pos);
+            if (lock != null) {
+                lock.lock();
+                try {
+                    for (GameEntity entity : entry.getValue()) {
+                        if (entity.isVisible()) {
+                            visible.add(entity);
+                        }
                     }
+                }
+                finally {
+                    lock.unlock();
                 }
             }
         }
         return visible;
     }
 
+
     public void applySandstorm(Position delta) {
-        System.out.println("Sandstorm pushing with delta: " + delta);
 
         int startRow = 0, endRow = rows, stepRow = 1;
         int startCol = 0, endCol = cols, stepCol = 1;
@@ -522,37 +533,53 @@ public class GameMap {
      * @param playerPos the player's current position
      */
     public void printPlayerView(Position playerPos) {
-        for (List<GameEntity> list : grid.values()) {
-            synchronized (list) {
-                for (GameEntity entity : list) {
-                    entity.setVisible(false);
+        // First, set all entities as not visible (iterate all lists)
+        for (Map.Entry<Position, List<GameEntity>> entry : grid.entrySet()) {
+            Position pos = entry.getKey();
+            List<GameEntity> list = entry.getValue();
+            ReentrantLock lock = locks.get(pos);
+            if (lock != null) {
+                lock.lock();
+                try {
+                    for (GameEntity entity : list) {
+                        entity.setVisible(false);
+                    }
+                }
+                finally {
+                    lock.unlock();
                 }
             }
         }
-
+        // Then, for each position in view, set visible and print symbol
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < cols; col++) {
                 Position pos = new Position(row, col);
-                List<GameEntity> list = grid.get(pos);
-
                 if (playerPos.distanceTo(pos) <= 2) {
-                    if (list != null) {
-                        synchronized (list) {
+                    List<GameEntity> list = grid.get(pos);
+                    ReentrantLock lock = locks.get(pos);
+                    if (list != null && lock != null) {
+                        lock.lock();
+                        try {
                             for (GameEntity entity : list) {
                                 entity.setVisible(true);
                             }
+                            if (!list.isEmpty()) {
+                                GameEntity top = list.getLast(); // getLast equivalent
+                                System.out.print(top.getDisplaySymbol());
+                            }
+                            else {
+                                System.out.print("⟨.⟩");
+                            }
+                        }
+                        finally {
+                            lock.unlock();
                         }
                     }
-                    if (list != null && !list.isEmpty()) {
-                        GameEntity top;
-                        synchronized (list) {
-                            top = list.getLast();
-                        }
-                        System.out.print(top.getDisplaySymbol());
-                    } else {
+                    else {
                         System.out.print("⟨.⟩");
                     }
-                } else {
+                }
+                else {
                     System.out.print("⟨#⟩");
                 }
                 System.out.print(" ");

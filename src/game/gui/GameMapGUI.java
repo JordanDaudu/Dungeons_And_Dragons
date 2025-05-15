@@ -228,13 +228,6 @@ public class GameMapGUI extends JFrame implements ScreenListener{
 
     private void setAppIcon() {
         // TaskBar is for multiplatform support
-        if (!Taskbar.isTaskbarSupported()) {
-            GameLogger.getInstance().log("Taskbar API not supported on this platform. Skipping icon set.");
-            return;
-        }
-
-        Taskbar taskbar = Taskbar.getTaskbar();
-
         try {
             BufferedImage icon = ImageIO.read(Objects.requireNonNull(getClass().getResource("/images/logo.png")));
             if (icon == null) {
@@ -242,8 +235,14 @@ public class GameMapGUI extends JFrame implements ScreenListener{
                 return;
             }
             this.setIconImage(icon);
+            GameLogger.getInstance().log("Application window icon set successfully.");
+            if (!Taskbar.isTaskbarSupported()) {
+                GameLogger.getInstance().log("Taskbar API not supported on this platform. Skipping icon set.");
+                return;
+            }
+            Taskbar taskbar = Taskbar.getTaskbar();
             taskbar.setIconImage(icon);
-            GameLogger.getInstance().log("Application icon set successfully.");
+            GameLogger.getInstance().log("Application taskbar icon set successfully.");
         }
         catch (IOException e) {
             GameLogger.getInstance().log("Failed to load icon image: " + e.getMessage());

@@ -42,7 +42,7 @@ public class SettingsMenuGUI extends JDialog {
         super(parent, "Settings", true);  // modal
         setLayout(new BorderLayout());
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        setSize(400, 280);
+        setSize(450, 400);
         setLocationRelativeTo(parent);
 
         initComponents();

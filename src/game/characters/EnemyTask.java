@@ -20,12 +20,10 @@ public class EnemyTask implements Runnable {
     @Override
     public void run() {
         if(!running.get()) {
-            System.out.println("Enemy system shutting down. Skipping " + enemy);
-            return;
+            return; // Don’t reschedule
         }
 
         if (enemy.isDead()) {
-            System.out.println(enemy + " is dead. Stopping task.");
             return; // Don’t reschedule
         }
 
