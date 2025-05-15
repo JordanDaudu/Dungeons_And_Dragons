@@ -22,6 +22,8 @@ This project simulates a simplified turn-based role-playing game (RPG), where pl
 - 🍾 **Item System** – Pick up potions, power potions, and treasure from defeated enemies.
 - 🎒 **Inventory & Status Panels** – Use E/middle mouse to manage items, Q for player stats.
 - 🧌 **Enemy Types** – Face off against Goblins, Orcs, and mighty Dragons.
+- 🌪️ **Global Events** – Random world events like sandstorms that force entity movement or magic waves that damage all characters.
+- 📜 **Game Logging System** – Every action (movement, attacks, pickups) is logged in real-time via an in-game logger.
 - 🔊 **Dynamic Sound & Music** – Audio reacts to combat events (e.g., low HP or dragon battles).
 - 🎨 **Customizable Settings** – Change SFX/music volume and grid colors on the fly.
 - 🏁 **Victory & Game Over Screens** – Endgame summary with a ranked treasure score list.
@@ -38,8 +40,10 @@ src/
     ├── combat/          # Combat logic and attacker interfaces
     ├── core/            # Game entity base classes and inventory system
     ├── engine/          # Game engine and utilities
+    ├── global_events/   # Random game-wide effects like sandstorms and magic waves
     ├── gui/             # Graphical user interface components (Swing windows, screens, etc.)
     ├── items/           # In-game items (potions, treasure, etc.)
+    ├── logging/         # GameLogger for tracking all game actions
     ├── map/             # Map and position logic
     └── resources/       # Sound, images, config files
 

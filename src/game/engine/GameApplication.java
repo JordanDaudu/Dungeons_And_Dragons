@@ -10,7 +10,6 @@ import game.map.GameMap;
 import javax.swing.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Entry point and core application manager for the game GUI.

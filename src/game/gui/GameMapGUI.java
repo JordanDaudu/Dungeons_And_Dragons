@@ -12,18 +12,21 @@ import game.core.ScreenListener;
 import game.engine.RandomUtil;
 import game.items.GameItem;
 import game.items.Interactable;
+import game.logging.GameLogger;
 import game.map.GameMap;
 import game.map.Position;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.List;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.util.*;
+import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.Timer;
 import java.awt.*;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Set;
+import java.util.List;
 
 /**
  * The GameMapGUI class represents the main gameplay interface,
@@ -197,6 +200,7 @@ public class GameMapGUI extends JFrame implements ScreenListener{
         setSize(800, 800);  // Default size, can be resized
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setAppIcon();
 
         for (GameEntity entity : map.getAllEntities()) {
             entityAlphaMap.put(entity, entity.isVisible() ? 1f : 0f);
@@ -218,6 +222,37 @@ public class GameMapGUI extends JFrame implements ScreenListener{
 
         add(gridPanel);
         this.setVisible(false);
+    }
+
+    public void setAppIcon() {
+        if (!Taskbar.isTaskbarSupported()) {
+            GameLogger.getInstance().log("Taskbar API not supported on this platform. Skipping icon set.");
+            return;
+        }
+
+        Taskbar taskbar = Taskbar.getTaskbar();
+
+        try {
+            BufferedImage icon = ImageIO.read(Objects.requireNonNull(getClass().getResource("/images/logo.png")));
+            if (icon == null) {
+                GameLogger.getInstance().log("Icon image loaded is null. Check resource path.");
+                return;
+            }
+            taskbar.setIconImage(icon);
+            GameLogger.getInstance().log("Application icon set successfully.");
+        }
+        catch (IOException e) {
+            GameLogger.getInstance().log("Failed to load icon image: " + e.getMessage());
+        }
+        catch (UnsupportedOperationException e) {
+            GameLogger.getInstance().log("Setting taskbar icon not supported on this platform: " + e.getMessage());
+        }
+        catch (SecurityException e) {
+            GameLogger.getInstance().log("Security manager prevents setting taskbar icon: " + e.getMessage());
+        }
+        catch (Exception e) {
+            GameLogger.getInstance().log("Unexpected error while setting app icon: " + e.getMessage());
+        }
     }
 
     /**

@@ -7,11 +7,12 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class GameLogger implements Runnable {
-    private static GameLogger instance;
+    private static volatile GameLogger instance = null;
     private final BlockingQueue<String> logQueue = new LinkedBlockingQueue<>();
-    private volatile boolean running = true;
+    private final AtomicBoolean running = new AtomicBoolean(true);
     private final PrintWriter writer;
 
     private GameLogger() throws IOException {
@@ -21,13 +22,18 @@ public class GameLogger implements Runnable {
         loggerThread.start();
     }
 
-    public static synchronized GameLogger getInstance() {
+    public static GameLogger getInstance() {
         if (instance == null) {
-            try {
-                instance = new GameLogger();
-            } catch (IOException e) {
-                e.printStackTrace();
-                throw new RuntimeException("Failed to start logger.");
+            synchronized (GameLogger.class) {
+                if(instance == null) {
+                    try {
+                        instance = new GameLogger();
+                    }
+                    catch (IOException e) {
+                        e.printStackTrace();
+                        throw new RuntimeException("Failed to start logger.");
+                    }
+                }
             }
         }
         return instance;
@@ -39,13 +45,13 @@ public class GameLogger implements Runnable {
     }
 
     public void stop() {
-        running = false;
+        running.set(false);
     }
 
     @Override
     public void run() {
         try {
-            while (running || !logQueue.isEmpty()) {
+            while (running.get() || !logQueue.isEmpty()) {
                 String logMessage = logQueue.take();  // Blocks if empty
                 writer.println(logMessage);
             }
