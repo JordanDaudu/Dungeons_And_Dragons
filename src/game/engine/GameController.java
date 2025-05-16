@@ -81,8 +81,7 @@ public class GameController implements ScreenListener {
                         System.out.println("Setting up next player " + nextPlayer.getName());
                         gameWorld.setCurrentPlayer(nextPlayer);
                         GameMap.getInstance().updatePlayerView(nextPlayer.getPosition());
-                        if(gameMapGUI.getSidePanelsVisible())
-                            callPanelRefreshers();
+                        callPanelRefreshers();
                         foundAlive = true;
                         break;
                     }
@@ -155,8 +154,10 @@ public class GameController implements ScreenListener {
      * Refreshes the status and inventory panels on the GUI with the current player's data.
      */
     private void callPanelRefreshers() {
-        gameMapGUI.getStatusPanel().updatePlayer(getCurrentPlayer());
-        gameMapGUI.getInventoryPanel().updatePlayer(getCurrentPlayer());
+        if(gameMapGUI.getSidePanelsVisible()) {
+            gameMapGUI.getStatusPanel().updatePlayer(getCurrentPlayer());
+            gameMapGUI.getInventoryPanel().updatePlayer(getCurrentPlayer());
+        }
     }
 
     /**
@@ -383,6 +384,7 @@ public class GameController implements ScreenListener {
                 if(gameWorld.getCurrentPlayer().isDead()) {
                     onAction(ScreenAction.END_TURN, (Object) null);
                 }
+                callPanelRefreshers();
             }
             case ScreenAction.END_TURN -> {
                 endTurn = true;

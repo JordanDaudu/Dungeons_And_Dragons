@@ -472,19 +472,6 @@ public class GameMapGUI extends JFrame implements ScreenListener{
         Set<Position> allPositions = map.getAllPositions();
         flashBackgroundEffect(new Color(194, 178, 128), 500);
         rumbleWindow(6, 500);
-
-        for (Position pos : allPositions) {
-            List<GameEntity> entitiesAtPos = map.getEntitiesAt(pos);
-
-            for (GameEntity entity : entitiesAtPos) {
-                if (entity instanceof AbstractCharacter character && character.isVisible()) {
-                    int damage = 1;
-                    character.receiveDamage(damage, null);
-                    onAction(ScreenAction.RECEIVE_DAMAGE_TEXT_ANIMATION, null, pos, damage);
-                    break; // only one character per tile gets the effect
-                }
-            }
-        }
         // Showing up on frame which event plays out
         Timer delayTimer = new Timer(500, e -> {
             floatingTextPopupGameMapGUI = new FloatingTextPopupGUI("*Sandstorm*", new Color(194, 178, 128), 40);

@@ -78,7 +78,7 @@ public class GameMap {
     }
 
     // Add a ReentrantLock for each position in the grid
-    private ReentrantLock getLockForPosition(Position pos) {
+    public ReentrantLock getLockForPosition(Position pos) {
         return locks.computeIfAbsent(pos, k -> new ReentrantLock());
     }
 

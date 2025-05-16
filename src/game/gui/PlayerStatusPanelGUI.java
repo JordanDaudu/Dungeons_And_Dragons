@@ -70,9 +70,7 @@ public class PlayerStatusPanelGUI extends JPanel {
     }
 
     public void updatePlayer(PlayerCharacter newPlayer) {
-        System.out.println("PLAYERSTATUS" + newPlayer);
         if(!this.player.equals(newPlayer)) {
-            this.player = newPlayer;
             // Update player image
             Image image = newPlayer.getDisplayImage();
             Image scaledImage = image.getScaledInstance(300, 300, Image.SCALE_SMOOTH);
@@ -87,8 +85,10 @@ public class PlayerStatusPanelGUI extends JPanel {
         treasureLabel.setText("Treasure Points: " + newPlayer.getTreasurePoints());
 
         // Update health bar
-        healthBar.updateHealth(newPlayer.getHealth());
+        boolean isSamePlayer = this.player.equals(newPlayer);
+        healthBar.updateHealth(newPlayer.getHealth(), isSamePlayer);
 
+        this.player = newPlayer;
         revalidate();
         repaint();
     }

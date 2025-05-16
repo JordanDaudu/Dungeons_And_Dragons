@@ -44,7 +44,6 @@ public class InventoryPanelGUI extends JPanel {
     }
 
     public void updatePlayer(PlayerCharacter newPlayer) {
-        System.out.println("PLAYERINVENTORY" + newPlayer);
         this.player = newPlayer;
         refreshInventory();
     }
