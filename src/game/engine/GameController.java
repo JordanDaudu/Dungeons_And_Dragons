@@ -39,7 +39,7 @@ public class GameController implements ScreenListener {
     private final GameMapGUI gameMapGUI;
     private boolean endTurn = false;
     private ScheduledExecutorService enemyScheduler;
-    private AtomicBoolean enemyRunningFlag = new AtomicBoolean(true);
+    private final AtomicBoolean enemyRunningFlag = new AtomicBoolean(true);
     private static GlobalEventManager manager;
     private static final Scanner scanner = new Scanner(System.in);
 
@@ -57,11 +57,43 @@ public class GameController implements ScreenListener {
     }
 
     /**
-     * Returns whether the player's turn has ended.
-     *
-     * @return true if the player's turn has ended, false otherwise
+     * Starts the main turn-based game loop using a timer.
+     * Each iteration checks if a player's turn has ended and advances to the next alive player.
      */
-    public boolean getEndTurn() {return endTurn;}
+    public void startGameLoop() {
+        // checks if the turn has ended, if it did switches to the next current player
+        Timer turnTimer = new Timer(200, e -> {
+            if (endTurn) {
+                PlayerCharacter currentPlayer = gameWorld.getCurrentPlayer();
+                System.out.println(currentPlayer.getName() + "'s turn ended.");
+
+                setEndTurn(false); // Reset for next turn
+
+                // Advance to next player
+                int currentIndex = gameWorld.getPlayers().indexOf(currentPlayer);
+                int size = gameWorld.getPlayers().size();
+                boolean foundAlive = false;
+
+                for (int i = 0; i < size; i++) {
+                    int nextIndex = (currentIndex + 1 + i) % size;
+                    PlayerCharacter nextPlayer = gameWorld.getPlayers().get(nextIndex);
+                    if (!nextPlayer.isDead()) {
+                        System.out.println("Setting up next player " + nextPlayer.getName());
+                        gameWorld.setCurrentPlayer(nextPlayer);
+                        GameMap.getInstance().updatePlayerView(nextPlayer.getPosition());
+                        if(gameMapGUI.getSidePanelsVisible())
+                            callPanelRefreshers();
+                        foundAlive = true;
+                        break;
+                    }
+                }
+                if (!foundAlive || gameWorld.getEnemies().isEmpty()) {
+                    this.onAction(ScreenAction.EXIT_GAME, (Object) null);
+                }
+            }
+        });
+        turnTimer.start();
+    }
 
     /**
      * Sets the end-of-turn flag.
@@ -97,6 +129,11 @@ public class GameController implements ScreenListener {
             enemyRunningFlag.set(false);
             enemyScheduler.shutdown();
         }
+    }
+
+    private void callPanelRefreshers() {
+        gameMapGUI.getStatusPanel().updatePlayer(getCurrentPlayer());
+        gameMapGUI.getInventoryPanel().updatePlayer(getCurrentPlayer());
     }
 
     /**

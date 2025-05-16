@@ -16,9 +16,7 @@ import game.logging.GameLogger;
 import game.map.GameMap;
 import game.map.Position;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.*;
@@ -50,7 +48,11 @@ public class GameMapGUI extends JFrame implements ScreenListener{
     private final InputMap inputMap = getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
     private final ActionMap actionMap = getRootPane().getActionMap();
 
-    private InventoryPanelGUI inventoryPanelGUI;
+    private InventoryDialogGUI inventoryDialogGUI;
+
+    private PlayerStatusPanelGUI statusPanel;
+    private InventoryPanelGUI inventoryPanel;
+    private boolean sidePanelsVisible = true; // tracked setting
 
     private TileColorBackgroundTheme currentColorTheme = TileColorBackgroundTheme.CLEAR;
     private Color temporaryOverrideColor = null;
@@ -77,143 +79,30 @@ public class GameMapGUI extends JFrame implements ScreenListener{
         this.map = map;
         this.controllerListener = controllerListener;
         this.gameController.getCombatSystem().setListener(this);
+
         animationTimer = new Timer(ANIMATION_DELAY, e -> animateAlphaTransitions());
         animationTimer.start();
 
-        inputMap.put(KeyStroke.getKeyStroke("W"), "moveUp");
-        inputMap.put(KeyStroke.getKeyStroke("A"), "moveLeft");
-        inputMap.put(KeyStroke.getKeyStroke("S"), "moveDown");
-        inputMap.put(KeyStroke.getKeyStroke("D"), "moveRight");
+        initComponents();
+        layoutComponents();
+        attachListeners();
 
-        actionMap.put("moveUp", new AbstractAction() {
-            /**
-             * Moves the player upwards on the map.
-             * This action is triggered when the user presses the 'W' key.
-             *
-             * @param e the action event triggered by the key press
-             */
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                movePlayerTo(getNewPositionForDirection("W"));
-            }
-        });
-
-        actionMap.put("moveDown", new AbstractAction() {
-            /**
-             * Moves the player downwards on the map.
-             * This action is triggered when the user presses the 'S' key.
-             *
-             * @param e the action event triggered by the key press
-             */
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                movePlayerTo(getNewPositionForDirection("S"));
-            }
-        });
-
-        actionMap.put("moveLeft", new AbstractAction() {
-            /**
-             * Moves the player left on the map.
-             * This action is triggered when the user presses the 'A' key.
-             *
-             * @param e the action event triggered by the key press
-             */
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                movePlayerTo(getNewPositionForDirection("A"));
-            }
-        });
-
-        actionMap.put("moveRight", new AbstractAction() {
-            /**
-             * Moves the player right on the map.
-             * This action is triggered when the user presses the 'D' key.
-             *
-             * @param e the action event triggered by the key press
-             */
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                movePlayerTo(getNewPositionForDirection("D"));
-            }
-        });
-
-        // Key binding for 'E' to show inventory
-        inputMap.put(KeyStroke.getKeyStroke("E"), "showInventory");
-        actionMap.put("showInventory", new AbstractAction() {
-            /**
-             * Displays the player's inventory in a modal dialog.
-             * This action is triggered when the user presses the 'E' key.
-             *
-             * @param e the action event triggered by the key press
-             */
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                PlayerCharacter currentPlayer = gameController.getCurrentPlayer();
-                if (currentPlayer != null) {
-                    // Show inventory at center of the panel
-                    inventoryPanelGUI = new InventoryPanelGUI(GameMapGUI.this, gameController.getCurrentPlayer(), controllerListener);
-                    inventoryPanelGUI.setVisible(true);  // Blocks until closed if modal
-                }
-            }
-        });
-
-        // Key binding for 'Q' to show player status
-        inputMap.put(KeyStroke.getKeyStroke("Q"), "showStatus");
-        actionMap.put("showStatus", new AbstractAction() {
-            /**
-             * Displays a modal dialog showing the current player's status.
-             * This is triggered when the user presses the 'Q' key.
-             *
-             * @param e the action event triggered by key binding
-             */
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                PlayerCharacter currentPlayer = gameController.getCurrentPlayer();
-                if (currentPlayer != null) {
-                    PlayerStatusDialogGUI statusDialog = new PlayerStatusDialogGUI(GameMapGUI.this, currentPlayer);
-                    statusDialog.setVisible(true);  // modal dialog
-                }
-            }
-        });
-
-        // Key binding for "ESC" to show settings menu
-        inputMap.put(KeyStroke.getKeyStroke("ESCAPE"), "openSettings");
-        actionMap.put("openSettings", new AbstractAction() {
-            /**
-             * Opens the settings menu as a modal window.
-             * Triggered when the user presses the 'Escape' key.
-             *
-             * @param e the action event triggered by key binding
-             */
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                new SettingsMenuGUI(GameMapGUI.this).setVisible(true);
-            }
-        });
-
-        initUI();
+        this.setVisible(false);
     }
 
-    /**
-     * Initializes the JFrame and populates the map grid with interactive cells.
-     */
-    private void initUI() {
+
+    private void initComponents() {
         setTitle("Dungeons & Dragons - like game");
-        setSize(800, 800);  // Default size, can be resized
-        setLocationRelativeTo(null);
+        setSize(800, 800);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
         setAppIcon();
 
-        for (GameEntity entity : map.getAllEntities()) {
-            entityAlphaMap.put(entity, entity.isVisible() ? 1f : 0f);
-        }
-
-        // Setting up GridLayout for the map
         int rows = map.getRows();
         int cols = map.getCols();
         gridPanel = new JPanel(new GridLayout(rows, cols));
+        gridPanel.setPreferredSize(new Dimension(800, 800));
 
-        // Adding grid cells (each corresponding to a tile)
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
                 Position pos = new Position(i, j);
@@ -222,9 +111,80 @@ public class GameMapGUI extends JFrame implements ScreenListener{
             }
         }
 
-        add(gridPanel);
-        this.setVisible(false);
+        for (GameEntity entity : map.getAllEntities()) {
+            entityAlphaMap.put(entity, entity.isVisible() ? 1f : 0f);
+        }
     }
+
+    private void layoutComponents() {
+        setLayout(new BorderLayout());
+        add(gridPanel, BorderLayout.CENTER);
+
+    }
+
+    private void attachListeners() {
+        inputMap.put(KeyStroke.getKeyStroke("W"), "moveUp");
+        inputMap.put(KeyStroke.getKeyStroke("A"), "moveLeft");
+        inputMap.put(KeyStroke.getKeyStroke("S"), "moveDown");
+        inputMap.put(KeyStroke.getKeyStroke("D"), "moveRight");
+
+        actionMap.put("moveUp", new AbstractAction() {
+            @Override public void actionPerformed(ActionEvent e) {
+                movePlayerTo(getNewPositionForDirection("W"));
+            }
+        });
+        actionMap.put("moveDown", new AbstractAction() {
+            @Override public void actionPerformed(ActionEvent e) {
+                movePlayerTo(getNewPositionForDirection("S"));
+            }
+        });
+        actionMap.put("moveLeft", new AbstractAction() {
+            @Override public void actionPerformed(ActionEvent e) {
+                movePlayerTo(getNewPositionForDirection("A"));
+            }
+        });
+        actionMap.put("moveRight", new AbstractAction() {
+            @Override public void actionPerformed(ActionEvent e) {
+                movePlayerTo(getNewPositionForDirection("D"));
+            }
+        });
+
+        inputMap.put(KeyStroke.getKeyStroke("E"), "showInventory");
+        actionMap.put("showInventory", new AbstractAction() {
+            @Override public void actionPerformed(ActionEvent e) {
+                PlayerCharacter currentPlayer = gameController.getCurrentPlayer();
+                if (currentPlayer != null) {
+                    inventoryDialogGUI = new InventoryDialogGUI(GameMapGUI.this, currentPlayer, controllerListener);
+                    inventoryDialogGUI.setVisible(true);
+                }
+            }
+        });
+
+        inputMap.put(KeyStroke.getKeyStroke("Q"), "showStatus");
+        actionMap.put("showStatus", new AbstractAction() {
+            @Override public void actionPerformed(ActionEvent e) {
+                PlayerCharacter currentPlayer = gameController.getCurrentPlayer();
+                if (currentPlayer != null) {
+                    PlayerStatusDialogGUI statusDialog = new PlayerStatusDialogGUI(GameMapGUI.this, currentPlayer);
+                    statusDialog.setVisible(true);
+                }
+            }
+        });
+
+        inputMap.put(KeyStroke.getKeyStroke("ESCAPE"), "openSettings");
+        actionMap.put("openSettings", new AbstractAction() {
+            @Override public void actionPerformed(ActionEvent e) {
+                new SettingsMenuGUI(GameMapGUI.this).setVisible(true);
+            }
+        });
+    }
+
+
+    public PlayerStatusPanelGUI getStatusPanel() {return statusPanel;}
+
+    public InventoryPanelGUI getInventoryPanel() {return inventoryPanel;}
+
+    public boolean getSidePanelsVisible() {return sidePanelsVisible;}
 
     private void setAppIcon() {
         // TaskBar is for multiplatform support
@@ -256,6 +216,31 @@ public class GameMapGUI extends JFrame implements ScreenListener{
         catch (Exception e) {
             GameLogger.getInstance().log("Unexpected error while setting app icon: " + e.getMessage());
         }
+    }
+
+    public void toggleSidePanels(boolean show) {
+        sidePanelsVisible = show;
+
+        if (show) {
+            if(statusPanel == null || inventoryPanel == null) {
+                statusPanel = new PlayerStatusPanelGUI(gameController.getCurrentPlayer());
+                inventoryPanel = new InventoryPanelGUI(gameController.getCurrentPlayer(), gameController);
+                statusPanel.setPreferredSize(new Dimension(300, 800));
+                inventoryPanel.setPreferredSize(new Dimension(300, 800));
+            }
+            statusPanel.updatePlayer(gameController.getCurrentPlayer());
+            inventoryPanel.updatePlayer(gameController.getCurrentPlayer());
+            add(statusPanel, BorderLayout.WEST);
+            add(inventoryPanel, BorderLayout.EAST);
+        } else {
+            remove(statusPanel);
+            remove(inventoryPanel);
+        }
+
+        revalidate(); // triggers layout recalculation
+        repaint();    // refreshes the display
+        pack();       // resize the frame to fit the new layout
+        setLocationRelativeTo(null);
     }
 
     /**
@@ -647,8 +632,8 @@ public class GameMapGUI extends JFrame implements ScreenListener{
         private void handleMiddleClick() {
             PlayerCharacter currentPlayer = gameController.getCurrentPlayer();
             if (currentPlayer != null) {
-                inventoryPanelGUI = new InventoryPanelGUI(GameMapGUI.this, currentPlayer, controllerListener);
-                inventoryPanelGUI.setVisible(true);  // Blocks until closed if modal
+                inventoryDialogGUI = new InventoryDialogGUI(GameMapGUI.this, currentPlayer, controllerListener);
+                inventoryDialogGUI.setVisible(true);  // Blocks until closed if modal
             }
         }
 
@@ -784,7 +769,7 @@ public class GameMapGUI extends JFrame implements ScreenListener{
                         g2d.fillRect(0, 0, getWidth(), getHeight());
                     }
                     if(showHPBar) {
-                        if(entity instanceof AbstractCharacter character) {
+                        if(entity instanceof AbstractCharacter) {
                             drawHealthBar(g2d, entity, entityAlpha);
                         }
                     }

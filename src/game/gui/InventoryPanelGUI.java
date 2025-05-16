@@ -8,80 +8,58 @@ import game.items.Potion;
 import game.items.PowerPotion;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.net.URL;
 import java.util.*;
 
-/**
- * A modal dialog that displays the inventory of a given player.
- * Allows the player to use items such as Potions and PowerPotions.
- * Notifies the controller when an item is used and the turn ends.
- */
-public class InventoryPanelGUI extends JDialog {
+public class InventoryPanelGUI extends JPanel {
 
-    // Data Members
-    private final PlayerCharacter player;
-    private final JPanel itemsPanel;
-    private final Map<String, ImageIcon> itemIcons = new HashMap<>(); // Using a map for future extendability
-    private final ImageIcon emptyPotion;
+    private PlayerCharacter player;
     private final ScreenListener controllerListener;
+    private final JPanel itemsPanel;
+    private final Map<String, ImageIcon> itemIcons = new HashMap<>();
+    private final ImageIcon emptyPotionIcon;
 
-    // Methods
-    /**
-     * Constructs the inventory panel for a player, showing usable items.
-     *
-     * @param parent             the parent frame to center this dialog on
-     * @param player             the player whose inventory is to be shown
-     * @param controllerListener the listener to notify game state changes like ending turn
-     */
-    public InventoryPanelGUI(JFrame parent, PlayerCharacter player, ScreenListener controllerListener) {
-        super(parent, "Inventory - " + player.getName(), true);
+    public InventoryPanelGUI(PlayerCharacter player, ScreenListener controllerListener) {
         this.player = player;
         this.controllerListener = controllerListener;
 
-        // Load icons, we are making sure they are scaled down to look normal in the inventory
+        setLayout(new BorderLayout());
+        setBorder(new EmptyBorder(10, 10, 10, 10));
+
+        // Load icons
         itemIcons.put(Potion.class.getSimpleName(), loadImage("/images/life_potion.png", 64, 64));
         itemIcons.put(PowerPotion.class.getSimpleName(), loadImage("/images/power_potion.png", 64, 64));
-        emptyPotion = loadImage("/images/empty_potion.png", 32, 32);
-
-        setLayout(new BorderLayout());
+        emptyPotionIcon = loadImage("/images/empty_potion.png", 32, 32);
 
         itemsPanel = new JPanel();
         itemsPanel.setLayout(new BoxLayout(itemsPanel, BoxLayout.Y_AXIS));
+        itemsPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 
         refreshInventory();
 
         add(new JScrollPane(itemsPanel), BorderLayout.CENTER);
-
-        JButton close = new JButton("Close");
-        close.addActionListener(e -> dispose());
-        add(close, BorderLayout.SOUTH);
-
-        setSize(300, 400);
-        setLocationRelativeTo(parent);
     }
 
-    /**
-     * Refreshes the inventory UI by:
-     * - Clearing existing components
-     * - Listing each unique item type with counts
-     * - Creating buttons for using items
-     * - Handling interactions and item usage logic
-     */
+    public void updatePlayer(PlayerCharacter newPlayer) {
+        System.out.println("PLAYERINVENTORY" + newPlayer);
+        this.player = newPlayer;
+        refreshInventory();
+    }
+
     private void refreshInventory() {
         itemsPanel.removeAll();
-
-        player.printInventoryOfPlayer();
 
         if (player.isEmpty()) {
             JLabel emptyLabel = new JLabel("Inventory is empty.");
             emptyLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+            emptyLabel.setFont(new Font("Arial", Font.ITALIC, 14));
             itemsPanel.add(emptyLabel);
         }
         else {
             Map<String, Integer> itemCounts = new HashMap<>();
-
             for (Interactable item : player.getInventory().getItems()) {
                 String name = item.getClass().getSimpleName();
                 itemCounts.put(name, itemCounts.getOrDefault(name, 0) + 1);
@@ -89,82 +67,63 @@ public class InventoryPanelGUI extends JDialog {
 
             for (Map.Entry<String, Integer> entry : itemCounts.entrySet()) {
                 String itemName = entry.getKey();
-                JButton useButton = getButton(entry, itemName);
-
-                useButton.addActionListener((ActionEvent e) -> {
-                    boolean used = false;
-                    String interactionDetails = null;
-
-                    for (Interactable item : player.getInventory().getItems()) {
-                        if (item.getClass().getSimpleName().equals(itemName)) {
-                            interactionDetails = item.getInteractionDetails();
-                            break;
-                        }
-                    }
-                    if (itemName.equals(Potion.class.getSimpleName())) {
-                        used = player.usePotion();
-                    }
-                    else if (itemName.equals(PowerPotion.class.getSimpleName())) {
-                        used = player.usePowerPotion();
-                    }
-
-                    if (used) {
-                        if(interactionDetails != null)
-                            JOptionPane.showMessageDialog(this, itemName + " used!\nGained " + interactionDetails,
-                                    "Item Used", JOptionPane.INFORMATION_MESSAGE, emptyPotion);
-                        else
-                            JOptionPane.showMessageDialog(this, itemName + " used!",
-                                    "Item Used", JOptionPane.INFORMATION_MESSAGE, emptyPotion);
-
-                        // Close the inventory panel after use
-                        dispose();
-
-                        controllerListener.onAction(ScreenAction.END_TURN, (Object) null);
-                        refreshInventory();
-                        revalidate();
-                        repaint();
-                    }
-                    else {
-                        JOptionPane.showMessageDialog(this, "No " + itemName + " available.");
-                    }
-                });
-
+                JButton useButton = createItemButton(entry, itemName);
+                itemsPanel.add(Box.createVerticalStrut(10));
                 itemsPanel.add(useButton);
             }
         }
+
+        itemsPanel.revalidate();
+        itemsPanel.repaint();
     }
 
-    /**
-     * Creates a JButton representing an item in the player's inventory.
-     * The button displays the item's name and count, and includes an icon if available.
-     * It is aligned properly for display in the inventory panel.
-     *
-     * @param entry     the map entry containing the item name and its count
-     * @param itemName  the name of the item (typically the class simple name)
-     * @return a JButton configured for the specified item
-     */
-    private JButton getButton(Map.Entry<String, Integer> entry, String itemName) {
+    private JButton createItemButton(Map.Entry<String, Integer> entry, String itemName) {
         int count = entry.getValue();
-
-        String buttonText = "Use " + itemName + (count > 1 ? " x" + count : "");
+        String label = "Use " + itemName + (count > 1 ? " x" + count : "");
         ImageIcon icon = itemIcons.get(itemName);
 
-        // Button to use specific interactable
-        JButton useButton = new JButton(buttonText, icon);
-        useButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        useButton.setHorizontalAlignment(SwingConstants.LEFT);
-        return useButton;
+        JButton button = new JButton(label, icon);
+        button.setAlignmentX(Component.CENTER_ALIGNMENT);
+        button.setHorizontalAlignment(SwingConstants.LEFT);
+
+        button.addActionListener((ActionEvent e) -> {
+            boolean used = false;
+            String interactionDetails = null;
+
+            for (Interactable item : player.getInventory().getItems()) {
+                if (item.getClass().getSimpleName().equals(itemName)) {
+                    interactionDetails = item.getInteractionDetails();
+                    break;
+                }
+            }
+
+            used = switch (itemName) {
+                case "Potion" -> player.usePotion();
+                case "PowerPotion" -> player.usePowerPotion();
+                default -> false;
+            };
+
+            if (used) {
+                String message = itemName + " used!";
+                if (interactionDetails != null) {
+                    message += "\nGained " + interactionDetails;
+                }
+
+                JOptionPane.showMessageDialog(this, message, "Item Used", JOptionPane.INFORMATION_MESSAGE, emptyPotionIcon);
+                controllerListener.onAction(ScreenAction.END_TURN, (Object) null);
+                Window window = SwingUtilities.getWindowAncestor(this);
+                if (window instanceof JDialog) {
+                    window.dispose(); // Close dialog if inside one
+                }
+            }
+            else {
+                JOptionPane.showMessageDialog(this, "No " + itemName + " available.");
+            }
+        });
+
+        return button;
     }
 
-    /**
-     * Loads an image from the classpath and scales it to the specified dimensions.
-     * If the image cannot be found, attempts to load a fallback 'missing.png' image.
-     *
-     * @param path   the path to the image in the resources
-     * @param width  desired width of the scaled image
-     * @param height desired height of the scaled image
-     * @return the scaled ImageIcon or null if no image could be loaded
-     */
     private ImageIcon loadImage(String path, int width, int height) {
         URL imageUrl = getClass().getResource(path);
         if (imageUrl == null) {
@@ -175,8 +134,8 @@ public class InventoryPanelGUI extends JDialog {
                 return null;
             }
         }
+
         Image image = new ImageIcon(imageUrl).getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
         return new ImageIcon(image);
     }
-
 }

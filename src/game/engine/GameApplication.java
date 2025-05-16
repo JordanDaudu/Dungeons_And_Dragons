@@ -1,13 +1,11 @@
 package game.engine;
 
-import game.characters.PlayerCharacter;
 import game.core.ScreenAction;
 import game.core.ScreenListener;
 import game.gui.PlayerCreationPanelGUI;
 import game.gui.StartingScreenGUI;
 import game.map.GameMap;
 
-import javax.swing.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -70,16 +68,18 @@ public class GameApplication implements ScreenListener {
         // Starting the global events in the map
         gameApplication.controller.startManagerEvent();
 
+        // Setting up first player correctly to start game
+        game.setCurrentPlayer(game.getPlayers().getFirst());
+        GameMap.getInstance().updatePlayerView(game.getCurrentPlayer().getPosition());
+        gameApplication.controller.getGameMapGUI().toggleSidePanels(true);
+
         // Ensure the map is fully drawn and refreshed
         gameApplication.controller.getGameMapGUI().setVisible(true);
         gameApplication.controller.getGameMapGUI().revalidate();
         gameApplication.controller.getGameMapGUI().repaint();
-        // Start the turn loop (not blocking the GUI thread, it's for better performance on the cpu)
-        gameApplication.startGameLoop();  // Start the turn-based game loop
 
-        // Set initial player to start game
-        game.setCurrentPlayer(game.getPlayers().getFirst());
-        GameMap.getInstance().updatePlayerView(game.getCurrentPlayer().getPosition());
+        // Start the turn loop (not blocking the GUI thread, it's for better performance on the cpu)
+        gameApplication.controller.startGameLoop();  // Start the turn-based game loop
     }
 
     /**
@@ -104,50 +104,12 @@ public class GameApplication implements ScreenListener {
     public boolean onAction(ScreenAction action, Object... data) {
         if (action == ScreenAction.START_GAME) {
             // Create character from data given
-            if(data[0] instanceof String && data[1] instanceof String) {
-                String name = (String) data[0];
-                String selectedClass = (String) data[1];
+            if(data[0] instanceof String name && data[1] instanceof String selectedClass) {
                 map.createCharacter(name, selectedClass);
                 return true;
             }
             return false;
         }
         return false;
-    }
-
-    /**
-     * Starts the main turn-based game loop using a timer.
-     * Each iteration checks if a player's turn has ended and advances to the next alive player.
-     */
-    private void startGameLoop() {
-        // checks if the turn has ended, if it did switches to the next current player
-        Timer turnTimer = new Timer(200, e -> {
-            if (controller.getEndTurn()) {
-                PlayerCharacter currentPlayer = game.getCurrentPlayer();
-                System.out.println(currentPlayer.getName() + "'s turn ended.");
-
-                controller.setEndTurn(false); // Reset for next turn
-
-                // Advance to next player
-                int currentIndex = game.getPlayers().indexOf(currentPlayer);
-                int size = game.getPlayers().size();
-                boolean foundAlive = false;
-
-                for (int i = 0; i < size; i++) {
-                    int nextIndex = (currentIndex + 1 + i) % size;
-                    PlayerCharacter nextPlayer = game.getPlayers().get(nextIndex);
-                    if (!nextPlayer.isDead()) {
-                        game.setCurrentPlayer(nextPlayer);
-                        GameMap.getInstance().updatePlayerView(nextPlayer.getPosition());
-                        foundAlive = true;
-                        break;
-                    }
-                }
-                if (!foundAlive || game.getEnemies().isEmpty()) {
-                    controller.onAction(ScreenAction.EXIT_GAME, (Object) null);
-                }
-            }
-        });
-        turnTimer.start();
     }
 }
