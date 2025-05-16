@@ -117,20 +117,4 @@ public class ControlsDialogGUI extends JDialog {
             return UIManager.getIcon("OptionPane.informationIcon");
         }
     }
-
-    public static void main(String[] args) {
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (Exception ignored) {}
-
-        SwingUtilities.invokeLater(() -> {
-            JFrame dummyParent = new JFrame("Dummy Parent");
-            dummyParent.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            dummyParent.setSize(300, 200);
-            dummyParent.setLocationRelativeTo(null);
-            dummyParent.setVisible(true);
-
-            new ControlsDialogGUI(dummyParent).setVisible(true);
-        });
-    }
 }

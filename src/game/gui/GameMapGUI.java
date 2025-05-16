@@ -98,11 +98,13 @@ public class GameMapGUI extends JFrame implements ScreenListener{
         setLocationRelativeTo(null);
         setAppIcon();
 
+        // Setting up GridLayout for the map
         int rows = map.getRows();
         int cols = map.getCols();
         gridPanel = new JPanel(new GridLayout(rows, cols));
         gridPanel.setPreferredSize(new Dimension(800, 800));
 
+        // Adding grid cells (each corresponding to a tile)
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
                 Position pos = new Position(i, j);
@@ -129,26 +131,51 @@ public class GameMapGUI extends JFrame implements ScreenListener{
         inputMap.put(KeyStroke.getKeyStroke("D"), "moveRight");
 
         actionMap.put("moveUp", new AbstractAction() {
+            /**
+             * Moves the player upwards on the map.
+             * This action is triggered when the user presses the 'W' key.
+             *
+             * @param e the action event triggered by the key press
+             */
             @Override public void actionPerformed(ActionEvent e) {
                 movePlayerTo(getNewPositionForDirection("W"));
             }
         });
         actionMap.put("moveDown", new AbstractAction() {
+            /**
+             * Moves the player downwards on the map.
+             * This action is triggered when the user presses the 'S' key.
+             *
+             * @param e the action event triggered by the key press
+             */
             @Override public void actionPerformed(ActionEvent e) {
                 movePlayerTo(getNewPositionForDirection("S"));
             }
         });
         actionMap.put("moveLeft", new AbstractAction() {
+            /**
+             * Moves the player left on the map.
+             * This action is triggered when the user presses the 'A' key.
+             *
+             * @param e the action event triggered by the key press
+             */
             @Override public void actionPerformed(ActionEvent e) {
                 movePlayerTo(getNewPositionForDirection("A"));
             }
         });
         actionMap.put("moveRight", new AbstractAction() {
+            /**
+             * Moves the player right on the map.
+             * This action is triggered when the user presses the 'D' key.
+             *
+             * @param e the action event triggered by the key press
+             */
             @Override public void actionPerformed(ActionEvent e) {
                 movePlayerTo(getNewPositionForDirection("D"));
             }
         });
 
+        // Key binding for 'E' to show inventory
         inputMap.put(KeyStroke.getKeyStroke("E"), "showInventory");
         actionMap.put("showInventory", new AbstractAction() {
             @Override public void actionPerformed(ActionEvent e) {
@@ -160,6 +187,7 @@ public class GameMapGUI extends JFrame implements ScreenListener{
             }
         });
 
+        // Key binding for 'Q' to show player status
         inputMap.put(KeyStroke.getKeyStroke("Q"), "showStatus");
         actionMap.put("showStatus", new AbstractAction() {
             @Override public void actionPerformed(ActionEvent e) {
@@ -171,6 +199,7 @@ public class GameMapGUI extends JFrame implements ScreenListener{
             }
         });
 
+        // Key binding for "ESC" to show settings menu
         inputMap.put(KeyStroke.getKeyStroke("ESCAPE"), "openSettings");
         actionMap.put("openSettings", new AbstractAction() {
             @Override public void actionPerformed(ActionEvent e) {
@@ -227,14 +256,17 @@ public class GameMapGUI extends JFrame implements ScreenListener{
                 inventoryPanel = new InventoryPanelGUI(gameController.getCurrentPlayer(), gameController);
                 statusPanel.setPreferredSize(new Dimension(300, 800));
                 inventoryPanel.setPreferredSize(new Dimension(300, 800));
+                setSize(1400, 800);
             }
             statusPanel.updatePlayer(gameController.getCurrentPlayer());
             inventoryPanel.updatePlayer(gameController.getCurrentPlayer());
             add(statusPanel, BorderLayout.WEST);
             add(inventoryPanel, BorderLayout.EAST);
-        } else {
+        }
+        else {
             remove(statusPanel);
             remove(inventoryPanel);
+            setSize(800, 800);
         }
 
         revalidate(); // triggers layout recalculation
