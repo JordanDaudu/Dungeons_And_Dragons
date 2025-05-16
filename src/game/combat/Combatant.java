@@ -149,5 +149,11 @@ public interface Combatant extends GameEntity {
      */
     default boolean setLastDamageReceived(int newLastDamageReceived) {return false;}
 
+    /**
+     * Returns a formatted name of the combatant to be used in game logs.
+     * Useful for tracking events like combat or death in log files.
+     *
+     * @return a string identifier used in game logs
+     */
     String getLogName();
 }

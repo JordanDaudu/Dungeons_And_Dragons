@@ -111,21 +111,28 @@ public class GameWorld {
         return items;
     }
 
-    public GameMap getMap() {
-        return map;
-    }
-
     /**
      * Gets the game map instance.
      *
      * @return the game map
      */
-    public PlayerCharacter getCurrentPlayer() {return currentPlayer;}
+    public GameMap getMap() {
+        return map;
+    }
+
 
     /**
      * Gets the player whose turn is currently active.
      *
      * @return the current player
+     */
+    public PlayerCharacter getCurrentPlayer() {return currentPlayer;}
+
+    /**
+     * Sets the current active player for the game turn.
+     *
+     * @param p the player character to set as current
+     * @return true if set successfully (always true here)
      */
     public boolean setCurrentPlayer(PlayerCharacter p) {
         currentPlayer = p;
@@ -204,6 +211,14 @@ public class GameWorld {
         }
     }
 
+    /**
+     * Attaches the game controller (screen listener) to all enemies
+     * and schedules their actions using the provided executor and atomic flag.
+     *
+     * @param gameController the screen listener for handling enemy actions
+     * @param enemyScheduler the scheduled executor to schedule enemy tasks
+     * @param atomicBoolean atomic flag to control scheduling lifecycle
+     */
     public void attachGameControllerToEnemies(ScreenListener gameController, ScheduledExecutorService enemyScheduler, AtomicBoolean atomicBoolean) {
         for(Enemy enemy : enemies) {
             enemy.setScreenListener(gameController);

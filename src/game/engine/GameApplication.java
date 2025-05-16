@@ -11,7 +11,8 @@ import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * Entry point and core application manager for the game GUI.
- * Manages screen transitions, game initialization, and the main game loop.
+ * Handles screen transitions, gathers player settings, initializes game state,
+ * and starts the main game loop with GUI updates and enemy threading.
  */
 public class GameApplication implements ScreenListener {
 
@@ -23,8 +24,11 @@ public class GameApplication implements ScreenListener {
     // Methods
     /**
      * Main method to launch the game.
-     * Loads sounds, gathers player input, initializes characters and entities,
-     * and starts the turn-based loop.
+     * <p>
+     * This method loads resources, prompts the user for game settings via GUI,
+     * initializes the game world and map, creates player characters, populates the map with enemies and items,
+     * and then starts the game loop and global events in a GUI environment.
+     * </p>
      *
      * @param args command-line arguments (unused)
      */
@@ -78,13 +82,19 @@ public class GameApplication implements ScreenListener {
         gameApplication.controller.getGameMapGUI().revalidate();
         gameApplication.controller.getGameMapGUI().repaint();
 
-        // Start the turn loop (not blocking the GUI thread, it's for better performance on the cpu)
-        gameApplication.controller.startGameLoop();  // Start the turn-based game loop
+        // Start the turn loop
+        gameApplication.controller.startGameLoop();
     }
 
     /**
      * Constructs the main game application.
-     * Initializes the game world, map, and controller.
+     * <p>
+     * Initializes the singleton game world with the specified map dimensions,
+     * and sets up the map and game controller.
+     * </p>
+     *
+     * @param rows number of rows in the game map
+     * @param cols number of columns in the game map
      */
     public GameApplication(int rows, int cols) {
         GameWorld.initialize(rows, cols);

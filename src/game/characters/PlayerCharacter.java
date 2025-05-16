@@ -246,7 +246,7 @@ public abstract class PlayerCharacter extends AbstractCharacter implements Playe
 
     /**
      * Handles the defeat of the player character.
-     * Prints a game over message along with the player's total treasure points.
+     * Sets the character as invisible, displays a game over message, and logs the event.
      */
     @Override
     public void defeat() {
@@ -257,6 +257,11 @@ public abstract class PlayerCharacter extends AbstractCharacter implements Playe
 
     }
 
+    /**
+     * Gets the log name of the player character for logging purposes.
+     *
+     * @return a formatted string with the player's name
+     */
     @Override
     public String getLogName() {
         return "Player: " + getName();

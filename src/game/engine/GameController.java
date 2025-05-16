@@ -106,24 +106,44 @@ public class GameController implements ScreenListener {
         return true;
     }
 
+    /**
+     * Returns the AtomicBoolean flag indicating whether enemy actions are running.
+     *
+     * @return the AtomicBoolean enemy running flag
+     */
     public AtomicBoolean getEnemyRunningFlag() {return enemyRunningFlag;}
 
+    /**
+     * Starts the global event manager for the current map and controller.
+     */
     public void startManagerEvent() {
         manager = new GlobalEventManager(map, this);
         manager.start();
     }
 
+    /**
+     * Stops the global event manager if it is running.
+     */
     public void stopManagerEvent() {
         if (manager != null) {
             manager.stop();  // Stop the manager
         }
     }
 
+    /**
+     * Sets the ScheduledExecutorService responsible for scheduling enemy actions.
+     *
+     * @param scheduler the ScheduledExecutorService to be set
+     * @return true after setting the scheduler
+     */
     public boolean setEnemyScheduler(ScheduledExecutorService scheduler) {
         this.enemyScheduler = scheduler;
         return true;
     }
 
+    /**
+     * Shuts down the enemy scheduler and sets the enemy running flag to false.
+     */
     public void shutdownEnemyScheduler() {
         if (enemyScheduler != null && !enemyScheduler.isShutdown()) {
             enemyRunningFlag.set(false);
@@ -131,6 +151,9 @@ public class GameController implements ScreenListener {
         }
     }
 
+    /**
+     * Refreshes the status and inventory panels on the GUI with the current player's data.
+     */
     private void callPanelRefreshers() {
         gameMapGUI.getStatusPanel().updatePlayer(getCurrentPlayer());
         gameMapGUI.getInventoryPanel().updatePlayer(getCurrentPlayer());
@@ -195,10 +218,17 @@ public class GameController implements ScreenListener {
         return null;
     }
 
+    /**
+     * Logs the current player's movement to the game logger.
+     */
     public void logMovements() {
         GameLogger.getInstance().log("Player: " + getCurrentPlayer().getName() + " successfully moved to position:" + getCurrentPlayer().getPosition());
     }
 
+    /**
+     * Shuts down all background threads including enemy scheduler and event manager,
+     * and stops the game logger.
+     */
     private void shutDownThreads() {
         shutdownEnemyScheduler();
         stopManagerEvent();
@@ -208,6 +238,7 @@ public class GameController implements ScreenListener {
     /**
      * Handles actions triggered by the GUI or game loop.
      * Supports movement, attacking, picking up items, ending turns, and exiting the game.
+     * Logs relevant events such as item pickups and enemy movements.
      *
      * @param action the action being performed
      * @param data optional parameters related to the action

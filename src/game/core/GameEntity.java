@@ -54,5 +54,11 @@ public interface GameEntity {
      */
     Image getDisplayImage();
 
+    /**
+     * Returns a textual description of the entity, used for tooltips or logs.
+     * Override to provide specific information about the entity.
+     *
+     * @return a string description of the entity (default: "null")
+     */
     default String getDescription() {return "null";}
 }

@@ -89,6 +89,7 @@ public class CombatSystem {
      * Executes a single turn of combat from one combatant to another.
      * Handles evasion checks, damage application, sound/visual effects,
      * and post-combat logic like death or music changes.
+     * Combat events are logged via {@link GameLogger}, including successful attacks, evasion outcomes, and enemy defeats.
      *
      * @param attacker the combatant performing the attack
      * @param defender the combatant receiving the attack
@@ -231,12 +232,24 @@ public class CombatSystem {
             SoundManager.crossfadeTo("dragon1", true);
     }
 
+    /**
+     * Logs the result of a successful attack, including attacker, defender, and damage dealt.
+     *
+     * @param attacker the combatant who initiated the attack
+     * @param defender the combatant who received the attack
+     * @param damage the amount of damage dealt to the defender
+     */
     private void logAttack(Combatant attacker, Combatant defender, int damage) {
         String message = attacker.getLogName() + " attacked " + defender.getLogName()
                 + " and dealt " + damage + " damage.";
         GameLogger.getInstance().log(message);
     }
 
+    /**
+     * Logs the result of a successful evasion by the defender.
+     *
+     * @param defender the combatant who evaded the attack
+     */
     private void logEvade(Combatant defender) {
         String message = defender.getLogName() + " evaded the attack!";
         GameLogger.getInstance().log(message);
