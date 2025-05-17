@@ -5,6 +5,7 @@ import game.characters.PlayerCharacter;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.util.Objects;
 
 /**
  * A reusable panel that displays the current status of a player character.
@@ -13,79 +14,39 @@ import java.awt.*;
 public class PlayerStatusPanelGUI extends JPanel {
 
     private PlayerCharacter player;
-    private final JLabel imageLabel;
-    private final JLabel nameLabel;
-    private final JLabel typeLabel;
-    private final JLabel healthLabel;
-    private final HealthBarPanelGUI healthBar;
-    private final JLabel powerLabel;
-    private final JLabel treasureLabel;
+    private JLabel imageLabel;
+    private JTextArea nameLabel;
+    private JTextArea typeLabel;
+    private JLabel healthLabel;
+    private HealthBarPanelGUI healthBar;
+    private JLabel powerLabel;
+    private JLabel treasureLabel;
 
     public PlayerStatusPanelGUI(PlayerCharacter player) {
         this.player = player;
-        setBorder(new EmptyBorder(15, 15, 15, 15));
-        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        setBackground(Color.WHITE);
+        setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(Color.GRAY, 2, true),
+                new EmptyBorder(15, 15, 15, 15)
+        ));
 
-        // Player image
-        Image image = player.getDisplayImage();
-        Image scaledImage = image.getScaledInstance(300, 300, Image.SCALE_SMOOTH);
-        ImageIcon icon = new ImageIcon(scaledImage);
-        imageLabel = new JLabel(icon);
-        imageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        add(imageLabel);
-
-        // Player name
-        nameLabel = new JLabel("Name: " + player.getName());
-        nameLabel.setFont(new Font("Arial", Font.BOLD, 16));
-        nameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        add(Box.createVerticalStrut(10));
-        add(nameLabel);
-
-        // Player type
-        typeLabel = new JLabel("Type: " + player.getType());
-        typeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        add(typeLabel);
-
-        // Health
-        healthLabel = new JLabel("Health: " + player.getHealth() + "/" + player.getMaxHealth());
-        healthLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        add(Box.createVerticalStrut(10));
-        add(healthLabel);
-
-        // Health bar
-        healthBar = new HealthBarPanelGUI(player.getHealth(), player.getMaxHealth());
-        healthBar.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
-        healthBar.setPreferredSize(new Dimension(200, 40));
-        add(healthBar);
-
-        // Power
-        powerLabel = new JLabel("Power: " + player.getPower());
-        powerLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        add(powerLabel);
-
-        // Treasure
-        treasureLabel = new JLabel("Treasure Points: " + player.getTreasurePoints());
-        treasureLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        add(treasureLabel);
+        initComponents();
+        layoutComponents();
     }
 
     public void updatePlayer(PlayerCharacter newPlayer) {
-        if(!this.player.equals(newPlayer)) {
-            // Update player image
-            Image image = newPlayer.getDisplayImage();
-            Image scaledImage = image.getScaledInstance(300, 300, Image.SCALE_SMOOTH);
-            imageLabel.setIcon(new ImageIcon(scaledImage));
+        boolean isSamePlayer = this.player.equals(newPlayer);
 
-            // Update all labels
+        if (!isSamePlayer) {
+            Image scaledImage = newPlayer.getDisplayImage().getScaledInstance(300, 300, Image.SCALE_SMOOTH);
+            imageLabel.setIcon(new ImageIcon(scaledImage));
             nameLabel.setText("Name: " + newPlayer.getName());
             typeLabel.setText("Type: " + newPlayer.getType());
         }
+
         healthLabel.setText("Health: " + newPlayer.getHealth() + "/" + newPlayer.getMaxHealth());
         powerLabel.setText("Power: " + newPlayer.getPower());
-        treasureLabel.setText("Treasure Points: " + newPlayer.getTreasurePoints());
-
-        // Update health bar
-        boolean isSamePlayer = this.player.equals(newPlayer);
+        treasureLabel.setText("Treasure points: " + newPlayer.getTreasurePoints());
         healthBar.updateHealth(newPlayer.getHealth(), isSamePlayer);
 
         this.player = newPlayer;
@@ -93,4 +54,92 @@ public class PlayerStatusPanelGUI extends JPanel {
         repaint();
     }
 
+    private void initComponents() {
+        // === Stats Images ===
+        ImageIcon heartIcon = loadAndScaleIcon("/icons/heart.png", 24, 24);
+        ImageIcon powerIcon = loadAndScaleIcon("/icons/power.png", 24, 24);
+        ImageIcon treasureIcon = loadAndScaleIcon("/icons/treasure_chest.png", 24, 24);
+
+        // === Player Image ===
+        Image scaledImage = player.getDisplayImage().getScaledInstance(300, 300, Image.SCALE_SMOOTH);
+        imageLabel = new JLabel(new ImageIcon(scaledImage));
+        imageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        // === Identity Group ===
+        nameLabel = createWrappedLabel("Name: " + player.getName(), new Font("Serif", Font.BOLD, 20));
+        typeLabel = createWrappedLabel("Type: " + player.getType(), new Font("SansSerif", Font.BOLD, 14));
+
+        // === Stats Group ===
+        healthLabel = new JLabel("Health: " + player.getHealth() + "/" + player.getMaxHealth(), heartIcon, JLabel.LEFT);
+        healthLabel.setFont(new Font("SansSerif", Font.BOLD, 16));
+        healthLabel.setForeground(new Color(200, 30, 30));
+        healthLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        healthBar = new HealthBarPanelGUI(player.getHealth(), player.getMaxHealth());
+        healthBar.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
+        healthBar.setPreferredSize(new Dimension(200, 40));
+
+        powerLabel = new JLabel("Power: " + player.getPower(), powerIcon, JLabel.LEFT);
+        powerLabel.setFont(new Font("SansSerif", Font.BOLD, 16));
+        powerLabel.setForeground(new Color(30, 60, 200));
+        powerLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        treasureLabel = new JLabel("Treasure points: " + player.getTreasurePoints(), treasureIcon, JLabel.LEFT);
+        treasureLabel.setFont(new Font("SansSerif", Font.BOLD, 16));
+        treasureLabel.setForeground(new Color(212, 175, 55));
+        treasureLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+    }
+
+    private void layoutComponents() {
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+
+        // === Player Image ===
+        add(imageLabel);
+
+        // === Identity Group ===
+        JPanel identityPanel = new JPanel();
+        identityPanel.setLayout(new BoxLayout(identityPanel, BoxLayout.Y_AXIS));
+        identityPanel.setOpaque(false);
+        identityPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
+        identityPanel.add(nameLabel);
+        identityPanel.add(typeLabel);
+        add(identityPanel);
+
+        // === Stats Group ===
+        JPanel statsPanel = new JPanel();
+        statsPanel.setLayout(new BoxLayout(statsPanel, BoxLayout.Y_AXIS));
+        statsPanel.setOpaque(false);
+        statsPanel.setBorder(BorderFactory.createTitledBorder("Stats"));
+
+        statsPanel.add(healthLabel);
+        statsPanel.add(Box.createVerticalStrut(5));
+        statsPanel.add(healthBar);
+        statsPanel.add(Box.createVerticalStrut(10));
+        statsPanel.add(powerLabel);
+        statsPanel.add(Box.createVerticalStrut(10));
+        statsPanel.add(treasureLabel);
+
+        add(statsPanel);
+    }
+
+    private ImageIcon loadAndScaleIcon(String path, int width, int height) {
+        ImageIcon originalIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource(path)));
+        Image scaledImage = originalIcon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
+        return new ImageIcon(scaledImage);
+    }
+
+    private JTextArea createWrappedLabel(String text, Font font) {
+        JTextArea area = new JTextArea(text);
+        area.setFont(font);
+        area.setWrapStyleWord(true);
+        area.setLineWrap(true);
+        area.setOpaque(false);
+        area.setEditable(false);
+        area.setFocusable(false);
+        area.setAlignmentX(Component.CENTER_ALIGNMENT);
+        area.setMargin(new Insets(0, 0, 0, 0));
+        // doing *2 in preferredSize to get more vertical space (for at least 2 lines)
+        area.setMaximumSize(new Dimension(Integer.MAX_VALUE, area.getPreferredSize().height * 2));
+        return area;
+    }
 }
