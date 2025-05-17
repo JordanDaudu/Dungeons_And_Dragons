@@ -1,4 +1,4 @@
-<img src="Photos/Main photo for ReadMe/DD7.png" align="center" alt="logo" width="768" height="512">
+<img src="Photos/Main photo for ReadMe/DD2.png" align="center" alt="logo" width="768" height="512">
 
 # 🐉 Dungeons & Dragons Inspired - Java Game Project
 
@@ -6,7 +6,7 @@ This repository contains a Java-based implementation of a Dungeons & Dragons-ins
 
 ## 📜 Project Overview
 
-This project simulates a simplified turn-based role-playing game (RPG), where players and enemies take actions such as attacking, casting spells, and moving around a game map. The architecture follows object-oriented principles and leverages Java interfaces, inheritance, and polymorphism to define different character types and combat behaviors.
+This project simulates a simplified action turn-based role-playing game (ARPG), where players and enemies take actions such as attacking, casting spells, and moving around a game map. The architecture follows object-oriented principles and leverages Java interfaces, inheritance, threading and polymorphism to define different character types and combat behaviors.
 
 ---
 
@@ -23,6 +23,7 @@ This project simulates a simplified turn-based role-playing game (RPG), where pl
 - 🎒 **Inventory & Status Panels** – Use E/middle mouse to manage items, Q for player stats.
 - 🧌 **Enemy Types** – Face off against Goblins, Orcs, and mighty Dragons.
 - 🌪️ **Global Events** – Random world events like sandstorms that force entity movement or magic waves that damage all characters.
+- 🧰 **Toggleable UI Panels** – Through the settings menu, players can toggle the visibility of HP bars and side panels that display player status and inventory.
 - 📜 **Game Logging System** – Every action (movement, attacks, pickups) is logged in real-time via an in-game logger.
 - 🔊 **Dynamic Sound & Music** – Audio reacts to combat events (e.g., low HP or dragon battles).
 - 🎨 **Customizable Settings** – Change SFX/music volume and grid colors on the fly.
@@ -122,16 +123,16 @@ There are **two ways** to mark the resources folder correctly:
 
 ## 🖥️ Technologies Used
 
-| Tool / Concept       | Purpose                                                                           |
-|----------------------|-----------------------------------------------------------------------------------|
-| Java                 | Core game logic and backend                                                       |
-| Java Swing           | GUI components (windows, buttons, panels)                                         |
-| OOP Principles       | Inheritance, interfaces, and polymorphism for scalable design                     |
-| Threads              | Enable concurrent character actions and smoother game flow                        |
+| Tool / Concept          | Purpose                                                                           |
+|-------------------------|-----------------------------------------------------------------------------------|
+| Java                    | Core game logic and backend                                                       |
+| Java Swing              | GUI components (windows, buttons, panels)                                         |
+| OOP Principles          | Inheritance, interfaces, and polymorphism for scalable design                     |
+| Threads                 | Enable concurrent character actions and smoother game flow                        |
 | Locks (Synchronization) | Manage thread safety during shared resource access (e.g., inventory, combat, map) |
-| Design Patterns      | Applied patterns like Singleton, MVC, ThreadPool and Observer                     |
-| Custom Audio Engine  | Handles dynamic sound effects and adaptive background music                       |
-| IntelliJ / Eclipse   | Development environment and debugging support                                     |
+| Design Patterns         | Applied patterns like Singleton, MVC, ThreadPool and Observer                     |
+| Custom Audio Engine     | Handles dynamic sound effects and adaptive background music                       |
+| IntelliJ / Eclipse      | Development environment and debugging support                                     |
 
 
 ---
@@ -146,14 +147,14 @@ It includes core components of the game file.
 
 ## ⌨️ Controls & Shortcuts
 
-| Key / Action              | Function                                                             |
-|---------------------------|----------------------------------------------------------------------|
-| **W / A / S / D**         | Move your character                                                  |
-| **Left Click**            | Move to the clicked tile                                             |
-| **E** or **Middle Click** | Open the inventory to use potions and items                          |
-| **Right Click**           | Inspect any entity (player, enemy, or item) for detailed info        |
-| **Q**                     | View player status panel with stats and treasure points              |
-| **ESC**                   | Open settings menu (adjust volume, background color, or exit game)   |
+| Key / Action              | Function                                                                          |
+|---------------------------|-----------------------------------------------------------------------------------|
+| **W / A / S / D**         | Move your character                                                               |
+| **Left Click**            | Move to the clicked tile                                                          |
+| **E** or **Middle Click** | Open the inventory to use potions and items                                       |
+| **Right Click**           | Inspect any entity (player, enemy, or item) for detailed info                     |
+| **Q**                     | View player status panel with stats and treasure points                           |
+| **ESC**                   | Open settings menu (adjust volume, background color, toggle panels and exit game) |
 
 ---
 
@@ -185,7 +186,7 @@ A visual tour of the game features and interface:
 > Explore the map as a solo adventurer.
 
 **Multiplayer Movement Demo**  
-<img src="Photos/Main photo for ReadMe/multiplayer.gif" alt="Multiplayer Movement" width="768">
+<img src="Photos/Main photo for ReadMe/Multiplayer.gif" alt="Multiplayer Movement" width="768">
 
 > Multiple players navigating the grid. The game supports 1–4 player gameplay.
 
@@ -219,6 +220,12 @@ A visual tour of the game features and interface:
 
 > View player stats, class type, and current treasure points.
 
+**World Events**
+<img src="Photos/Main photo for ReadMe/SandStorm.gif" alt="SandStorm" width="720">
+<img src="Photos/Main photo for ReadMe/Magic_Wave.gif" alt="Magic Wave" width="720">
+
+> Random global events like magic waves the deals damage and sandstorms that deal damage and move the entities
+
 ---
 
 ### ⚙️ Game Options
@@ -226,8 +233,12 @@ A visual tour of the game features and interface:
 **Settings Menu**  
 <img src="Photos/Main photo for ReadMe/Settings.gif" alt="Settings Menu" width="720">
 
-> Adjust music and sound effect volume, change the grid background color using a dropdown menu, or exit the game via the pause menu.
+> Adjust music and sound effect volume, change the grid background color using a dropdown menu, remove panels from game or exit the game via the pause menu.
 
+**Controls Menu**
+<img src="Photos/Main photo for ReadMe/Controls.png" alt="Controls Menu" width="720">
+
+> Controls can be seen from in-game
 ---
 
 ### 🏁 Endgame
@@ -235,12 +246,12 @@ A visual tour of the game features and interface:
 **Game Over Screen**  
 <img src="Photos/Main photo for ReadMe/GameOver.png" alt="Game Over" width="720">
 
-> Shown when all players are defeated. This will show the scores of each player in a descending order.
+> Shown when all players are defeated. This will show the scores of each player in descending order.
 
 **Victory Screen**  
 <img src="Photos/Main photo for ReadMe/Winning.png" alt="Victory Screen" width="720">
 
-> Displayed when players defeat all enemies. This will show the scores of each player in a descending order
+> Displayed when players defeat all enemies. This will show the scores of each player in descending order
 
 ---
 
