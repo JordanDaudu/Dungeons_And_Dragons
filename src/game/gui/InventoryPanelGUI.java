@@ -14,14 +14,27 @@ import java.awt.event.ActionEvent;
 import java.net.URL;
 import java.util.*;
 
+/**
+ * A panel that displays a player's inventory.
+ * Shows item icons and allows the player to use consumable items like potions.
+ * Notifies the controller when an item is used and can update when the player changes.
+ */
 public class InventoryPanelGUI extends JPanel {
 
+    // Data Members
     private PlayerCharacter player;
     private final ScreenListener controllerListener;
     private final JPanel itemsPanel;
     private final Map<String, ImageIcon> itemIcons = new HashMap<>();
     private final ImageIcon emptyPotionIcon;
 
+    // Methods
+    /**
+     * Creates the inventory panel for the specified player.
+     *
+     * @param player             the player whose inventory is shown
+     * @param controllerListener listener for handling actions (e.g., using items)
+     */
     public InventoryPanelGUI(PlayerCharacter player, ScreenListener controllerListener) {
         this.player = player;
         this.controllerListener = controllerListener;
@@ -43,11 +56,19 @@ public class InventoryPanelGUI extends JPanel {
         add(new JScrollPane(itemsPanel), BorderLayout.CENTER);
     }
 
+    /**
+     * Updates the panel to show the inventory of a new player.
+     *
+     * @param newPlayer the new player to display
+     */
     public void updatePlayer(PlayerCharacter newPlayer) {
         this.player = newPlayer;
         refreshInventory();
     }
 
+    /**
+     * Reloads and refreshes the inventory display based on the current player's items.
+     */
     private void refreshInventory() {
         itemsPanel.removeAll();
 
@@ -76,6 +97,13 @@ public class InventoryPanelGUI extends JPanel {
         itemsPanel.repaint();
     }
 
+    /**
+     * Creates a button for using a specific item in the inventory.
+     *
+     * @param entry    map entry containing item name and quantity
+     * @param itemName name of the item
+     * @return a JButton configured to use the item when clicked
+     */
     private JButton createItemButton(Map.Entry<String, Integer> entry, String itemName) {
         int count = entry.getValue();
         String label = "Use " + itemName + (count > 1 ? " x" + count : "");
@@ -123,6 +151,14 @@ public class InventoryPanelGUI extends JPanel {
         return button;
     }
 
+    /**
+     * Loads an image icon from the resource path, scaled to the given size.
+     *
+     * @param path   path to the image resource
+     * @param width  desired image width
+     * @param height desired image height
+     * @return the loaded and scaled ImageIcon, or null if not found
+     */
     private ImageIcon loadImage(String path, int width, int height) {
         URL imageUrl = getClass().getResource(path);
         if (imageUrl == null) {

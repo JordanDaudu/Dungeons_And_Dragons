@@ -70,9 +70,9 @@ public class GameMapGUI extends JFrame implements ScreenListener{
     /**
      * Constructs the GameMapGUI.
      *
-     * @param gameController        the game controller handling core logic
-     * @param map                   the game map to render and interact with
-     * @param controllerListener    listener to handle screen-related events
+     * @param gameController      the controller that manages game logic
+     * @param map                 the map to be rendered in the grid
+     * @param controllerListener  the listener to handle screen navigation or control handoff
      */
     public GameMapGUI(GameController gameController, GameMap map, ScreenListener controllerListener) {
         this.gameController = gameController;
@@ -90,7 +90,10 @@ public class GameMapGUI extends JFrame implements ScreenListener{
         this.setVisible(false);
     }
 
-
+    /**
+     * Initializes the components required for displaying the game map, such as grid layout,
+     * loading entities, and setting window parameters.
+     */
     private void initComponents() {
         setTitle("Dungeons & Dragons - like game");
         setSize(800, 800);
@@ -118,12 +121,20 @@ public class GameMapGUI extends JFrame implements ScreenListener{
         }
     }
 
+    /**
+     * Applies the layout of components in the main window.
+     * Places the map grid in the center of the BorderLayout.
+     */
     private void layoutComponents() {
         setLayout(new BorderLayout());
         add(gridPanel, BorderLayout.CENTER);
 
     }
 
+    /**
+     * Attaches keyboard input listeners to trigger various player actions, such as movement (WASD),
+     * opening inventory ('E'), status panel ('Q'), or settings menu (ESCAPE).
+     */
     private void attachListeners() {
         inputMap.put(KeyStroke.getKeyStroke("W"), "moveUp");
         inputMap.put(KeyStroke.getKeyStroke("A"), "moveLeft");
@@ -208,13 +219,31 @@ public class GameMapGUI extends JFrame implements ScreenListener{
         });
     }
 
-
+    /**
+     * Gets the status panel GUI, which displays current player statistics.
+     *
+     * @return the PlayerStatusPanelGUI instance
+     */
     public PlayerStatusPanelGUI getStatusPanel() {return statusPanel;}
 
+    /**
+     * Gets the inventory panel GUI, which displays the player's items.
+     *
+     * @return the InventoryPanelGUI instance
+     */
     public InventoryPanelGUI getInventoryPanel() {return inventoryPanel;}
 
+    /**
+     * Indicates whether the side panels (status and inventory) are currently visible.
+     *
+     * @return true if side panels are shown, false otherwise
+     */
     public boolean getSidePanelsVisible() {return sidePanelsVisible;}
 
+    /**
+     * Sets the icon of the application window and system taskbar (if supported).
+     * Includes robust error handling and logging for failure scenarios.
+     */
     private void setAppIcon() {
         // TaskBar is for multiplatform support
         try {
@@ -247,6 +276,13 @@ public class GameMapGUI extends JFrame implements ScreenListener{
         }
     }
 
+    /**
+     * Toggles the visibility of the side panels (player status and inventory).
+     * When enabling, the panels are created if necessary and added to the layout.
+     * When disabling, they are removed and the frame resizes back to its compact form.
+     *
+     * @param show true to show the panels, false to hide them
+     */
     public void toggleSidePanels(boolean show) {
         sidePanelsVisible = show;
 
@@ -436,12 +472,24 @@ public class GameMapGUI extends JFrame implements ScreenListener{
         repaint();
     }
 
+    /**
+     * Returns the current effective background color used for tiles.
+     * This checks if a temporary override is active (e.g., during a flash animation),
+     * otherwise falls back to the theme's default color.
+     *
+     * @return the effective background color for tiles
+     */
     private Color getEffectiveTileBackgroundColor() {
         return (temporaryOverrideColor != null) ? temporaryOverrideColor :
                 (currentColorTheme != null ? currentColorTheme.getColor() : null);
     }
 
-
+    /**
+     * Triggers a "Magic Wave" animation across the map.
+     * Affects all visible characters on tiles by dealing fixed damage,
+     * followed by a flashing background and screen rumble.
+     * Also displays floating text to indicate the wave's occurrence.
+     */
     public void magicWaveAnimation() {
         Set<Position> allPositions = map.getAllPositions();
         flashBackgroundEffect(new Color(138, 43, 226), 400);
@@ -468,6 +516,11 @@ public class GameMapGUI extends JFrame implements ScreenListener{
         delayTimer.start();
     }
 
+    /**
+     * Triggers a "Sandstorm" animation across the map.
+     * Visually flashes the background with a sand-like color and shakes the window.
+     * Displays a floating "*Sandstorm*" text popup after a delay.
+     */
     public void sandstormAnimation() {
         Set<Position> allPositions = map.getAllPositions();
         flashBackgroundEffect(new Color(194, 178, 128), 500);
@@ -481,6 +534,13 @@ public class GameMapGUI extends JFrame implements ScreenListener{
         delayTimer.start();
     }
 
+    /**
+     * Temporarily overrides the background color of the map to create a flashing effect.
+     * After the specified duration, it restores the original theme-based background color.
+     *
+     * @param flashColor     the temporary color to flash
+     * @param durationMillis how long the flash should last in milliseconds
+     */
     private void flashBackgroundEffect(Color flashColor, int durationMillis) {
         this.temporaryOverrideColor = flashColor;
         repaint();
@@ -492,6 +552,13 @@ public class GameMapGUI extends JFrame implements ScreenListener{
         }).start();
     }
 
+    /**
+     * Creates a screen shake ("rumble") animation by randomly shifting the window's location.
+     * The effect mimics an earthquake or magical tremor over a given duration.
+     *
+     * @param intensity       the maximum pixel offset for the shake in any direction
+     * @param durationMillis  how long the rumble effect should last in milliseconds
+     */
     private void rumbleWindow(int intensity, int durationMillis) {
         Point originalLocation = this.getLocation();
 

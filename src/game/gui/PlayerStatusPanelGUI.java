@@ -8,11 +8,13 @@ import java.awt.*;
 import java.util.Objects;
 
 /**
- * A reusable panel that displays the current status of a player character.
- * Can be embedded in dialogs or shown directly in the main game UI.
+ * A panel that displays the current status of a player character.
+ * Includes their image, name, type, health, power, treasure, and a visual health bar.
+ * This panel can be reused in dialogs or embedded in the main game interface.
  */
 public class PlayerStatusPanelGUI extends JPanel {
 
+    // Data Members
     private PlayerCharacter player;
     private JLabel imageLabel;
     private JTextArea nameLabel;
@@ -22,6 +24,12 @@ public class PlayerStatusPanelGUI extends JPanel {
     private JLabel powerLabel;
     private JLabel treasureLabel;
 
+    // Methods
+    /**
+     * Constructs the panel and initializes its components based on the given player.
+     *
+     * @param player the player character whose status should be shown
+     */
     public PlayerStatusPanelGUI(PlayerCharacter player) {
         this.player = player;
         setBackground(Color.WHITE);
@@ -34,6 +42,13 @@ public class PlayerStatusPanelGUI extends JPanel {
         layoutComponents();
     }
 
+    /**
+     * Updates the panel to reflect the current state of the given player.
+     * If the player is the same, only dynamic stats are updated. If it's a different player,
+     * identity and image data are also updated.
+     *
+     * @param newPlayer the new player data to display
+     */
     public void updatePlayer(PlayerCharacter newPlayer) {
         boolean isSamePlayer = this.player.equals(newPlayer);
 
@@ -54,6 +69,9 @@ public class PlayerStatusPanelGUI extends JPanel {
         repaint();
     }
 
+    /**
+     * Initializes all Swing components used in the panel.
+     */
     private void initComponents() {
         // === Stats Images ===
         ImageIcon heartIcon = loadAndScaleIcon("/icons/heart.png", 24, 24);
@@ -90,6 +108,9 @@ public class PlayerStatusPanelGUI extends JPanel {
         treasureLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
     }
 
+    /**
+     * Lays out all components vertically in the panel using BoxLayout.
+     */
     private void layoutComponents() {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
@@ -122,12 +143,27 @@ public class PlayerStatusPanelGUI extends JPanel {
         add(statsPanel);
     }
 
+    /**
+     * Loads an image from a path and scales it to the specified size.
+     *
+     * @param path the resource path of the image
+     * @param width the desired width
+     * @param height the desired height
+     * @return the scaled ImageIcon
+     */
     private ImageIcon loadAndScaleIcon(String path, int width, int height) {
         ImageIcon originalIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource(path)));
         Image scaledImage = originalIcon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
         return new ImageIcon(scaledImage);
     }
 
+    /**
+     * Creates a non-editable, transparent text area for displaying a label with word wrapping.
+     *
+     * @param text the text to display
+     * @param font the font to apply
+     * @return a configured JTextArea component
+     */
     private JTextArea createWrappedLabel(String text, Font font) {
         JTextArea area = new JTextArea(text);
         area.setFont(font);

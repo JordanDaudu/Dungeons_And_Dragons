@@ -4,8 +4,15 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 
+/**
+ * Displays a health bar with animations for health changes.
+ *
+ * The bar shows current health, supports animations for damage and healing,
+ * and changes color based on health level.
+ */
 public class HealthBarPanelGUI extends JPanel {
 
+    // Data Members
     private final JProgressBar healthBar;
     private int currentHealth;
     private final Timer animationTimer;
@@ -24,6 +31,13 @@ public class HealthBarPanelGUI extends JPanel {
     private float glowX = -1f;
     private Timer glowTimer;
 
+    // Methods
+    /**
+     * Constructs a HealthBarPanelGUI with the specified initial health and maximum health values.
+     *
+     * @param currentHealth the initial current health value
+     * @param maxHealth     the maximum possible health value
+     */
     public HealthBarPanelGUI(int currentHealth, int maxHealth) {
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -114,6 +128,12 @@ public class HealthBarPanelGUI extends JPanel {
         animationTimer = new Timer(15, e -> animateHealthStep());
     }
 
+    /**
+     * Updates the health bar color based on current health percentage.
+     * <p>
+     * Triggers the pulse effect if health is low (< 30%),
+     * yellow color if moderately low (< 70%), and green color otherwise.
+     */
     private void updateHealthColor() {
         int max = healthBar.getMaximum();
         float percent = (float) currentHealth / max;
@@ -130,6 +150,12 @@ public class HealthBarPanelGUI extends JPanel {
         }
     }
 
+    /**
+     * Performs one animation step towards the target health value.
+     * <p>
+     * Incrementally increases or decreases the displayed health value
+     * until the target health is reached.
+     */
     private void animateHealthStep() {
         int displayed = healthBar.getValue();
         if (displayed == animationTarget) {
@@ -145,6 +171,12 @@ public class HealthBarPanelGUI extends JPanel {
         repaint();
     }
 
+    /**
+     * Updates the health to a new value, optionally with animation.
+     *
+     * @param newHealth the new health value to set
+     * @param animate   true to animate the change, false to update instantly
+     */
     public void updateHealth(int newHealth, boolean animate) {
         newHealth = Math.max(0, Math.min(newHealth, healthBar.getMaximum()));
 
@@ -172,10 +204,20 @@ public class HealthBarPanelGUI extends JPanel {
         }
     }
 
+    /**
+     * Updates the health value with default animation enabled.
+     *
+     * @param newHealth the new health value
+     */
     private void updateHealth(int newHealth) {
         updateHealth(newHealth, true); // Default behavior: animate
     }
 
+    /**
+     * Starts the pulsing effect to indicate low health.
+     * <p>
+     * Pulses the health bar color smoothly between two shades of red.
+     */
     private void startPulse() {
         if (pulsing) return;
         pulsing = true;
@@ -194,6 +236,9 @@ public class HealthBarPanelGUI extends JPanel {
         pulseTimer.start();
     }
 
+    /**
+     * Stops the pulsing effect if active.
+     */
     private void stopPulse() {
         pulsing = false;
         if (pulseTimer != null) {
@@ -202,6 +247,11 @@ public class HealthBarPanelGUI extends JPanel {
         }
     }
 
+    /**
+     * Triggers a shake animation to visually indicate damage taken.
+     * <p>
+     * The health bar shifts left and right quickly to grab player attention.
+     */
     private void triggerShake() {
         if (shakeTimer != null && shakeTimer.isRunning()) return;
 
@@ -223,6 +273,11 @@ public class HealthBarPanelGUI extends JPanel {
         shakeTimer.start();
     }
 
+    /**
+     * Triggers a healing glow sweep animation across the health bar.
+     * <p>
+     * A white glow moves horizontally to highlight health increases.
+     */
     private void triggerGlow() {
         glowX = -50f;
         if (glowTimer != null && glowTimer.isRunning()) glowTimer.stop();
@@ -238,6 +293,13 @@ public class HealthBarPanelGUI extends JPanel {
         glowTimer.start();
     }
 
+    /**
+     * A simple test main method demonstrating the HealthBarPanelGUI.
+     * <p>
+     * Provides buttons to simulate taking damage and healing to see the effects.
+     *
+     * @param args not used
+     */
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             JFrame frame = new JFrame("Health Bar Test");

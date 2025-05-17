@@ -79,7 +79,9 @@ public class Treasure extends GameItem implements Interactable {
 
     /**
      * Allows a {@link PlayerCharacter} to interact with the treasure.
-     * If adjacent and not already collected, it gives treasure points or items randomly.
+     * If the player is adjacent and the treasure has not already been collected,
+     * it randomly rewards either treasure points, a potion, or a power potion.
+     * All actions are recorded using the {@link GameLogger}.
      *
      * @param c the player character interacting with the treasure
      */

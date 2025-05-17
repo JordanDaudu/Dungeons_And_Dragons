@@ -66,7 +66,9 @@ public class PowerPotion extends Potion {
 
     /**
      * Allows a {@link PlayerCharacter} to interact with this power potion.
-     * If the player is adjacent and the potion hasn't been used, the player gains power.
+     * If the player is adjacent to the potion or the potion is in the player's inventory,
+     * and it has not already been used, the player gains additional power.
+     * The action is logged using {@link GameLogger}.
      *
      * @param c the player character attempting to interact
      */

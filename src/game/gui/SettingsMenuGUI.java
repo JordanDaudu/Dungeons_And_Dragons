@@ -7,9 +7,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 
 /**
- * A modal settings menu dialog for adjusting game audio preferences.
- * Provides sliders for modifying music and sound effects (SFX) volume,
- * along with buttons to return to the game or quit the application.
+ * A settings dialog for adjusting audio levels, UI themes, and game preferences.
+ * Allows the player to control music and sound effects volume, toggle UI elements,
+ * change tile color themes, view controls, or quit the game.
  */
 public class SettingsMenuGUI extends JDialog {
 
@@ -39,10 +39,10 @@ public class SettingsMenuGUI extends JDialog {
 
     // Methods
     /**
-     * Constructs a new SettingsMenuGUI dialog with sliders for audio volume settings
-     * and control buttons for navigation.
+     * Creates a modal settings dialog attached to the given parent frame.
+     * Initializes all components and layouts, and sets up event handling.
      *
-     * @param parent the parent JFrame that owns this settings dialog
+     * @param parent the parent JFrame to which this dialog is attached
      */
     public SettingsMenuGUI(JFrame parent) {
         super(parent, "Settings", true);  // modal
@@ -58,7 +58,8 @@ public class SettingsMenuGUI extends JDialog {
     }
 
     /**
-     * Initializes all UI components such as sliders, labels, and buttons.
+     * Initializes all UI components used in the settings menu,
+     * including sliders, checkboxes, combo boxes, and buttons.
      */
     private void initComponents() {
         mainPanel = new JPanel(new GridLayout(4, 1, 10, 10));
@@ -99,7 +100,8 @@ public class SettingsMenuGUI extends JDialog {
     }
 
     /**
-     * Arranges all UI components within the dialog using appropriate layouts.
+     * Lays out the components visually using layout managers.
+     * Groups panels and adds them to the dialog.
      */
     private void layoutComponents() {
         musicPanel.add(musicLabel, BorderLayout.WEST);
@@ -134,7 +136,9 @@ public class SettingsMenuGUI extends JDialog {
     }
 
     /**
-     * Attaches action and change listeners to UI components to handle user interaction.
+     * Attaches listeners to UI components to respond to user input,
+     * such as changing volume, theme selection, checkbox toggles,
+     * and button clicks.
      */
     private void attachListeners() {
         musicSlider.addChangeListener(e -> SoundManager.setMusicVolume(musicSlider.getValue() / 100f));
@@ -169,6 +173,9 @@ public class SettingsMenuGUI extends JDialog {
         quitButton.addActionListener(e -> System.exit(0));
     }
 
+    /**
+     * Configures the Escape key to close the dialog when pressed.
+     */
     private void setupEscapeKey() {
         JRootPane rootPane = getRootPane();
         KeyStroke escapeKeyStroke = KeyStroke.getKeyStroke("ESCAPE");

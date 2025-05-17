@@ -102,7 +102,9 @@ public class Potion extends GameItem implements Interactable {
 
     /**
      * Allows a {@link PlayerCharacter} to interact with this potion.
-     * If the player is adjacent and the potion hasn't been used, the player is healed.
+     * If the player is adjacent to the potion or if the potion is in the player's inventory,
+     * and it hasn't been used yet, the player is healed by the potion's amount.
+     * Logs the interaction using {@link GameLogger}.
      *
      * @param c the player character attempting to interact
      */

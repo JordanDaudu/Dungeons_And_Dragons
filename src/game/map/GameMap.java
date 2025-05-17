@@ -77,7 +77,13 @@ public class GameMap {
         return instance;
     }
 
-    // Add a ReentrantLock for each position in the grid
+    /**
+     * Returns the lock object associated with a specific position.
+     * If no lock exists for that position, one is created.
+     *
+     * @param pos the position to get the lock for
+     * @return the ReentrantLock for the given position
+     */
     public ReentrantLock getLockForPosition(Position pos) {
         return locks.computeIfAbsent(pos, k -> new ReentrantLock());
     }
@@ -326,6 +332,12 @@ public class GameMap {
         return all;
     }
 
+    /**
+     * Returns a set of all positions currently occupied on the grid.
+     * This is a snapshot to prevent modification outside this class.
+     *
+     * @return a set of all positions with entities
+     */
     public Set<Position> getAllPositions() {
         mapLock.lock();
         try {
@@ -461,7 +473,13 @@ public class GameMap {
         return visible;
     }
 
-
+    /**
+     * Moves all movable entities on the map by a delta offset to simulate a sandstorm effect.
+     * Entities that cannot be moved (like walls) remain in place.
+     * Entities will only move if the target tile is valid and not blocked.
+     *
+     * @param delta the position delta representing the direction and distance of movement
+     */
     public void applySandstorm(Position delta) {
 
         int startRow = 0, endRow = rows, stepRow = 1;

@@ -6,10 +6,18 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * A modal dialog that displays the current status of a player character.
+ * A dialog window that displays the current status of a player character.
+ * It uses a PlayerStatusPanelGUI to show the player's information and provides a button to close the dialog.
  */
 public class PlayerStatusDialogGUI extends JDialog {
 
+    // Methods
+    /**
+     * Creates a modal dialog to display the status of the given player character.
+     *
+     * @param parentFrame the parent frame for the dialog
+     * @param player the player character whose status is displayed
+     */
     public PlayerStatusDialogGUI(JFrame parentFrame, PlayerCharacter player) {
         super(parentFrame, "Player Status", true); // modal
 

@@ -92,7 +92,13 @@ public class FloatingTextPopupGUI extends JComponent {
         animateFloatingText(textLabel, overlayPanel, 60);
     }
 
-
+    /**
+     * Animates the floating label by moving it upward and reducing its opacity until it disappears.
+     *
+     * @param textLabel   the JLabel to animate
+     * @param parentPanel the panel containing the label
+     * @param totalSteps  the number of animation frames (controls duration/smoothness)
+     */
     private void animateFloatingText(JLabel textLabel, JPanel parentPanel, final int totalSteps) {
         // totalSteps = Animation frames
         Timer timer = new Timer(30, null); // Fires every 30 milliseconds
