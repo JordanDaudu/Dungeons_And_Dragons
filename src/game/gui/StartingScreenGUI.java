@@ -60,6 +60,11 @@ public class StartingScreenGUI extends JDialog {
         return settings;
     }
 
+    /**
+     * Logs the game settings selected by the user to the game logger.
+     *
+     * @param settings the game settings to log
+     */
     private static void logStartingScreen(GameSettings settings) {
         String message = "Game initialized with " +
                 settings.getPlayers() + " player(s), " +
