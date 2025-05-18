@@ -208,8 +208,8 @@ public class PlayerStatusPanelGUI extends JPanel {
         else if(character instanceof Archer)
             passiveSkillPanelGUI.updateContent(loadAndScaleIcon("/icons/accuracy.png", 40, 40), "Special Accuracy", "Has higher accuracy when attacking.");
         else if(character instanceof Mage)
-            passiveSkillPanelGUI.updateContent(loadAndScaleIcon("/icons/multiplier.png", 40, 40), "Special Attack", "Has elemental attack with higher multipliers.");
+            passiveSkillPanelGUI.updateContent(loadAndScaleIcon("/icons/multiplier.png", 40, 40), "Special Attack", "Has elemental attack with higher damage multipliers.");
         else
-            passiveSkillPanelGUI = new PassiveSkillPanelGUI(loadAndScaleIcon("/images/missing.png", 40, 40), "NULL", "NULL");
+            passiveSkillPanelGUI.updateContent(loadAndScaleIcon("/images/missing.png", 40, 40), "NULL", "NULL");
     }
 }
