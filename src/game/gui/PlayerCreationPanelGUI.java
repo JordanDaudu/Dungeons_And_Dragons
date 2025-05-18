@@ -147,6 +147,10 @@ public class PlayerCreationPanelGUI extends JPanel {
         dialog.setSize(600, 600);
         dialog.setLocationRelativeTo(null);
         dialog.add(this);
+
+        // Enter trigger the Start Game button
+        dialog.getRootPane().setDefaultButton(startButton);
+
         dialog.addWindowListener(new java.awt.event.WindowAdapter() {
             /**
              * Handles the event where the player creation window is closed manually

@@ -84,7 +84,7 @@ public class SettingsMenuGUI extends JDialog {
 
         checkBoxesPanel = new JPanel(new GridLayout(1, 2, 10, 0));
 
-        showHPBarCheckbox = new JCheckBox("Show HP Bar", showHPBar);
+        showHPBarCheckbox = new JCheckBox("Show HP Bar On Map", showHPBar);
         showHPBarCheckbox.setSelected(lastSelectedHPBar);
 
         showPlayerInformationCheckbox = new JCheckBox("Show Player Information", showPlayerInformation);

@@ -194,6 +194,14 @@ public class PlayerStatusPanelGUI extends JPanel {
         return area;
     }
 
+    /**
+     * Updates the passive skill panel based on the character's class type.
+     * Displays a corresponding icon, subtitle, and description depending on whether
+     * the character is a Warrior, Archer, or Mage. If the character type is unrecognized,
+     * the panel is reset to a default "NULL" state.
+     *
+     * @param character the player character whose passive skill information is to be displayed
+     */
     private void passiveSkillSet(PlayerCharacter character) {
         if(character instanceof Warrior)
             passiveSkillPanelGUI.updateContent(loadAndScaleIcon("/icons/defence.png", 40, 40), "Special Defence", "Has higher defence and durability.");

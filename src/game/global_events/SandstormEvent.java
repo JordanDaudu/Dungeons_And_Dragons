@@ -18,7 +18,7 @@ import java.util.concurrent.locks.ReentrantLock;
 public class SandstormEvent implements GlobalEvent {
 
     // Data Members
-    String directionName = "";
+    private String directionName = "";
 
     // Methods
     /**

@@ -42,6 +42,7 @@ public class StartingScreenGUI extends JDialog {
         layoutComponents();  // Set up layout
         resizeBackgroundImage();  // Resize background immediately after showing the dialog
         attachListeners();  // Attach listeners
+        getRootPane().setDefaultButton(confirmButton);  // Enter trigger the Start Game button
     }
 
     /**

@@ -4,8 +4,15 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
+/**
+ * A GUI panel for displaying information about a passive skill in the game.
+ * This includes a title, icon, subtitle (skill name), and a description.
+ *
+ * The panel uses a styled layout and consistent fonts/colors to fit the game's theme.
+ */
 public class PassiveSkillPanelGUI extends JPanel {
 
+    // Data Members
     private static final Color TITLE_COLOR = Color.WHITE;
     private static final Color SUBTITLE_COLOR = new Color(255, 200, 0);
     private static final Color DESCRIPTION_COLOR = Color.LIGHT_GRAY;
@@ -20,6 +27,14 @@ public class PassiveSkillPanelGUI extends JPanel {
     private JLabel titleLabel;
     private JSeparator lineSeparator;
 
+    // Methods
+    /**
+     * Constructs a PassiveSkillPanelGUI with the given icon, subtitle, and description.
+     *
+     * @param icon        the image icon representing the passive skill
+     * @param subtitle    the subtitle or name of the passive skill
+     * @param description the description text of what the skill does
+     */
     public PassiveSkillPanelGUI(ImageIcon icon, String subtitle, String description) {
         setBackground(new Color(50, 50, 50)); // Warm dark gray background
         setLayout(new BorderLayout(10, 10));
@@ -35,7 +50,11 @@ public class PassiveSkillPanelGUI extends JPanel {
     }
 
     /**
-     * Dynamically updates the content of the panel.
+     * Updates the icon, subtitle, and description displayed in the panel.
+     *
+     * @param newIcon        the new icon to display
+     * @param newSubtitle    the new subtitle or skill name
+     * @param newDescription the new description text
      */
     public void updateContent(ImageIcon newIcon, String newSubtitle, String newDescription) {
         iconLabel.setIcon(newIcon);
@@ -46,7 +65,11 @@ public class PassiveSkillPanelGUI extends JPanel {
     }
 
     /**
-     * Initializes fonts, colors, and properties of all components.
+     * Initializes all components with the given icon, subtitle, and description.
+     *
+     * @param icon        the image icon for the skill
+     * @param subtitle    the name or label of the skill
+     * @param description the detailed description of the skill
      */
     private void initComponents(ImageIcon icon, String subtitle, String description) {
         // Title label
@@ -80,7 +103,9 @@ public class PassiveSkillPanelGUI extends JPanel {
     }
 
     /**
-     * Adds and arranges components in the panel.
+     * Arranges the components visually in the panel using layout managers.
+     * Divides the layout into three sections: title (NORTH), center (icon and subtitle),
+     * and bottom (separator and description).
      */
     private void layoutComponents() {
         // Top section – Title
