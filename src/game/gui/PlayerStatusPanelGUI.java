@@ -1,6 +1,9 @@
 package game.gui;
 
+import game.characters.Archer;
+import game.characters.Mage;
 import game.characters.PlayerCharacter;
+import game.characters.Warrior;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -23,6 +26,7 @@ public class PlayerStatusPanelGUI extends JPanel {
     private HealthBarPanelGUI healthBar;
     private JLabel powerLabel;
     private JLabel treasureLabel;
+    private PassiveSkillPanelGUI passiveSkillPanelGUI;
 
     // Methods
     /**
@@ -59,10 +63,13 @@ public class PlayerStatusPanelGUI extends JPanel {
             typeLabel.setText("Type: " + newPlayer.getType());
         }
 
+        passiveSkillSet(newPlayer);
+
         healthLabel.setText("Health: " + newPlayer.getHealth() + "/" + newPlayer.getMaxHealth());
         powerLabel.setText("Power: " + newPlayer.getPower());
         treasureLabel.setText("Treasure points: " + newPlayer.getTreasurePoints());
         healthBar.updateHealth(newPlayer.getHealth(), isSamePlayer);
+        passiveSkillPanelGUI.setVisible(true);
 
         this.player = newPlayer;
         revalidate();
@@ -106,6 +113,11 @@ public class PlayerStatusPanelGUI extends JPanel {
         treasureLabel.setFont(new Font("SansSerif", Font.BOLD, 16));
         treasureLabel.setForeground(new Color(212, 175, 55));
         treasureLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        // === Passive Skill Panel ===
+        ImageIcon passiveIcon = loadAndScaleIcon("/images/missing.png", 40, 40);
+        passiveSkillPanelGUI = new PassiveSkillPanelGUI(passiveIcon, "NULL", "NULL");
+        passiveSkillPanelGUI.setVisible(false); // initially hidden
     }
 
     /**
@@ -139,8 +151,11 @@ public class PlayerStatusPanelGUI extends JPanel {
         statsPanel.add(powerLabel);
         statsPanel.add(Box.createVerticalStrut(10));
         statsPanel.add(treasureLabel);
-
         add(statsPanel);
+
+        // === Passive skill panel ===
+        add(Box.createVerticalStrut(10));
+        add(passiveSkillPanelGUI);
     }
 
     /**
@@ -177,5 +192,16 @@ public class PlayerStatusPanelGUI extends JPanel {
         // doing *2 in preferredSize to get more vertical space (for at least 2 lines)
         area.setMaximumSize(new Dimension(Integer.MAX_VALUE, area.getPreferredSize().height * 2));
         return area;
+    }
+
+    private void passiveSkillSet(PlayerCharacter character) {
+        if(character instanceof Warrior)
+            passiveSkillPanelGUI.updateContent(loadAndScaleIcon("/icons/defence.png", 40, 40), "Special Defence", "Has higher defence and durability.");
+        else if(character instanceof Archer)
+            passiveSkillPanelGUI.updateContent(loadAndScaleIcon("/icons/accuracy.png", 40, 40), "Special Accuracy", "Has higher accuracy when attacking.");
+        else if(character instanceof Mage)
+            passiveSkillPanelGUI.updateContent(loadAndScaleIcon("/icons/multiplier.png", 40, 40), "Special Attack", "Has elemental attack with higher multipliers.");
+        else
+            passiveSkillPanelGUI = new PassiveSkillPanelGUI(loadAndScaleIcon("/images/missing.png", 40, 40), "NULL", "NULL");
     }
 }
