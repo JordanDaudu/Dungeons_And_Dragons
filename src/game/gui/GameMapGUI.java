@@ -292,8 +292,8 @@ public class GameMapGUI extends JFrame implements ScreenListener{
                 inventoryPanel = new InventoryPanelGUI(gameController.getCurrentPlayer(), gameController);
                 statusPanel.setPreferredSize(new Dimension(300, 800));
                 inventoryPanel.setPreferredSize(new Dimension(300, 800));
-                setSize(1400, 800);
             }
+            setPreferredSize(new Dimension(1400, 800));
             statusPanel.updatePlayer(gameController.getCurrentPlayer());
             inventoryPanel.updatePlayer(gameController.getCurrentPlayer());
             add(statusPanel, BorderLayout.WEST);
@@ -302,7 +302,7 @@ public class GameMapGUI extends JFrame implements ScreenListener{
         else {
             remove(statusPanel);
             remove(inventoryPanel);
-            setSize(800, 800);
+            setPreferredSize(new Dimension(800, 800));
         }
 
         revalidate(); // triggers layout recalculation

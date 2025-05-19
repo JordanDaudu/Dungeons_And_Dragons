@@ -89,7 +89,7 @@ public class FloatingTextPopupGUI extends JComponent {
         overlayPanel.repaint();
 
         // Start the animation
-        animateFloatingText(textLabel, overlayPanel, 60);
+        animateFloatingText(textLabel, overlayPanel, 40);
     }
 
     /**
