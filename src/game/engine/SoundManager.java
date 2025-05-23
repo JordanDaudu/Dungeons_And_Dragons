@@ -49,7 +49,8 @@ public class SoundManager {
         loadEffect("magicSpell", "sounds/effects/magic_spell.wav");
         loadEffect("pickupInteractable", "sounds/effects/pickupInteractable.wav");
         loadEffect("clickSound", "sounds/effects/clickSound.wav");
-        loadEffect("playerStatusSound", "sounds/effects/PlayerStatusDialogSFX.wav");
+        loadEffect("settingsSFX", "sounds/effects/settingsSFX.wav");
+        loadEffect("playerStatusSound", "sounds/effects/playerStatusDialogSFX.wav");
         loadEffect("inventorySound", "sounds/effects/inventoryDialogSFX.wav");
         loadEffect("openingSound", "sounds/effects/openingSFX.wav");
         loadEffect("closingSound", "sounds/effects/closingSFX.wav");

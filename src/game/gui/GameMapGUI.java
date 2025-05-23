@@ -217,7 +217,7 @@ public class GameMapGUI extends JFrame implements ScreenListener{
         inputMap.put(KeyStroke.getKeyStroke("ESCAPE"), "openSettings");
         actionMap.put("openSettings", new AbstractAction() {
             @Override public void actionPerformed(ActionEvent e) {
-                SoundManager.playEffect("openingSound");
+                SoundManager.playEffect("settingsSFX");
                 new SettingsMenuGUI(GameMapGUI.this).setVisible(true);
             }
         });
