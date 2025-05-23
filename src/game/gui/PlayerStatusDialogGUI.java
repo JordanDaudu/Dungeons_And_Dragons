@@ -5,6 +5,7 @@ import game.engine.SoundManager;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 
 /**
  * A dialog window that displays the current status of a player character.
@@ -41,6 +42,19 @@ public class PlayerStatusDialogGUI extends JDialog {
             SoundManager.playEffect("closingSound");
             dispose();
         });
+
+        // Bind ESC key
+        String escActionKey = "ESCAPE_CLOSE";
+        getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+                .put(KeyStroke.getKeyStroke("ESCAPE"), escActionKey);
+        getRootPane().getActionMap().put(escActionKey, new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                SoundManager.playEffect("closingSound");
+                dispose();
+            }
+        });
+
         JPanel buttonPanel = new JPanel();
         buttonPanel.add(closeButton);
         add(buttonPanel, BorderLayout.SOUTH);

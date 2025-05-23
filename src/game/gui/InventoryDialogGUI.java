@@ -6,6 +6,7 @@ import game.engine.SoundManager;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 
 /**
  * A modal dialog window that displays a player's inventory.
@@ -35,6 +36,18 @@ public class InventoryDialogGUI extends JDialog {
         close.addActionListener(e -> {
             SoundManager.playEffect("closingSound");
             dispose();
+        });
+
+        // Bind ESC key
+        String escActionKey = "ESCAPE_CLOSE";
+        getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+                .put(KeyStroke.getKeyStroke("ESCAPE"), escActionKey);
+        getRootPane().getActionMap().put(escActionKey, new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                SoundManager.playEffect("closingSound");
+                dispose();
+            }
         });
 
         JPanel bottomPanel = new JPanel();
