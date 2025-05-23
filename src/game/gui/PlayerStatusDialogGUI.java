@@ -1,6 +1,7 @@
 package game.gui;
 
 import game.characters.PlayerCharacter;
+import game.engine.SoundManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -36,7 +37,10 @@ public class PlayerStatusDialogGUI extends JDialog {
 
         // Close button
         JButton closeButton = new JButton("Close");
-        closeButton.addActionListener(e -> dispose());
+        closeButton.addActionListener(e -> {
+            SoundManager.playEffect("closingSound");
+            dispose();
+        });
         JPanel buttonPanel = new JPanel();
         buttonPanel.add(closeButton);
         add(buttonPanel, BorderLayout.SOUTH);

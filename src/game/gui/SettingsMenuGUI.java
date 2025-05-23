@@ -145,6 +145,7 @@ public class SettingsMenuGUI extends JDialog {
         sfxSlider.addChangeListener(e -> SoundManager.setSFXVolume(sfxSlider.getValue() / 100f));
 
         colorThemeComboBox.addActionListener(e -> {
+            SoundManager.playEffect("clickSound");
             TileColorBackgroundTheme selectedColorTheme = (TileColorBackgroundTheme) colorThemeComboBox.getSelectedItem();
             if (getParent() instanceof GameMapGUI gameMap) {
                 lastSelectedTheme = selectedColorTheme; // Save selection
@@ -153,6 +154,7 @@ public class SettingsMenuGUI extends JDialog {
         });
 
         showHPBarCheckbox.addActionListener(e -> {
+            SoundManager.playEffect("clickSound");
             showHPBar = showHPBarCheckbox.isSelected();
             if (getParent() instanceof GameMapGUI gameMap) {
                 lastSelectedHPBar = showHPBarCheckbox.isSelected();
@@ -161,6 +163,7 @@ public class SettingsMenuGUI extends JDialog {
         });
 
         showPlayerInformationCheckbox.addActionListener(e -> {
+            SoundManager.playEffect("clickSound");
             showPlayerInformation = showPlayerInformationCheckbox.isSelected();
             if (getParent() instanceof GameMapGUI gameMap) {
                 lastSelectedPlayerInformation = showPlayerInformationCheckbox.isSelected();
@@ -168,8 +171,14 @@ public class SettingsMenuGUI extends JDialog {
             }
         });
 
-        viewControlsButton.addActionListener(e -> new ControlsDialogGUI((JFrame) getParent()).setVisible(true));
-        backButton.addActionListener(e -> dispose());
+        viewControlsButton.addActionListener(e -> {
+            SoundManager.playEffect("openingSound");
+            new ControlsDialogGUI((JFrame) getParent()).setVisible(true);
+        });
+        backButton.addActionListener(e -> {
+            SoundManager.playEffect("closingSound");
+            dispose();
+        });
         quitButton.addActionListener(e -> System.exit(0));
     }
 
@@ -183,6 +192,7 @@ public class SettingsMenuGUI extends JDialog {
         rootPane.getActionMap().put("ESCAPE", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                SoundManager.playEffect("closingSound");
                 dispose();
             }
         });

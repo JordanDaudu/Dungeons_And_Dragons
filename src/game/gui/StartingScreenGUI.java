@@ -1,6 +1,7 @@
 package game.gui;
 
 import game.engine.GameSettings;
+import game.engine.SoundManager;
 import game.logging.GameLogger;
 
 import javax.swing.*;
@@ -217,6 +218,7 @@ public class StartingScreenGUI extends JDialog {
 
         // Confirm Button ActionListener
         confirmButton.addActionListener(e -> {
+            SoundManager.playEffect("clickSound");
             selectedPlayers = (int) playerSpinner.getValue();
             selectedRows = (int) rowSpinner.getValue();
             selectedCols = (int) colSpinner.getValue();

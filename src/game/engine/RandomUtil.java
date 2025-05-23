@@ -20,7 +20,9 @@ public class RandomUtil {
 
     // Methods
 
-    // Default Constructor
+    /**
+     * Default Constructor
+     */
     private RandomUtil() {}
 
     /**

@@ -2,6 +2,7 @@ package game.gui;
 
 import game.core.ScreenAction;
 import game.core.ScreenListener;
+import game.engine.SoundManager;
 import game.logging.GameLogger;
 
 import javax.swing.*;
@@ -119,6 +120,7 @@ public class PlayerCreationPanelGUI extends JPanel {
                                 "Logging failed: " + ex.getMessage(), "Log Error", JOptionPane.ERROR_MESSAGE);
                     }
 
+                    SoundManager.playEffect("clickSound");
                     listener.onAction(ScreenAction.START_GAME, playerName, selectedClass);
                     dialog.setVisible(false);
                 }

@@ -2,6 +2,7 @@ package game.gui;
 
 import game.characters.PlayerCharacter;
 import game.core.ScreenListener;
+import game.engine.SoundManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -31,7 +32,10 @@ public class InventoryDialogGUI extends JDialog {
         add(panel, BorderLayout.CENTER);
 
         JButton close = new JButton("Close");
-        close.addActionListener(e -> dispose());
+        close.addActionListener(e -> {
+            SoundManager.playEffect("closingSound");
+            dispose();
+        });
 
         JPanel bottomPanel = new JPanel();
         bottomPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));

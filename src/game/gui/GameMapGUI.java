@@ -10,6 +10,7 @@ import game.engine.GameController;
 import game.core.ScreenAction;
 import game.core.ScreenListener;
 import game.engine.RandomUtil;
+import game.engine.SoundManager;
 import game.items.GameItem;
 import game.items.Interactable;
 import game.logging.GameLogger;
@@ -192,6 +193,7 @@ public class GameMapGUI extends JFrame implements ScreenListener{
             @Override public void actionPerformed(ActionEvent e) {
                 PlayerCharacter currentPlayer = gameController.getCurrentPlayer();
                 if (currentPlayer != null) {
+                    SoundManager.playEffect("inventorySound");
                     inventoryDialogGUI = new InventoryDialogGUI(GameMapGUI.this, currentPlayer, controllerListener);
                     inventoryDialogGUI.setVisible(true);
                 }
@@ -204,6 +206,7 @@ public class GameMapGUI extends JFrame implements ScreenListener{
             @Override public void actionPerformed(ActionEvent e) {
                 PlayerCharacter currentPlayer = gameController.getCurrentPlayer();
                 if (currentPlayer != null) {
+                    SoundManager.playEffect("playerStatusSound");
                     PlayerStatusDialogGUI statusDialog = new PlayerStatusDialogGUI(GameMapGUI.this, currentPlayer);
                     statusDialog.setVisible(true);
                 }
@@ -214,6 +217,7 @@ public class GameMapGUI extends JFrame implements ScreenListener{
         inputMap.put(KeyStroke.getKeyStroke("ESCAPE"), "openSettings");
         actionMap.put("openSettings", new AbstractAction() {
             @Override public void actionPerformed(ActionEvent e) {
+                SoundManager.playEffect("openingSound");
                 new SettingsMenuGUI(GameMapGUI.this).setVisible(true);
             }
         });

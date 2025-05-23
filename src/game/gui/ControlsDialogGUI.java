@@ -1,5 +1,7 @@
 package game.gui;
 
+import game.engine.SoundManager;
+
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
@@ -110,7 +112,10 @@ public class ControlsDialogGUI extends JDialog {
      * Attaches listeners to interactive components like the close button and Escape key binding.
      */
     private void attachListeners() {
-        closeButton.addActionListener(e -> dispose());
+        closeButton.addActionListener(e -> {
+            SoundManager.playEffect("closingSound");
+            dispose();
+        });
         setupEscapeKey();
     }
 
@@ -124,6 +129,7 @@ public class ControlsDialogGUI extends JDialog {
         rootPane.getActionMap().put("ESCAPE", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                SoundManager.playEffect("closingSound");
                 dispose();
             }
         });

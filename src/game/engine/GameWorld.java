@@ -250,7 +250,6 @@ public class GameWorld {
                 positions.add(pos);
             }
         }
-
         return positions;
     }
 
