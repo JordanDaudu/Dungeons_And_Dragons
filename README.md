@@ -221,7 +221,8 @@ A visual tour of the game features and interface:
 > View player stats, class type, and current treasure points.
 
 **World Events**
-<img src="Photos/Main photo for ReadMe/SandStorm.gif" alt="SandStorm" width="720">
+
+<img src="Photos/Main photo for ReadMe/Sandstorm.gif" alt="SandStorm" width="720">
 <img src="Photos/Main photo for ReadMe/Magic_Wave.gif" alt="Magic Wave" width="720">
 
 > Random global events like magic waves the deals damage and sandstorms that deal damage and move the entities
