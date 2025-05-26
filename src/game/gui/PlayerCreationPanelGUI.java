@@ -9,6 +9,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 import java.util.Objects;
 
 /**
@@ -23,18 +26,19 @@ import java.util.Objects;
 public class PlayerCreationPanelGUI extends JPanel {
 
     // Data Members
-    private final JDialog dialog;
-    private final JTextField nameField;
-    private final JRadioButton warriorButton, archerButton, mageButton;
+    private JDialog dialog;
+    private JTextField nameField;
+    private JRadioButton warriorButton, archerButton, mageButton;
     private ImageIcon warriorIcon, archerIcon, mageIcon;
-    private final ButtonGroup classGroup;
-    private final JPanel classPanel;
-    private final JButton startButton;
+    private ButtonGroup classGroup;
+    private JPanel classPanel;
+    private JButton startButton;
     private String playerName;
     private String selectedClass;
-    private final JLabel nameLabel, classLabel;
-    private final JTextPane classDescriptionPane;
-    private final JScrollPane scrollPane;
+    private JLabel nameLabel, classLabel;
+    private JTextPane classDescriptionPane;
+    private JScrollPane scrollPane;
+    private final ScreenListener listener;
 
     // Methods
     /**
@@ -43,14 +47,36 @@ public class PlayerCreationPanelGUI extends JPanel {
      * @param listener the ScreenListener used to trigger game start events
      */
     public PlayerCreationPanelGUI(ScreenListener listener) {
+        this.listener = listener;
+
+        initComponents();
+        layoutComponents();
+        attachListeners();
+        initDialog();
+    }
+
+    /**
+     * Displays the player creation panel as a modal dialog.
+     * Blocks input to other windows until the dialog is closed.
+     */
+    public void showModal() {
+        dialog.setModal(true);
+        dialog.setVisible(true);
+    }
+
+    private void initComponents() {
+        Color bgColor = new Color(240, 235, 220);  // parchment
+        this.setBackground(bgColor);
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setAlignmentX(Component.CENTER_ALIGNMENT);
         playerName = null;
         selectedClass = null;
 
         // Player Name Field
+        Color accent = new Color(80, 50, 20);      // fantasy brown
         nameLabel = new JLabel("Enter your name:");
         nameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        nameLabel.setForeground(accent);
         nameField = new JTextField(20);
         nameField.setMaximumSize(nameField.getPreferredSize());
         nameField.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -85,6 +111,7 @@ public class PlayerCreationPanelGUI extends JPanel {
         classPanel.add(warriorButton);
         classPanel.add(archerButton);
         classPanel.add(mageButton);
+        classPanel.setBackground(bgColor);
 
         // Class Description Panel with scroll
         classDescriptionPane = new JTextPane();
@@ -101,6 +128,39 @@ public class PlayerCreationPanelGUI extends JPanel {
         // Start Button
         startButton = new JButton("Start Game");
         startButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+    }
+
+    private void layoutComponents() {
+        add(Box.createRigidArea(new Dimension(0, 15)));
+        add(nameLabel);
+        add(nameField);
+        add(Box.createRigidArea(new Dimension(0, 20)));
+        add(classLabel);
+
+        // --- Adding horizontal separator above classPanel ---
+        JSeparator topSeparator = new JSeparator(SwingConstants.HORIZONTAL);
+        topSeparator.setMaximumSize(new Dimension(Integer.MAX_VALUE, 1));
+        add(Box.createRigidArea(new Dimension(0, 10)));
+        add(topSeparator);
+
+        // --- Adding classPanel with a bit of spacing ---
+        add(Box.createRigidArea(new Dimension(0, 10)));
+        add(classPanel);
+
+        // --- Adding horizontal separator below classPanel ---
+        add(Box.createRigidArea(new Dimension(0, 10)));
+        JSeparator bottomSeparator = new JSeparator(SwingConstants.HORIZONTAL);
+        bottomSeparator.setMaximumSize(new Dimension(Integer.MAX_VALUE, 1));
+        add(bottomSeparator);
+
+        // --- Adding instructions and description ---
+        add(Box.createRigidArea(new Dimension(0, 10)));
+        add(scrollPane);
+        add(Box.createRigidArea(new Dimension(0, 20)));
+        add(startButton);
+    }
+
+    private void attachListeners() {
         startButton.addActionListener(new ActionListener() {
             /**
              * Handles the "Start Game" button click.
@@ -129,19 +189,9 @@ public class PlayerCreationPanelGUI extends JPanel {
                 }
             }
         });
+    }
 
-        // Add components
-        add(Box.createRigidArea(new Dimension(0, 15)));
-        add(nameLabel);
-        add(nameField);
-        add(Box.createRigidArea(new Dimension(0, 20)));
-        add(classLabel);
-        add(classPanel);
-        add(Box.createRigidArea(new Dimension(0, 10)));
-        add(scrollPane);
-        add(Box.createRigidArea(new Dimension(0, 20)));
-        add(startButton);
-
+    private void initDialog() {
         // Setup Dialog
         dialog = new JDialog();
         dialog.setTitle("Character Creation");
@@ -167,15 +217,6 @@ public class PlayerCreationPanelGUI extends JPanel {
     }
 
     /**
-     * Displays the player creation panel as a modal dialog.
-     * Blocks input to other windows until the dialog is closed.
-     */
-    public void showModal() {
-        dialog.setModal(true);
-        dialog.setVisible(true);
-    }
-
-    /**
      * Creates a radio button representing a player class, complete with image and listener.
      *
      * @param className  the name of the class (e.g., "Warrior")
@@ -188,16 +229,35 @@ public class PlayerCreationPanelGUI extends JPanel {
         radioButton.setHorizontalTextPosition(SwingConstants.CENTER);
         radioButton.setVerticalTextPosition(SwingConstants.BOTTOM);
         radioButton.setAlignmentY(Component.CENTER_ALIGNMENT);
+        radioButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
-        radioButton.addActionListener(new ActionListener() {
-            /**
-             * Sets the selected class to the one associated with this button
-             * and updates the class description pane accordingly.
-             */
+        ImageIcon hoverIcon = scaleIcon(classImage, 110, 110);
+        Color glowColor = getGlowColor(className);
+        ImageIcon glowIcon = createGlowingIcon(classImage, glowColor, 8);
+
+        radioButton.addActionListener(e -> {
+            SoundManager.playEffect("clickSound");
+            selectedClass = className;
+            updateClassDescription(className);
+            updateIcons();
+        });
+
+        radioButton.addMouseListener(new MouseAdapter() {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                selectedClass = className;
-                updateClassDescription(className);
+            public void mouseEntered(MouseEvent e) {
+                if (!radioButton.isSelected()) {
+                    radioButton.setIcon(hoverIcon); // optional slight scale on hover
+                }
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                if (radioButton.isSelected()) {
+                    radioButton.setIcon(glowIcon);
+                }
+                else {
+                    radioButton.setIcon(classImage);
+                }
             }
         });
         return radioButton;
@@ -268,5 +328,58 @@ public class PlayerCreationPanelGUI extends JPanel {
         Image img = icon.getImage();
         Image scaledImg = img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
         return new ImageIcon(scaledImg);
+    }
+
+    private void updateIcons() {
+        updateButtonIcon(warriorButton, "Warrior", warriorIcon);
+        updateButtonIcon(archerButton, "Archer", archerIcon);
+        updateButtonIcon(mageButton, "Mage", mageIcon);
+    }
+
+    private void updateButtonIcon(JRadioButton button, String className, ImageIcon baseIcon) {
+        if (className.equals(selectedClass)) {
+            Color glowColor = getGlowColor(className);
+            button.setIcon(createGlowingIcon(baseIcon, glowColor, 8));
+        }
+        else {
+            button.setIcon(baseIcon);
+        }
+    }
+
+
+    private ImageIcon createGlowingIcon(ImageIcon originalIcon, Color glowColor, int glowSize) {
+        int width = originalIcon.getIconWidth() + glowSize * 2;
+        int height = originalIcon.getIconHeight() + glowSize * 2;
+
+        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2 = image.createGraphics();
+
+        // Enable quality rendering
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+
+        // Draw glow by repeatedly painting translucent color
+        for (int i = glowSize; i > 0; i--) {
+            float opacity = (float) i / (glowSize * 2);
+            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, opacity));
+            g2.setColor(glowColor);
+            g2.fillRoundRect(i, i, originalIcon.getIconWidth(), originalIcon.getIconHeight(), 20, 20);
+        }
+
+        // Draw original image on top
+        g2.setComposite(AlphaComposite.SrcOver);
+        g2.drawImage(originalIcon.getImage(), glowSize, glowSize, null);
+        g2.dispose();
+
+        return new ImageIcon(image);
+    }
+
+    private Color getGlowColor(String className) {
+        return switch (className) {
+            case "Warrior" -> new Color(70, 130, 180);      // SteelBlue
+            case "Archer" -> new Color(60, 179, 113);     // MediumSeaGreen
+            case "Mage" -> new Color(138, 43, 226);       // BlueViolet
+            default -> Color.WHITE;
+        };
     }
 }

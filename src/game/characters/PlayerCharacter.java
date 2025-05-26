@@ -228,7 +228,9 @@ public abstract class PlayerCharacter extends AbstractCharacter implements Playe
      * @param target the combatant to attack
      */
     @Override
-    public void fight(Combatant target) {}
+    public void fight(Combatant target) {
+        System.out.println("Choose a class to be able to fight");
+    }
 
     /**
      * Handles the defeat of the player character.
