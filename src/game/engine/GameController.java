@@ -65,8 +65,6 @@ public class GameController implements ScreenListener {
         Timer turnTimer = new Timer(200, e -> {
             if (endTurn) {
                 PlayerCharacter currentPlayer = gameWorld.getCurrentPlayer();
-                System.out.println(currentPlayer.getName() + "'s turn ended.");
-
                 setEndTurn(false); // Reset for next turn
 
                 // Advance to next player
@@ -78,7 +76,6 @@ public class GameController implements ScreenListener {
                     int nextIndex = (currentIndex + 1 + i) % size;
                     PlayerCharacter nextPlayer = gameWorld.getPlayers().get(nextIndex);
                     if (!nextPlayer.isDead()) {
-                        System.out.println("Setting up next player " + nextPlayer.getName());
                         gameWorld.setCurrentPlayer(nextPlayer);
                         GameMap.getInstance().updatePlayerView(nextPlayer.getPosition());
                         callPanelRefreshers();
@@ -202,7 +199,6 @@ public class GameController implements ScreenListener {
      * @return the new position if the move was successful, otherwise null
      */
     public Position attemptMoveTo(Position newPosition) {
-        System.out.println("Entered function");
         if(gameWorld.getCurrentPlayer().getPosition().distanceTo(newPosition) <= 1 && map.isValidPosition(newPosition)) {
             if (map.isGameItemBlocking(newPosition) || map.isEnemyBlocking(newPosition) || map.isPlayerBlocking(newPosition))
                 return null;
@@ -215,7 +211,6 @@ public class GameController implements ScreenListener {
             else if((gameWorld.getCurrentPlayer().getPosition().getCol() - 1) == newPosition.getCol())
                 return gameWorld.getCurrentPlayer().moveLeft();
         }
-        System.out.println("DIDNT MOVE");
         return null;
     }
 
@@ -249,7 +244,6 @@ public class GameController implements ScreenListener {
     public boolean onAction(ScreenAction action, Object... data) {
         switch (action) {
             case ScreenAction.MOVE -> {
-                System.out.println("PLAYER IS TRYING TO MOVE");
                 if(data[0] instanceof Position position && map.isValidPosition(position)) {
                     Position newPosition = attemptMoveTo(position);
                     if(newPosition != null) {
@@ -266,7 +260,6 @@ public class GameController implements ScreenListener {
                 if(data[0] instanceof Enemy enemy)
                     target = enemy;
                 else {
-                    System.out.println("Tried to fight not an enemy");
                     return false;
                 }
 
@@ -280,7 +273,6 @@ public class GameController implements ScreenListener {
                     combatSystem.resolveCombat(player, target);
                     // Handle death for map entity
                     if (target.isDead()) {
-                        System.out.println("You defeated the " + target.getClass().getSimpleName() + "!");
                         gameWorld.removeEnemy(target);
                     }
                     if(player.isDead()) {
@@ -404,27 +396,27 @@ public class GameController implements ScreenListener {
                     gameIsWon = true;
 
                 if(gameIsOver) {
+                    for(PlayerCharacter p : gameWorld.getPlayers())
+                        GameLogger.getInstance().log(p.getName() + " - Treasure Points: " + p.getTreasurePoints());
                     shutDownThreads();
                     GameOverGUI gameOver = new GameOverGUI(gameMapGUI, gameWorld.getPlayers());
                     gameOver.showDialog();
                     gameOver.setVisible(true);  // blocks until closed
                     scanner.close();
-                    for(PlayerCharacter p : gameWorld.getPlayers())
-                        System.out.println(p.getName() + " - Treasure Points: " + p.getTreasurePoints());
                     System.exit(0);
                 }
                 else if(gameIsWon) {
+                    for(PlayerCharacter p : gameWorld.getPlayers())
+                        GameLogger.getInstance().log(p.getName() + " - Treasure Points: " + p.getTreasurePoints());
                     shutDownThreads();
                     CongratulationsGUI congratulationsGUI = new CongratulationsGUI(gameMapGUI, gameWorld.getPlayers());
                     congratulationsGUI.showDialog();
                     congratulationsGUI.setVisible(true);
                     scanner.close();
-                    for(PlayerCharacter p : gameWorld.getPlayers())
-                        System.out.println(p.getName() + " - Treasure Points: " + p.getTreasurePoints());
                     System.exit(0);
                 }
             }
-            default -> System.out.println("Not an option");
+            default -> {}
         }
         return false;
     }
@@ -440,7 +432,6 @@ public class GameController implements ScreenListener {
     private void updateAfterMovingPlayer(Position newPosition, GameMap map) {
         if(newPosition != null) {
             // ✅ Move the player
-            System.out.println("PLAYER MOVED SUCCESSFULLY");
             map.removeEntity(gameWorld.getCurrentPlayer()); // Remove from old position
             gameWorld.getCurrentPlayer().setPosition(newPosition);
             map.addEntity(gameWorld.getCurrentPlayer());    // Add to new position

@@ -94,7 +94,6 @@ public class Warrior extends PlayerCharacter implements MeleeFighter, PhysicalAt
         if(source != null)
             amount = (int) (source.getPower() * (1 - Math.min(0.6, defence / 200.0)));
         setHealth(getHealth() - amount);
-        System.out.println(getClass().getSimpleName() + " received " + amount + " damage!");
         setLastDamageReceived(amount);
     }
 
@@ -107,8 +106,6 @@ public class Warrior extends PlayerCharacter implements MeleeFighter, PhysicalAt
     public void fightClose(Combatant target) {
         if(isInMeleeRange(getPosition(), target.getPosition()))
             target.receiveDamage(calculateDamage(target), this);
-        else
-            System.out.println("Out of range!");
     }
 
     /**

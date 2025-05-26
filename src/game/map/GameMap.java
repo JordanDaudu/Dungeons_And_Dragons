@@ -31,7 +31,7 @@ public class GameMap {
     private int rows;
     private int cols;
     private final static GameMap instance = new GameMap();
-    private final ReentrantLock mapLock = new ReentrantLock(); // Universal lock used only when updating the player view
+    private final ReentrantLock mapLock = new ReentrantLock(); // Universal lock used only in specific functions
 
     // Methods
     /**
@@ -305,7 +305,7 @@ public class GameMap {
         }
         while (isOccupied(pos));
 
-        System.out.println("Added " + player.getName() + " to place: " + pos);
+        //System.out.println("Added " + player.getName() + " to place: " + pos);
         player.setPosition(pos);
         addEntity(player);
     }
@@ -363,22 +363,22 @@ public class GameMap {
                 if (roll < 0.10) {
                     // 10% → Wall
                     addEntity(new Wall(pos, "Wall"));
-                    System.out.println("Placing wall at: " + pos);
+                    //System.out.println("Placing wall at: " + pos);
                 }
                 else if (roll < 0.40) {
                     // Next 30% → Random enemy
                     addEntity(RandomUtil.randomEnemy(pos));
-                    System.out.println("Placing Enemy at: " + pos);
+                    //System.out.println("Placing Enemy at: " + pos);
                 }
                 else if (roll < 0.55) {
                     // Next 15% → Regular potion
                     addEntity(new Potion(pos, true, "Healing Potion, restores 10–50 HP. Use to recover health."));
-                    System.out.println("Placing Potion at: " + pos);
+                    //System.out.println("Placing Potion at: " + pos);
                 }
                 else if (roll < 0.60) {
                     // Next 5% → Power potion
                     addEntity(new PowerPotion(pos, true, "Power Potion, grants 1-5 Power. boosts damage potential by increasing power."));
-                    System.out.println("Placing Power Potion at: " + pos);
+                    //System.out.println("Placing Power Potion at: " + pos);
                 }
                 // Else: 40% chance to place nothing — do nothing
             }

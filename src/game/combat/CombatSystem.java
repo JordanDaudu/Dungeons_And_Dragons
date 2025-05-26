@@ -55,13 +55,8 @@ public class CombatSystem {
     public void resolveCombat(Combatant attacker, Combatant defender) {
         combatLock.lock();
         try {
-            System.out.println("Attacker: " + attacker);
-            System.out.println("Defender: " + defender);
             executeCombatTurn(attacker, defender);
-
             if (!defender.isDead()) {
-                System.out.println("Attacker: " + defender);
-                System.out.println("Defender: " + attacker);
                 executeCombatTurn(defender, attacker);
             }
         }
@@ -101,7 +96,6 @@ public class CombatSystem {
 
         if (attacker instanceof Archer) {
             if (defender.tryEvade(attacker.getAccuracyModifier())) {
-                System.out.println("Attack evaded!");
                 logEvade(defender); // LOGGING HERE
                 playGrayEvadedBlinkAnimation(attacker, defender);
                 return;
@@ -117,7 +111,6 @@ public class CombatSystem {
             }
         }
         else if (defender.tryEvade()) {
-            System.out.println("Attack evaded!");
             logEvade(defender); // LOGGING HERE
             playGrayEvadedBlinkAnimation(attacker, defender);
             return;
@@ -136,7 +129,7 @@ public class CombatSystem {
         if (defender.isDead()) {
             if (defender instanceof Enemy) {
                 defender.defeat();
-                GameLogger.getInstance().log(defender.getClass().getSimpleName() + "was defeated!");
+                GameLogger.getInstance().log(defender.getClass().getSimpleName() + " was defeated!");
                 changeBattleMusic(attacker, defender);
             } else {
                 defender.defeat();

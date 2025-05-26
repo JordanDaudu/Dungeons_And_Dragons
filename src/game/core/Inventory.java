@@ -99,25 +99,4 @@ public class Inventory {
         return items;
     }
 
-    /**
-     * Prints a summarized view of the inventory,
-     * showing the count of each type of item.
-     */
-    public void printInventory() {
-        if (items.isEmpty()) {
-            System.out.println("Inventory is empty.");
-            return;
-        }
-
-        Map<String, Integer> itemCounts = new HashMap<>();
-
-        for (Interactable item : items) {
-            String itemName = item.getClass().getSimpleName();
-            itemCounts.put(itemName, itemCounts.getOrDefault(itemName, 0) + 1);
-        }
-
-        System.out.println("Inventory:");
-        for (Map.Entry<String, Integer> entry : itemCounts.entrySet())
-            System.out.println("- " + entry.getKey() + " x" + entry.getValue());
-    }
 }

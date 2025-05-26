@@ -94,7 +94,6 @@ public class Orc extends Enemy implements MeleeFighter, PhysicalAttacker {
             amount = ((int) Math.round(amount * (1 - resistance)));
         }
         setHealth(getHealth() - amount);
-        System.out.println(getClass().getSimpleName() +" received " + amount + " damage!");
         setLastDamageReceived(amount);
     }
 

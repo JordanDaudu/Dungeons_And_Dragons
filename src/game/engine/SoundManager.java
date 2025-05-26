@@ -117,8 +117,8 @@ public class SoundManager {
                 }
                 clip.start();
 
-                System.out.println("Play music completed. '" + name + "' is now active.");
-                System.out.println("Current track playing: " + (currentClip != null && currentClip.isRunning() ? name : "NOT PLAYING"));
+//                System.out.println("Play music completed. '" + name + "' is now active.");
+//                System.out.println("Current track playing: " + (currentClip != null && currentClip.isRunning() ? name : "NOT PLAYING"));
 
                 // 🚨 Checking if clip is actually running
                 forceRestartIfNeeded(name);
@@ -263,7 +263,7 @@ public class SoundManager {
     public static void crossfadeTo(String name, boolean loop) {
         musicLock.lock();
         try {
-            System.out.println("Attempting to crossfade to track: " + name);
+            //System.out.println("Attempting to crossfade to track: " + name);
 
             Clip newClip = musicTracks.get(name);
             if (newClip == null) {
@@ -272,14 +272,14 @@ public class SoundManager {
             }
 
             if (newClip == currentClip) {
-                System.out.println("Track '" + name + "' is already playing. No transition needed.");
+                //System.out.println("Track '" + name + "' is already playing. No transition needed.");
                 return;
             }
 
             final Clip oldClip = currentClip;
             currentClip = newClip;
 
-            System.out.println("Transitioning from '" + (oldClip != null ? getTrackName(oldClip) : "None") + "' to '" + name + "'");
+            //System.out.println("Transitioning from '" + (oldClip != null ? getTrackName(oldClip) : "None") + "' to '" + name + "'");
 
             setVolume(newClip, 0f);
             newClip.setFramePosition(0);
@@ -305,12 +305,12 @@ public class SoundManager {
                 step[0]++;
                 if (step[0] > steps) {
                     if (oldClip != null) {
-                        System.out.println("Stopping old track: " + getTrackName(oldClip));
+                        //System.out.println("Stopping old track: " + getTrackName(oldClip));
                         oldClip.stop();
                         oldClip.setFramePosition(0);
                     }
-                    System.out.println("Crossfade completed. '" + name + "' is now active.");
-                    System.out.println("Current track playing: " + (currentClip != null && currentClip.isRunning() ? name : "NOT PLAYING"));
+                    //System.out.println("Crossfade completed. '" + name + "' is now active.");
+                    //System.out.println("Current track playing: " + (currentClip != null && currentClip.isRunning() ? name : "NOT PLAYING"));
 
                     // 🚨 Checking if clip is actually running
                     forceRestartIfNeeded(name);
@@ -319,7 +319,7 @@ public class SoundManager {
                 }
             });
 
-            System.out.println("Crossfade initiated for track: " + name);
+            //System.out.println("Crossfade initiated for track: " + name);
             timer.start();
         }
         finally {
@@ -350,7 +350,7 @@ public class SoundManager {
     private static void forceRestartIfNeeded(String name) {
         // 🚨 Force restart if the clip isn't running
         if (!currentClip.isRunning()) {
-            System.out.println("WARNING: '" + name + "' was set but isn't playing! Restarting manually...");
+            //System.out.println("WARNING: '" + name + "' was set but isn't playing! Restarting manually...");
             currentClip.setFramePosition(0);
             currentClip.start();
         }

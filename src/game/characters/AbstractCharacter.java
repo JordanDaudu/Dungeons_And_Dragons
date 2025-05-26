@@ -191,7 +191,6 @@ public abstract class AbstractCharacter implements Combatant, GameEntity {
     public void receiveDamage(int amount, Combatant source) {
         // Moved the evasion logic to CombatSystem for now
         setHealth(getHealth() - amount);
-        System.out.println(getClass().getSimpleName() + " received " + amount + " damage!");
         setLastDamageReceived(amount);
     }
 

@@ -147,7 +147,6 @@ public abstract class PlayerCharacter extends AbstractCharacter implements Playe
      */
     public boolean updateTreasurePoints(int amount) {
         treasurePoints += amount;
-        System.out.println("Your total now is: " + getTreasurePoints());
         return true;
     }
 
@@ -222,17 +221,6 @@ public abstract class PlayerCharacter extends AbstractCharacter implements Playe
         return new Position(currentPosition.getRow() + 1, currentPosition.getCol());
     }
 
-    /**
-     * Prints the contents of the player's inventory.
-     * If the inventory is empty, a message is displayed to indicate that.
-     */
-    public void printInventoryOfPlayer(){
-        if (this.isEmpty())
-            System.out.println("Your inventory is empty.");
-        else {
-            this.inventory.printInventory();
-        }
-    }
 
     /**
      * Setting up for future class chosen
@@ -240,9 +228,7 @@ public abstract class PlayerCharacter extends AbstractCharacter implements Playe
      * @param target the combatant to attack
      */
     @Override
-    public void fight(Combatant target) {
-        System.out.println("Choose a class to be able to fight");
-    }
+    public void fight(Combatant target) {}
 
     /**
      * Handles the defeat of the player character.
@@ -251,10 +237,7 @@ public abstract class PlayerCharacter extends AbstractCharacter implements Playe
     @Override
     public void defeat() {
         setVisible(false);
-        System.out.println("\n||GAME OVER " + getName() + "!||\n");
-        System.out.println(getName() + " you gained " + getTreasurePoints() + " treasure point(s) in total!\n");
         GameLogger.getInstance().log("Player: " + this.getName() + " is dead");
-
     }
 
     /**

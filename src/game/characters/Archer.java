@@ -136,8 +136,6 @@ public class Archer extends PlayerCharacter implements PhysicalAttacker, RangedF
     public void fightRanged(Combatant target) {
         if(isInRange(getPosition(), target.getPosition()))
             target.receiveDamage(calculateDamage(target), this);
-        else
-            System.out.println("Out of Range!");
     }
 
     /**
