@@ -333,7 +333,7 @@ public class GameController implements ScreenListener {
                         if (bestMove != null) {
                             if(gameWorld.getMap().tryMoveEnemy(enemy, bestMove)) {
                                 GameLogger.getInstance().log("Enemy: " + enemy.getClass().getSimpleName() +
-                                        " moved towards player to position " + bestMove + ".");
+                                        " moved towards player " + getCurrentPlayer().getName() + " to position " + bestMove + ".");
                                 map.updatePlayerView(gameWorld.getCurrentPlayer().getPosition());
                                 SwingUtilities.invokeLater(() -> getGameMapGUI().repaint());
                                 return true;
@@ -396,6 +396,7 @@ public class GameController implements ScreenListener {
                     gameIsWon = true;
 
                 if(gameIsOver) {
+                    GameLogger.getInstance().log("Game Over!");
                     for(PlayerCharacter p : gameWorld.getPlayers())
                         GameLogger.getInstance().log(p.getName() + " - Treasure Points: " + p.getTreasurePoints());
                     shutDownThreads();
@@ -406,6 +407,7 @@ public class GameController implements ScreenListener {
                     System.exit(0);
                 }
                 else if(gameIsWon) {
+                    GameLogger.getInstance().log("Game Won!");
                     for(PlayerCharacter p : gameWorld.getPlayers())
                         GameLogger.getInstance().log(p.getName() + " - Treasure Points: " + p.getTreasurePoints());
                     shutDownThreads();

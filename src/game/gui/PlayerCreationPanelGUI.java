@@ -229,6 +229,7 @@ public class PlayerCreationPanelGUI extends JPanel {
         radioButton.setHorizontalTextPosition(SwingConstants.CENTER);
         radioButton.setVerticalTextPosition(SwingConstants.BOTTOM);
         radioButton.setAlignmentY(Component.CENTER_ALIGNMENT);
+        radioButton.setContentAreaFilled(false);
         radioButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
         ImageIcon hoverIcon = scaleIcon(classImage, 110, 110);
