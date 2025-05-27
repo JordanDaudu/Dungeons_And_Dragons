@@ -26,6 +26,7 @@ This project simulates a simplified action turn-based role-playing game (ARPG), 
 - 🧰 **Toggleable UI Panels** – Through the settings menu, players can toggle the visibility of HP bars and side panels that display player status and inventory.
 - 📜 **Game Logging System** – Every action (movement, attacks, pickups) is logged in real-time via an in-game logger.
 - 🔊 **Dynamic Sound & Music** – Audio reacts to combat events (e.g., low HP or dragon battles).
+- 🎛️ **SFX for UI and Combat** – Button clicks, interactable items and player attacks come with satisfying sound effects for a responsive and immersive experience.
 - 🎨 **Customizable Settings** – Change SFX/music volume and grid colors on the fly.
 - 🏁 **Victory & Game Over Screens** – Endgame summary with a ranked treasure score list.
 - 📦 **Centralized Resource Management** - All sounds, images, and configuration files are organized in a dedicated resources folder
