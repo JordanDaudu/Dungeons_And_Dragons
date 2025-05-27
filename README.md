@@ -172,7 +172,7 @@ A visual tour of the game features and interface:
 
 **Character Creation**
 
-<img src="Photos/Main photo for ReadMe/Character_Creation.png" alt="Character Creation" width="720">
+<img src="Photos/Main photo for ReadMe/Character_Creation.gif" alt="Character Creation" width="720">
 
 > Enter a character name and choose a class: Warrior, Mage, or Archer.
 
