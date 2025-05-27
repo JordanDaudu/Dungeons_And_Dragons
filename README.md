@@ -141,7 +141,7 @@ There are **two ways** to mark the resources folder correctly:
 To better understand the class structure, relationships, and project flow, here's a visual representation of the game's architecture.<br>
 It includes core components of the game file.
 
-<img src="Photos/Diagrams/Advanced Object Oriented Programming.jpg" alt="Architecture Diagram" width="768">
+<img src="Photos/Diagrams/Advanced Object Oriented Programming.png" alt="Architecture Diagram" width="768">
 
 ---
 
