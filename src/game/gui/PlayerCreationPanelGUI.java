@@ -64,6 +64,10 @@ public class PlayerCreationPanelGUI extends JPanel {
         dialog.setVisible(true);
     }
 
+    /**
+     * Initializes and configures all GUI components including
+     * labels, buttons, text fields, icons, and panes.
+     */
     private void initComponents() {
         Color bgColor = new Color(240, 235, 220);  // parchment
         this.setBackground(bgColor);
@@ -130,6 +134,10 @@ public class PlayerCreationPanelGUI extends JPanel {
         startButton.setAlignmentX(Component.CENTER_ALIGNMENT);
     }
 
+    /**
+     * Organizes and lays out the visual components on the panel,
+     * including separators, spacing, and alignment.
+     */
     private void layoutComponents() {
         add(Box.createRigidArea(new Dimension(0, 15)));
         add(nameLabel);
@@ -160,6 +168,10 @@ public class PlayerCreationPanelGUI extends JPanel {
         add(startButton);
     }
 
+    /**
+     * Attaches event listeners to buttons and radio buttons,
+     * including logic for starting the game and playing sound effects.
+     */
     private void attachListeners() {
         startButton.addActionListener(new ActionListener() {
             /**
@@ -191,6 +203,10 @@ public class PlayerCreationPanelGUI extends JPanel {
         });
     }
 
+    /**
+     * Initializes and configures the modal dialog that wraps this panel.
+     * Ensures proper exit behavior and assigns the default button trigger.
+     */
     private void initDialog() {
         // Setup Dialog
         dialog = new JDialog();
@@ -244,6 +260,13 @@ public class PlayerCreationPanelGUI extends JPanel {
         });
 
         radioButton.addMouseListener(new MouseAdapter() {
+            /**
+             * Triggered when the mouse enters the button area.
+             * If the button is not currently selected, a slightly enlarged
+             * icon is shown to indicate interactivity.
+             *
+             * @param e the mouse event
+             */
             @Override
             public void mouseEntered(MouseEvent e) {
                 if (!radioButton.isSelected()) {
@@ -251,6 +274,13 @@ public class PlayerCreationPanelGUI extends JPanel {
                 }
             }
 
+            /**
+             * Triggered when the mouse exits the button area.
+             * If the button is selected, its glowing icon is restored;
+             * otherwise, the original base icon is restored.
+             *
+             * @param e the mouse event
+             */
             @Override
             public void mouseExited(MouseEvent e) {
                 if (radioButton.isSelected()) {
@@ -331,12 +361,23 @@ public class PlayerCreationPanelGUI extends JPanel {
         return new ImageIcon(scaledImg);
     }
 
+    /**
+     * Refreshes the icons of all class buttons to reflect the selected
+     * class (with glow effect) and reset unselected buttons to base icons.
+     */
     private void updateIcons() {
         updateButtonIcon(warriorButton, "Warrior", warriorIcon);
         updateButtonIcon(archerButton, "Archer", archerIcon);
         updateButtonIcon(mageButton, "Mage", mageIcon);
     }
 
+    /**
+     * Updates a single class radio button’s icon based on whether it is selected.
+     *
+     * @param button the radio button to update
+     * @param className the class associated with the button
+     * @param baseIcon the base (non-glowing) icon
+     */
     private void updateButtonIcon(JRadioButton button, String className, ImageIcon baseIcon) {
         if (className.equals(selectedClass)) {
             Color glowColor = getGlowColor(className);
@@ -347,7 +388,15 @@ public class PlayerCreationPanelGUI extends JPanel {
         }
     }
 
-
+    /**
+     * Generates an icon with a glowing effect by rendering a blurred
+     * colored halo around the original icon.
+     *
+     * @param originalIcon the base icon
+     * @param glowColor the color of the glow effect
+     * @param glowSize the size (thickness) of the glow effect
+     * @return an ImageIcon with a glow surrounding it
+     */
     private ImageIcon createGlowingIcon(ImageIcon originalIcon, Color glowColor, int glowSize) {
         int width = originalIcon.getIconWidth() + glowSize * 2;
         int height = originalIcon.getIconHeight() + glowSize * 2;
@@ -375,6 +424,12 @@ public class PlayerCreationPanelGUI extends JPanel {
         return new ImageIcon(image);
     }
 
+    /**
+     * Determines the glow color associated with a specific class.
+     *
+     * @param className the class name
+     * @return the Color used for that class’s glow effect
+     */
     private Color getGlowColor(String className) {
         return switch (className) {
             case "Warrior" -> new Color(70, 130, 180);      // SteelBlue
