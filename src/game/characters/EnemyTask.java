@@ -2,6 +2,8 @@ package game.characters;
 
 import game.engine.RandomUtil;
 
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -17,6 +19,7 @@ public class EnemyTask implements Runnable {
     private final Enemy enemy;
     private final ScheduledExecutorService scheduler;
     private final AtomicBoolean running;
+    private static final Set<Enemy> scheduledEnemies = ConcurrentHashMap.newKeySet(); // Tracks number of scheduled enemies
 
     // Methods
     /**
@@ -41,16 +44,30 @@ public class EnemyTask implements Runnable {
     @Override
     public void run() {
         if(!running.get()) {
+            scheduledEnemies.remove(enemy); // Clean up if paused
             return; // Don’t reschedule
         }
 
         if (enemy.isDead()) {
+            scheduledEnemies.remove(enemy); // Clean up if dead
             return; // Don’t reschedule
         }
+
+        scheduledEnemies.add(enemy); // Ensure tracking
 
         enemy.threadAction(); // Defined in enemy
 
         int nextDelayMillis = RandomUtil.getRandomInt(1500, 3001); // Random between 1500 (inclusive) and 3000 (inclusive)
         scheduler.schedule(new EnemyTask(enemy, scheduler, running), nextDelayMillis, TimeUnit.MILLISECONDS);
+    }
+
+    public static int getScheduledEnemyCount() {
+        return scheduledEnemies.size();
+    }
+
+    public static int calculateStartingEnemyThreadPoolSize(int mapSize) {
+        int poolSize = (int) Math.max(1, mapSize * 0.03);
+        poolSize = Math.min(poolSize, 10);
+        return poolSize;
     }
 }

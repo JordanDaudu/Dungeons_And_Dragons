@@ -33,6 +33,15 @@ public class Mage extends PlayerCharacter implements MagicAttacker, RangedFighte
         range = 2; // default
     }
 
+    public Mage(String name, int health, int power, MagicElement magicElement) {
+        super(name);
+        setMaxHealth(getHealth() + health);
+        setHealth(getHealth() + health);
+        setPower(getPower() + power);
+        this.element = magicElement;
+        range = 2; // default
+    }
+
     /**
      * Returns a string representation of the Mage, including inherited and class-specific fields.
      *

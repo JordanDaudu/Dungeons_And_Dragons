@@ -1,5 +1,7 @@
 package game.gui;
 
+import game.characters.PlayerCharacter;
+import game.characters.PlayerFactory;
 import game.core.ScreenAction;
 import game.core.ScreenListener;
 import game.engine.SoundManager;
@@ -39,7 +41,6 @@ public class PlayerCreationPanelGUI extends JPanel {
     private JTextPane classDescriptionPane;
     private JScrollPane scrollPane;
     private final ScreenListener listener;
-
     // Methods
     /**
      * Constructs a new PlayerCreationPanel with the required listener.
@@ -193,7 +194,11 @@ public class PlayerCreationPanelGUI extends JPanel {
                     }
 
                     SoundManager.playEffect("clickSound");
-                    listener.onAction(ScreenAction.START_GAME, playerName, selectedClass);
+                    Window owner = SwingUtilities.getWindowAncestor(PlayerCreationPanelGUI.this);
+                    PlayerCustomizationGUI customizationGUI = new PlayerCustomizationGUI(owner, selectedClass);
+                    customizationGUI.setVisible(true);
+
+                    listener.onAction(ScreenAction.START_GAME, playerName, selectedClass, customizationGUI);
                     dialog.setVisible(false);
                 }
                 else {

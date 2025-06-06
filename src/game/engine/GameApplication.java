@@ -1,8 +1,12 @@
 package game.engine;
 
+import game.characters.EnemyTask;
+import game.characters.PlayerCharacter;
+import game.characters.PlayerFactory;
 import game.core.ScreenAction;
 import game.core.ScreenListener;
 import game.gui.PlayerCreationPanelGUI;
+import game.gui.PlayerCustomizationGUI;
 import game.gui.StartingScreenGUI;
 import game.map.GameMap;
 
@@ -62,7 +66,7 @@ public class GameApplication implements ScreenListener {
         game.collectItemsFromMap();
 
         // Adding enemies to a thread pool so they can move in game
-        ScheduledExecutorService enemyScheduler = Executors.newScheduledThreadPool(3);
+        ScheduledExecutorService enemyScheduler = Executors.newScheduledThreadPool(EnemyTask.calculateStartingEnemyThreadPoolSize(mapRows * mapCols));
         game.attachGameControllerToEnemies(gameApplication.controller, enemyScheduler, gameApplication.controller.getEnemyRunningFlag());
         gameApplication.controller.setEnemyScheduler(enemyScheduler); // Add to the controller the thread pool of enemies
 
@@ -114,8 +118,30 @@ public class GameApplication implements ScreenListener {
     public boolean onAction(ScreenAction action, Object... data) {
         if (action == ScreenAction.START_GAME) {
             // Create character from data given
-            if(data[0] instanceof String name && data[1] instanceof String selectedClass) {
-                map.createCharacter(name, selectedClass);
+            if(data[0] instanceof String name && data[1] instanceof String selectedClass && data[2] instanceof PlayerCustomizationGUI customization) {
+
+                PlayerCharacter player = switch (selectedClass) {
+                    case "Warrior" -> ((PlayerFactory.WarriorBuilder) PlayerFactory.getBuilder("Warrior"))
+                            .setDefence(customization.getDefenseMod())
+                            .setName(name)
+                            .setPower(customization.getPowerMod())
+                            .setHealth(customization.getHealthMod())
+                            .build();
+                    case "Archer" -> ((PlayerFactory.ArcherBuilder) PlayerFactory.getBuilder("Archer"))
+                            .setAccuracy(customization.getAccuracyMod())
+                            .setName(name)
+                            .setPower(customization.getPowerMod())
+                            .setHealth(customization.getHealthMod())
+                            .build();
+                    case "Mage" -> ((PlayerFactory.MageBuilder) PlayerFactory.getBuilder("Mage"))
+                            .setMagicElement(customization.getSelectedElement())
+                            .setName(name)
+                            .setPower(customization.getPowerMod())
+                            .setHealth(customization.getHealthMod())
+                            .build();
+                    default -> throw new IllegalArgumentException("Unknown class: " + selectedClass);
+                };
+                map.addCharacter(player);
                 return true;
             }
             return false;

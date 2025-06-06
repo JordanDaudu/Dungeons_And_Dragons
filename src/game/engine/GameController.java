@@ -1,6 +1,8 @@
 package game.engine;
 
 import game.characters.Enemy;
+import game.characters.EnemyFactory;
+import game.characters.EnemyTask;
 import game.characters.PlayerCharacter;
 import game.combat.CombatSystem;
 import game.combat.RangedFighter;
@@ -23,6 +25,8 @@ import javax.swing.*;
 import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -231,6 +235,18 @@ public class GameController implements ScreenListener {
         GameLogger.getInstance().stop();
     }
 
+    private void checkIfNewEnemySpawning() {
+        System.out.println("Active threads: " + EnemyTask.getScheduledEnemyCount());
+        System.out.println("calculateStartingEnemyThreadPoolSize: " + EnemyTask.calculateStartingEnemyThreadPoolSize(map.getRows() * map.getCols()));
+        while(EnemyTask.getScheduledEnemyCount() < EnemyTask.calculateStartingEnemyThreadPoolSize(map.getRows() * map.getCols())) {
+            Enemy enemy = EnemyFactory.createEnemy(map.getLeastCommonEnemyType());
+            enemy.setScreenListener(this);
+            map.placeEnemyRandomly(enemy);
+            gameWorld.addEnemy(enemy);
+            enemyScheduler.schedule(new EnemyTask(enemy, enemyScheduler, getEnemyRunningFlag()), 1, TimeUnit.SECONDS);
+        }
+    }
+
     /**
      * Handles actions triggered by the GUI or game loop.
      * Supports movement, attacking, picking up items, ending turns, and exiting the game.
@@ -274,6 +290,7 @@ public class GameController implements ScreenListener {
                     // Handle death for map entity
                     if (target.isDead()) {
                         gameWorld.removeEnemy(target);
+                        checkIfNewEnemySpawning();
                     }
                     if(player.isDead()) {
                         gameWorld.removePlayerFromMap(player);
@@ -371,6 +388,7 @@ public class GameController implements ScreenListener {
                 for(Enemy enemy : gameWorld.getEnemies()) {
                     if(enemy.isDead()) {
                         enemy.defeat();
+                        checkIfNewEnemySpawning();
                     }
                 }
                 if(gameWorld.getCurrentPlayer().isDead()) {

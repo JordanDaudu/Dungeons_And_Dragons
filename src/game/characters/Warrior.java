@@ -32,6 +32,14 @@ public class Warrior extends PlayerCharacter implements MeleeFighter, PhysicalAt
         defence = RandomUtil.getRandomInt(0, 121);
     }
 
+    public Warrior(String name, int health, int power, int defence) {
+        super(name);
+        setMaxHealth(getHealth() + health);
+        setHealth(getHealth() + health);
+        setPower(getPower() + power);
+        this.defence = RandomUtil.getRandomInt(0, 121) + defence;
+    }
+
     /**
      * Returns a string representation of the Warrior including inherited
      * fields and the defense stat.

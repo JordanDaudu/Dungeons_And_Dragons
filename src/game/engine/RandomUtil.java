@@ -56,27 +56,20 @@ public class RandomUtil {
     /**
      * Generates a random enemy (Goblin, Orc, or Dragon) and assigns it the given position.
      *
-     * @param pos the position to assign to the generated enemy.
-     * @return a randomly chosen enemy instance with its position set.
+     * @return a randomly chosen enemy String.
      */
-    public static Enemy randomEnemy(Position pos) {
+    public static String randomEnemy() {
         int roll = getRandomInt(3);
         Enemy enemy;
         switch(roll) {
             case 0 -> {
-                enemy = new Goblin();
-                enemy.setPosition(pos);
-                return enemy;
+                return "Goblin";
             }
             case 1 -> {
-                enemy = new Orc();
-                enemy.setPosition(pos);
-                return enemy;
+                return "Orc";
             }
             default -> {
-                enemy = new Dragon();
-                enemy.setPosition(pos);
-                return enemy;
+                return "Dragon";
             }
         }
     }

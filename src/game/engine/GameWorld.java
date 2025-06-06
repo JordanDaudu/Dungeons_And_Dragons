@@ -178,6 +178,10 @@ public class GameWorld {
         map.removeEntity(item);
     }
 
+    public void addEnemy(Enemy enemy) {
+        enemies.add(enemy);
+    }
+
     /**
      * Scans the map and collects all player characters into the player list.
      */
@@ -252,6 +256,5 @@ public class GameWorld {
         }
         return positions;
     }
-
 }
 

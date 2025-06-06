@@ -37,6 +37,19 @@ public class Archer extends PlayerCharacter implements PhysicalAttacker, RangedF
         range = 2;
     }
 
+    public Archer(String name, int health, int power, double accuracy) {
+        super(name);
+        setMaxHealth(getHealth() + health);
+        setHealth(getHealth() + health);
+        setPower(getPower() + power);
+        do {
+            this.accuracy = RandomUtil.getRandomDouble();
+        }
+        while(this.accuracy > 0.80);
+        this.accuracy = this.accuracy + accuracy;
+        range = 2;
+    }
+
     /**
      * Returns a string representation of the Archer, including inherited and unique fields.
      *

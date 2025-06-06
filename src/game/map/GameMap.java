@@ -4,6 +4,7 @@ import game.characters.*;
 import game.core.GameEntity;
 import game.engine.RandomUtil;
 import game.items.*;
+import game.logging.GameLogger;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -291,6 +292,10 @@ public class GameMap {
         }
     }
 
+    public void addCharacter(PlayerCharacter player) {
+        placePlayerRandomly(player);
+    }
+
     /**
      * Places a PlayerCharacter at a random unoccupied position.
      *
@@ -367,7 +372,9 @@ public class GameMap {
                 }
                 else if (roll < 0.40) {
                     // Next 30% → Random enemy
-                    addEntity(RandomUtil.randomEnemy(pos));
+                    Enemy enemy = EnemyFactory.createEnemy(RandomUtil.randomEnemy());
+                    enemy.setPosition(pos);
+                    addEntity(enemy);
                     //System.out.println("Placing Enemy at: " + pos);
                 }
                 else if (roll < 0.55) {
@@ -542,6 +549,75 @@ public class GameMap {
         }
     }
 
+    /**
+     * Counts how many of each Enemy subclass are currently on the map,
+     * and returns the name of the type with the fewest instances.
+     *
+     * @return the enemy type with the least count, or null if no enemies are present
+     */
+    public String getLeastCommonEnemyType() {
+        Map<String, Integer> enemyCounts = new HashMap<>();
+
+        // No need to lock map as this is not critical even if it isn't 100% always exact
+        for (List<GameEntity> entities : grid.values()) {
+            synchronized (entities) {
+                for (GameEntity entity : entities) {
+                    if (entity instanceof Enemy enemy) {
+                        String typeName = enemy.getClass().getSimpleName(); // Or enemy.getType() if you have one
+                        enemyCounts.put(typeName, enemyCounts.getOrDefault(typeName, 0) + 1);
+                    }
+                }
+            }
+        }
+
+        if (enemyCounts.isEmpty()) {
+            return "Goblin"; // No enemies present
+        }
+
+        // Find the type with the minimum count
+        return enemyCounts.entrySet().stream()
+                .min(Comparator.comparingInt(Map.Entry::getValue))
+                .map(Map.Entry::getKey)
+                .orElse(null);
+    }
+
+    /**
+     * Attempts to place the given enemy on a random unoccupied tile on the map.
+     *
+     * @param enemy the enemy to place
+     * @return true if placement was successful, false if no free tile is found
+     */
+    public boolean placeEnemyRandomly(Enemy enemy) {
+        List<Position> freePositions = new ArrayList<>();
+
+        mapLock.lock();
+        try {
+            // Collect all unoccupied positions
+            for (int row = 0; row < rows; row++) {
+                for (int col = 0; col < cols; col++) {
+                    Position pos = new Position(row, col);
+                    if (!isOccupied(pos)) {
+                        freePositions.add(pos);
+                    }
+                }
+            }
+
+            // No available positions
+            if (freePositions.isEmpty()) {
+                return false;
+            }
+
+            // Pick a random position from the available ones
+            Position chosen = freePositions.get(RandomUtil.getRandomInt(0, freePositions.size()));
+            enemy.setPosition(chosen);
+            addEntity(enemy);
+            GameLogger.getInstance().log("Placed " + enemy.getClass().getSimpleName() + " at position: " + enemy.getPosition());
+            return true;
+        }
+        finally {
+            mapLock.unlock();
+        }
+    }
 
     // For debugging only
     /**

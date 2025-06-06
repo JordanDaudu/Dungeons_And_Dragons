@@ -15,6 +15,7 @@ public abstract class AbstractCharacter implements Combatant, GameEntity {
     // Data Members
     private Position position;
     private int health;
+    private int maxHealth = 100;
     private int power;
     private final double evasionChance = 0.25;
     private int lastDamageReceived = 0; // Will be used for animations
@@ -88,7 +89,12 @@ public abstract class AbstractCharacter implements Combatant, GameEntity {
      * @return max health is set to 100HP
      */
     public int getMaxHealth() {
-        return 100;
+        return maxHealth;
+    }
+
+    public boolean setMaxHealth(int value) {
+        maxHealth = value;
+        return true;
     }
 
     /**
@@ -139,6 +145,14 @@ public abstract class AbstractCharacter implements Combatant, GameEntity {
         if(this.health <= 0)
             this.health = 0;
         return true;
+    }
+
+    public boolean setPower(int power) {
+        if(power >= 0) {
+            this.power = power;
+            return true;
+        }
+        return false;
     }
 
     /**
