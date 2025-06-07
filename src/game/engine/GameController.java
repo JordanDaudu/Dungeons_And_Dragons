@@ -372,10 +372,9 @@ public class GameController implements ScreenListener {
                         }
                     }
                     else if(currentEnemyPosition.distanceTo(gameWorld.getCurrentPlayer().getPosition()) <= 2) {
-                        int range = 1;
                         if(enemy instanceof RangedFighter) {
-                            range = enemy.getRangeModifier();
-                            if(range <= 2) {
+                            int range = enemy.getRangeModifier();
+                            if(enemy.getPosition().distanceTo(getCurrentPlayer().getPosition()) <= range) {
                                 if(canEnemiesAttack()) {
                                     onAction(ScreenAction.ENEMY_ATTACK, enemy);
                                     return true;
@@ -437,7 +436,7 @@ public class GameController implements ScreenListener {
                     return false;
                 int range = 1; // default
                 if (sourceEnemy instanceof RangedFighter)
-                    range = ((RangedFighter) player).getRange();
+                    range = ((RangedFighter) enemy).getRange();
 
                 if (sourceEnemy.getPosition().distanceTo(player.getPosition()) <= range) {
                     // Combat resolution
