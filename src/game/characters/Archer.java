@@ -50,6 +50,12 @@ public class Archer extends PlayerCharacter implements PhysicalAttacker, RangedF
         range = 2;
     }
 
+    public Archer(Archer other){
+        super(other);
+        this.accuracy = other.accuracy;
+        this.range = other.range;
+    }
+
     /**
      * Returns a string representation of the Archer, including inherited and unique fields.
      *
@@ -235,4 +241,11 @@ public class Archer extends PlayerCharacter implements PhysicalAttacker, RangedF
     public void fight(Combatant target) {
         fightRanged(target);
     }
+
+    @Override
+    protected Archer clone() throws CloneNotSupportedException {
+        return new Archer(this);
+    }
+
+
 }

@@ -33,6 +33,10 @@ public class Orc extends Enemy implements MeleeFighter, PhysicalAttacker {
         while(this.resistance > 0.50);
     }
 
+    public Orc(Orc other){
+        super(other);
+        this.resistance = other.resistance;
+    }
     /**
      * Returns a string representation of the Orc, including inherited values and resistance.
      *
@@ -194,4 +198,10 @@ public class Orc extends Enemy implements MeleeFighter, PhysicalAttacker {
     public String getDescription(){
         return "High physical damage dealer, have low evasion but hits hard in close combat.";
     }
+
+    @Override
+    protected Orc clone() throws CloneNotSupportedException {
+        return new Orc(this);
+    }
+
 }

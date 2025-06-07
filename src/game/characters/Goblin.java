@@ -29,6 +29,11 @@ public class Goblin extends Enemy implements PhysicalAttacker, MeleeFighter {
         this.agility = RandomUtil.getRandomInt(0, 81);
     }
 
+    public Goblin(Goblin other){
+        super(other);
+        this.agility = other.agility;
+    }
+
     /**
      * Returns a string representation of the Goblin, including inherited data and agility.
      *
@@ -200,5 +205,11 @@ public class Goblin extends Enemy implements PhysicalAttacker, MeleeFighter {
     public String getDescription(){
         return "Fast and evasive, excels in melee with high dodge and swift strikes.";
     }
+
+    @Override
+    protected Goblin clone() throws CloneNotSupportedException {
+        return new Goblin(this);
+    }
+
 
 }

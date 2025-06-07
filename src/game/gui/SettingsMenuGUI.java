@@ -1,9 +1,15 @@
 package game.gui;
 
+import game.engine.GameController;
+import game.engine.GameWorld;
 import game.engine.SoundManager;
+import game.map.GameMap;
+import game.memento.GameWorldMemento;
+import game.memento.SaveManager;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Queue;
 import java.awt.event.ActionEvent;
 
 /**
@@ -28,7 +34,7 @@ public class SettingsMenuGUI extends JDialog {
     private static TileColorBackgroundTheme lastSelectedTheme = TileColorBackgroundTheme.CLEAR;
     private JCheckBox showHPBarCheckbox;
     private static boolean showHPBar = true;
-    private static boolean lastSelectedHPBar = true; // default starting
+    private static boolean lastSelectedHPBar = true;
     private JCheckBox showPlayerInformationCheckbox;
     private static boolean showPlayerInformation;
     private static boolean lastSelectedPlayerInformation = true; // default starting
@@ -36,6 +42,10 @@ public class SettingsMenuGUI extends JDialog {
     private JButton viewControlsButton;
     private JButton backButton;
     private JButton quitButton;
+    private JButton saveButton;
+    private JButton loadButton;
+    private final SaveManager manager = new SaveManager();
+
 
     // Methods
     /**
@@ -95,8 +105,11 @@ public class SettingsMenuGUI extends JDialog {
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 100, 10, 100));
 
         viewControlsButton = new JButton("View Controls");
+        saveButton = new JButton("Save Game");
+        loadButton = new JButton("Load Game");
         backButton = new JButton("Back");
         quitButton = new JButton("Quit Game");
+
     }
 
     /**
@@ -125,12 +138,18 @@ public class SettingsMenuGUI extends JDialog {
         viewControlsButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         backButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         quitButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        saveButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        loadButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         buttonPanel.add(viewControlsButton);
         buttonPanel.add(Box.createVerticalStrut(10));
         buttonPanel.add(backButton);
         buttonPanel.add(Box.createVerticalStrut(10));
         buttonPanel.add(quitButton);
+        buttonPanel.add(Box.createVerticalStrut(10));
+        buttonPanel.add(saveButton);
+        buttonPanel.add(Box.createVerticalStrut(10));
+        buttonPanel.add(loadButton);
 
         add(buttonPanel, BorderLayout.SOUTH);
     }
@@ -180,8 +199,79 @@ public class SettingsMenuGUI extends JDialog {
             dispose();
         });
         quitButton.addActionListener(e -> System.exit(0));
+
+        saveButton.addActionListener(e -> {
+            SoundManager.playEffect("clickSound");
+
+            try {
+                GameWorldMemento memento = GameWorld.getInstance().createMemento();
+                manager.save(memento);
+                JOptionPane.showMessageDialog(this, "Game saved successfully!", "Save", JOptionPane.INFORMATION_MESSAGE);
+            } catch (CloneNotSupportedException ex) {
+                JOptionPane.showMessageDialog(this, "Failed to save game: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                ex.printStackTrace();
+            }
+        });
+
+        loadButton.addActionListener(e -> {
+            SoundManager.playEffect("openingSound");
+
+            Queue<GameWorldMemento> saves = manager.getSaveSlots();
+            int totalSlots = saves.size();
+
+            if (totalSlots == 0) {
+                JOptionPane.showMessageDialog(this, "No saved games available.", "Load", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            String[] slotOptions = new String[totalSlots];
+            for (int i = 0; i < totalSlots; i++) {
+                slotOptions[i] = "Slot " + (i + 1);
+            }
+
+            String selected = (String) JOptionPane.showInputDialog(
+                    this,
+                    "Select a save slot to load:",
+                    "Load Game",
+                    JOptionPane.PLAIN_MESSAGE,
+                    null,
+                    slotOptions,
+                    slotOptions[0]
+            );
+
+            if (selected != null) {
+                int selectedIndex = Integer.parseInt(selected.replace("Slot ", "")) - 1;
+
+                try {
+                    // Load from memento
+                    GameWorldMemento memento = manager.loadMemento(selectedIndex);
+                    if (memento == null) {
+                        JOptionPane.showMessageDialog(this, "Selected save slot is empty.", "Error", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
+                    GameWorld.getInstance().loadFromMemento(memento);
+
+                    // Launch new game window
+                    GameController newController = new GameController();
+                    GameMap map = GameWorld.getInstance().getMap();
+                    GameMapGUI newGameWindow = new GameMapGUI(newController, map, newController);
+                    newGameWindow.setVisible(true);
+
+                    // Close settings window
+                    Window window = SwingUtilities.getWindowAncestor(SettingsMenuGUI.this);
+                    if (window != null) window.dispose();
+
+                } catch (IndexOutOfBoundsException ex) {
+                    JOptionPane.showMessageDialog(this, "Invalid save slot selected.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
     }
 
+    private void loadSaveSlots() {
+
+    }
     /**
      * Configures the Escape key to close the dialog when pressed.
      */

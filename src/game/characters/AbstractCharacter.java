@@ -10,7 +10,7 @@ import game.engine.RandomUtil;
  * Implements common functionality shared by all character types.
  */
 
-public abstract class AbstractCharacter implements Combatant, GameEntity {
+public abstract class AbstractCharacter implements Combatant, GameEntity, Cloneable {
 
     // Data Members
     private Position position;
@@ -30,6 +30,15 @@ public abstract class AbstractCharacter implements Combatant, GameEntity {
         this.health = getMaxHealth();
         this.power = RandomUtil.getRandomInt(4, 15);
         visible = false;
+    }
+
+    public AbstractCharacter(AbstractCharacter other) {
+        this.position = new Position(other.position);
+        this.health = other.getHealth();
+        this.power = other.getPower();
+        this.visible = other.visible;
+        this.lastDamageReceived = other.getLastDamageReceived();
+        this.maxHealth = other.getMaxHealth();
     }
 
     /**
@@ -246,5 +255,11 @@ public abstract class AbstractCharacter implements Combatant, GameEntity {
     @Override
     public int getPower(){
         return power;
+    }
+
+
+    @Override
+    public Object callClone() throws CloneNotSupportedException {
+        return clone();
     }
 }

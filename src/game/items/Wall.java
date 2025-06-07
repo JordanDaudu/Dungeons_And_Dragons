@@ -22,6 +22,8 @@ public class Wall extends GameItem {
      */
     public Wall(Position position, String description) { super(position, true, description); }
 
+    public Wall(Wall other) { super(other); }
+
     /**
      * Returns a string representation of this Wall, including inherited fields.
      *
@@ -72,5 +74,10 @@ public class Wall extends GameItem {
     public Image getDisplayImage() {
         ImageIcon icon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/wall.png")));
         return icon.getImage();
+    }
+
+    @Override
+    public Wall clone() {
+        return new Wall(this);
     }
 }

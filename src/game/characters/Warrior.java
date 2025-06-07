@@ -40,6 +40,11 @@ public class Warrior extends PlayerCharacter implements MeleeFighter, PhysicalAt
         this.defence = RandomUtil.getRandomInt(0, 121) + defence;
     }
 
+    public Warrior(Warrior other){
+        super(other);
+        defence = other.defence;
+    }
+
     /**
      * Returns a string representation of the Warrior including inherited
      * fields and the defense stat.
@@ -208,5 +213,10 @@ public class Warrior extends PlayerCharacter implements MeleeFighter, PhysicalAt
     @Override
     public String getAttackSound() {
         return "swordSwing";
+    }
+
+    @Override
+    protected Warrior clone() throws CloneNotSupportedException {
+        return new Warrior(this);
     }
 }

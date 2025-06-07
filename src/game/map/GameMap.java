@@ -78,6 +78,10 @@ public class GameMap {
         return instance;
     }
 
+    public ConcurrentMap<Position, List<GameEntity>> getGrid() {
+        return grid;
+    }
+
     /**
      * Returns the lock object associated with a specific position.
      * If no lock exists for that position, one is created.
@@ -705,4 +709,5 @@ public class GameMap {
             }
         }
     }
+
 }

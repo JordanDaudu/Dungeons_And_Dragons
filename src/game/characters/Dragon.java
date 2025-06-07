@@ -29,6 +29,12 @@ public class Dragon extends Enemy implements MagicAttacker, RangedFighter, Melee
         range = 2;
     }
 
+    public Dragon (Dragon other){
+        super(other);
+        this.range = other.range;
+        this.element = MagicElement.values()[RandomUtil.getRandomInt(4)];
+    }
+
     /**
      * Returns a string representation of the Dragon, including base info, element, and range.
      *
@@ -274,6 +280,11 @@ public class Dragon extends Enemy implements MagicAttacker, RangedFighter, Melee
     @Override
     public String getDescription(){
         return "All-around powerhouse, strong in magic, ranged, and melee attacks.";
+    }
+
+    @Override
+    protected Dragon clone() throws CloneNotSupportedException {
+        return new Dragon(this);
     }
 
 }

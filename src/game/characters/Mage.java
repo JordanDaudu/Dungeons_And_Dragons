@@ -42,6 +42,12 @@ public class Mage extends PlayerCharacter implements MagicAttacker, RangedFighte
         range = 2; // default
     }
 
+    public Mage(Mage other){
+        super(other);
+        this.element = other.element;
+        this.range = other.range;
+    }
+
     /**
      * Returns a string representation of the Mage, including inherited and class-specific fields.
      *
@@ -233,5 +239,10 @@ public class Mage extends PlayerCharacter implements MagicAttacker, RangedFighte
     @Override
     public void fight(Combatant target) {
         fightRanged(target);
+    }
+
+    @Override
+    protected Mage clone() throws CloneNotSupportedException{
+        return new Mage(this);
     }
 }

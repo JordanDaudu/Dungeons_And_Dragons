@@ -27,6 +27,9 @@ public class PowerPotion extends Potion {
         super(position, blocksMovement, description);
     }
 
+    public PowerPotion (PowerPotion other) {
+        super(other);
+    }
     /**
      * Returns a string representation of this power potion, including inherited potion fields.
      *
@@ -122,5 +125,10 @@ public class PowerPotion extends Potion {
     @Override
     protected int initializeIncreaseAmount() {
         return RandomUtil.getRandomInt(1, 6);
+    }
+
+    @Override
+    public PowerPotion clone() {
+        return new PowerPotion(this);
     }
 }

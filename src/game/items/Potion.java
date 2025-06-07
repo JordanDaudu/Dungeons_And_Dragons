@@ -34,6 +34,12 @@ public class Potion extends GameItem implements Interactable {
         isUsed = false;
     }
 
+    public Potion(Potion other) {
+        super(other);
+        increaseAmount = other.increaseAmount;
+        isUsed = other.isUsed;
+    }
+
     /**
      * Returns a string representation of this potion, including its healing amount and usage status.
      *
@@ -157,5 +163,10 @@ public class Potion extends GameItem implements Interactable {
      */
     protected int initializeIncreaseAmount() {
         return RandomUtil.getRandomInt(10, 51);
+    }
+
+    @Override
+    protected Potion clone() {
+        return new Potion(this);
     }
 }

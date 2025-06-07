@@ -23,6 +23,11 @@ public class Inventory {
         items = new ArrayList<>();
     }
 
+    public Inventory(Inventory other) {
+        items = new ArrayList<>();
+        items.addAll(other.items);
+    }
+
     /**
      * Returns a string representation of the inventory, including all items.
      *

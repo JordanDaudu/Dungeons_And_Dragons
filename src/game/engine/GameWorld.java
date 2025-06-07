@@ -6,9 +6,13 @@ import game.core.ScreenListener;
 import game.items.GameItem;
 import game.map.GameMap;
 import game.map.Position;
+import game.memento.GameWorldMemento;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -20,10 +24,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class GameWorld {
 
     // Data Members
-    private final List<PlayerCharacter> players;
-    private final List<Enemy> enemies;
-    private final List<GameItem> items;
-    private final GameMap map;
+    private List<PlayerCharacter> players;
+    private List<Enemy> enemies;
+    private List<GameItem> items;
+    private GameMap map;
     private PlayerCharacter currentPlayer;
     private static volatile GameWorld instance = null;
 
@@ -255,6 +259,32 @@ public class GameWorld {
             }
         }
         return positions;
+    }
+
+    public void setPlayers(List<PlayerCharacter> players) { this.players = players; }
+
+    public void setEnemies(List<Enemy> enemies) { this.enemies = enemies; }
+
+    public void setItems(List<GameItem> items) { this.items = items; }
+
+    public void setMap(GameMap map) { this.map = map; }
+
+    public void clearGameWorld() {
+        players.clear();
+        enemies.clear();
+        items.clear();
+        map.getGrid().clear();
+    }
+
+    public GameWorldMemento createMemento() throws CloneNotSupportedException {
+        return new GameWorldMemento(players,enemies,items,getMap().getGrid());}
+
+    public void loadFromMemento(GameWorldMemento memento) {
+        clearGameWorld();
+        players.addAll(memento.getSavedPlayers());
+        enemies.addAll(memento.getSavedEnemies());
+        items.addAll(memento.getSavedItems());
+        map.getGrid().putAll(memento.getSavedMap());
     }
 }
 

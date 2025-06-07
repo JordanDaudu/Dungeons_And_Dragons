@@ -7,11 +7,13 @@ import game.engine.RandomUtil;
 import game.items.Treasure;
 import game.map.GameMap;
 
+import java.io.Serializable;
+
 /**
  * Represents an enemy character in the game.
  * An Enemy has limited health and can drop loot (as a Treasure) when defeated.
  */
-public abstract class Enemy extends AbstractCharacter {
+public abstract class Enemy extends AbstractCharacter implements Serializable {
 
     // Data Members
     private final int loot;
@@ -27,6 +29,10 @@ public abstract class Enemy extends AbstractCharacter {
         loot = RandomUtil.getRandomInt(100, 301);
     }
 
+    public Enemy(Enemy other){
+        super(other);
+        loot = other.loot;
+    }
     /**
      * Returns a string representation of the Enemy, including health and loot.
      *

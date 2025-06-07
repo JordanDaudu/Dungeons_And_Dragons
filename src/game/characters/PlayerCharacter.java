@@ -3,18 +3,21 @@ package game.characters;
 import game.combat.Combatant;
 import game.core.Inventory;
 import game.core.PlayerMovement;
+import game.core.ScreenListener;
 import game.items.Interactable;
 import game.items.Potion;
 import game.items.PowerPotion;
 import game.logging.GameLogger;
 import game.map.Position;
 
+import java.io.Serializable;
+
 /**
  * Represents a player-controlled character in the game.
  * Inherits combat and position logic from AbstractCharacter,
  * and adds inventory management, treasure tracking, and movement.
  */
-public abstract class PlayerCharacter extends AbstractCharacter implements PlayerMovement {
+public abstract class PlayerCharacter extends AbstractCharacter implements PlayerMovement, Serializable {
 
     // Data Members
     private final String name;
@@ -34,6 +37,13 @@ public abstract class PlayerCharacter extends AbstractCharacter implements Playe
         this.name = name.substring(0, 1).toUpperCase() + name.substring(1); // making sure starts with an uppercase
         inventory = new Inventory();
         treasurePoints = 0;
+    }
+
+    public PlayerCharacter(PlayerCharacter other) {
+        super(other);
+        this.name = other.name;
+        inventory = new Inventory(other.inventory);
+        treasurePoints = other.treasurePoints;
     }
 
     /**
@@ -251,4 +261,5 @@ public abstract class PlayerCharacter extends AbstractCharacter implements Playe
     public String getLogName() {
         return "Player: " + getName();
     }
+
 }

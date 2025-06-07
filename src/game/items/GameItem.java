@@ -1,13 +1,16 @@
 package game.items;
 
 import game.core.GameEntity;
+import game.map.GameMap;
 import game.map.Position;
+
+import java.io.Serializable;
 
 /**
  * Abstract base class representing an item that can exist on the game map.
  * Implements {@link GameEntity} and supports positioning, visibility, and interaction logic.
  */
-public abstract class GameItem implements GameEntity {
+public abstract class GameItem implements GameEntity, Cloneable {
 
     // Data Members
     private Position position;
@@ -28,6 +31,13 @@ public abstract class GameItem implements GameEntity {
         this.position = new Position(position);
         this.blocksMovement = blocksMovement;
         this.description = description;
+    }
+
+    public GameItem(GameItem other){
+        this.position = new Position(other.getPosition());
+        this.blocksMovement = other.blocksMovement;
+        this.description = other.description;
+        this.visible = other.visible;
     }
 
     /**
@@ -122,4 +132,9 @@ public abstract class GameItem implements GameEntity {
     public boolean isVisible() {
         return this.visible;
     }
+
+    public Object callClone() throws CloneNotSupportedException {
+        return clone();
+    }
+
 }

@@ -36,6 +36,12 @@ public class Treasure extends GameItem implements Interactable {
         collected = false;
     }
 
+    public Treasure(Treasure other) {
+        super(other);
+        this.value = other.value;
+        this.collected = other.collected;
+    }
+
     /**
      * Returns a string representation of this Treasure, including its position, description,
      * value, and collected state.
@@ -146,7 +152,12 @@ public class Treasure extends GameItem implements Interactable {
      *
      * @return the treasure value
      */
-    private int getValue() {
+    public int getValue() {
         return value;
+    }
+
+    @Override
+    public Treasure clone() {
+        return new Treasure(this);
     }
 }

@@ -9,7 +9,7 @@ import java.awt.Image;
  * Entities have a position on the map, a visible state, and a symbol for display.
  * Implementing classes may include characters, items, or structures.
  */
-public interface GameEntity {
+public interface GameEntity extends Cloneable {
 
     /**
      * Gets the current position of the entity on the map.
@@ -61,4 +61,6 @@ public interface GameEntity {
      * @return a string description of the entity (default: "null")
      */
     default String getDescription() {return "null";}
+
+    Object callClone() throws CloneNotSupportedException;
 }
