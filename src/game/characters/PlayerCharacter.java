@@ -3,13 +3,13 @@ package game.characters;
 import game.combat.Combatant;
 import game.core.Inventory;
 import game.core.PlayerMovement;
-import game.core.ScreenListener;
 import game.items.Interactable;
 import game.items.Potion;
 import game.items.PowerPotion;
 import game.logging.GameLogger;
 import game.map.Position;
 
+import java.util.UUID;
 import java.io.Serializable;
 
 /**
@@ -23,6 +23,8 @@ public abstract class PlayerCharacter extends AbstractCharacter implements Playe
     private final String name;
     private final Inventory inventory;
     private int treasurePoints;
+    private final UUID id;
+
 
     // Methods
     /**
@@ -37,6 +39,7 @@ public abstract class PlayerCharacter extends AbstractCharacter implements Playe
         this.name = name.substring(0, 1).toUpperCase() + name.substring(1); // making sure starts with an uppercase
         inventory = new Inventory();
         treasurePoints = 0;
+        this.id = UUID.randomUUID(); // Unique per player
     }
 
     public PlayerCharacter(PlayerCharacter other) {
@@ -44,6 +47,7 @@ public abstract class PlayerCharacter extends AbstractCharacter implements Playe
         this.name = other.name;
         inventory = new Inventory(other.inventory);
         treasurePoints = other.treasurePoints;
+        this.id = other.id;
     }
 
     /**
@@ -86,7 +90,7 @@ public abstract class PlayerCharacter extends AbstractCharacter implements Playe
         PlayerCharacter that = (PlayerCharacter) obj;
         return treasurePoints == that.treasurePoints &&
                 name.equals(that.name) &&
-                inventory.equals(that.inventory);
+                inventory.equals(that.inventory) && id.equals(that.id);
     }
 
     /**
@@ -104,6 +108,11 @@ public abstract class PlayerCharacter extends AbstractCharacter implements Playe
      * @return the Inventory object containing the player's items
      */
     public Inventory getInventory() {return inventory;}
+
+    public UUID getId() {
+        return id;
+    }
+
 
     /**
      * Adds a game item to the player's inventory.
@@ -261,5 +270,4 @@ public abstract class PlayerCharacter extends AbstractCharacter implements Playe
     public String getLogName() {
         return "Player: " + getName();
     }
-
 }

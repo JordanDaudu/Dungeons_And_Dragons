@@ -136,5 +136,4 @@ public abstract class GameItem implements GameEntity, Cloneable {
     public Object callClone() throws CloneNotSupportedException {
         return clone();
     }
-
 }

@@ -44,8 +44,7 @@ public class SettingsMenuGUI extends JDialog {
     private JButton quitButton;
     private JButton saveButton;
     private JButton loadButton;
-    private final SaveManager manager = new SaveManager();
-
+    private final SaveManager manager = SaveManager.getInstance();
 
     // Methods
     /**
@@ -61,6 +60,7 @@ public class SettingsMenuGUI extends JDialog {
         setSize(450, 400);
         setLocationRelativeTo(parent);
 
+        GameController.pauseEnemyTasks();
         initComponents();
         layoutComponents();
         attachListeners();
@@ -197,6 +197,7 @@ public class SettingsMenuGUI extends JDialog {
         backButton.addActionListener(e -> {
             SoundManager.playEffect("closingSound");
             dispose();
+            GameController.resumeEnemyTasks();
         });
         quitButton.addActionListener(e -> System.exit(0));
 
@@ -207,7 +208,8 @@ public class SettingsMenuGUI extends JDialog {
                 GameWorldMemento memento = GameWorld.getInstance().createMemento();
                 manager.save(memento);
                 JOptionPane.showMessageDialog(this, "Game saved successfully!", "Save", JOptionPane.INFORMATION_MESSAGE);
-            } catch (CloneNotSupportedException ex) {
+            }
+            catch (CloneNotSupportedException ex) {
                 JOptionPane.showMessageDialog(this, "Failed to save game: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 ex.printStackTrace();
             }
@@ -225,8 +227,10 @@ public class SettingsMenuGUI extends JDialog {
             }
 
             String[] slotOptions = new String[totalSlots];
-            for (int i = 0; i < totalSlots; i++) {
-                slotOptions[i] = "Slot " + (i + 1);
+            int i = 0;
+            for (GameWorldMemento m : saves) {
+                slotOptions[i] = "Slot " + (i + 1) + " @ " + m.getFormattedTimestamp();
+                i++;
             }
 
             String selected = (String) JOptionPane.showInputDialog(
@@ -240,7 +244,13 @@ public class SettingsMenuGUI extends JDialog {
             );
 
             if (selected != null) {
-                int selectedIndex = Integer.parseInt(selected.replace("Slot ", "")) - 1;
+                int selectedIndex = -1;
+                for (int j = 0; j < slotOptions.length; j++) {
+                    if (slotOptions[j].equals(selected)) {
+                        selectedIndex = j;
+                        break;
+                    }
+                }
 
                 try {
                     // Load from memento
@@ -252,25 +262,17 @@ public class SettingsMenuGUI extends JDialog {
 
                     GameWorld.getInstance().loadFromMemento(memento);
 
-                    // Launch new game window
-                    GameController newController = new GameController();
-                    GameMap map = GameWorld.getInstance().getMap();
-                    GameMapGUI newGameWindow = new GameMapGUI(newController, map, newController);
-                    newGameWindow.setVisible(true);
-
                     // Close settings window
                     Window window = SwingUtilities.getWindowAncestor(SettingsMenuGUI.this);
                     if (window != null) window.dispose();
 
                 } catch (IndexOutOfBoundsException ex) {
                     JOptionPane.showMessageDialog(this, "Invalid save slot selected.", "Error", JOptionPane.ERROR_MESSAGE);
+                } catch (CloneNotSupportedException ex) {
+                    throw new RuntimeException(ex);
                 }
             }
         });
-    }
-
-    private void loadSaveSlots() {
-
     }
     /**
      * Configures the Escape key to close the dialog when pressed.
@@ -284,6 +286,7 @@ public class SettingsMenuGUI extends JDialog {
             public void actionPerformed(ActionEvent e) {
                 SoundManager.playEffect("closingSound");
                 dispose();
+                GameController.resumeEnemyTasks();
             }
         });
     }

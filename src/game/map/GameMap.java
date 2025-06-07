@@ -575,7 +575,9 @@ public class GameMap {
         }
 
         if (enemyCounts.isEmpty()) {
-            return "Goblin"; // No enemies present
+            // No enemies present
+            String[] enemyTypes = { "Goblin", "Orc", "Dragon" };
+            return enemyTypes[RandomUtil.getRandomInt(enemyTypes.length)];
         }
 
         // Find the type with the minimum count

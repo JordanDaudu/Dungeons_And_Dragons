@@ -2,17 +2,16 @@ package game.engine;
 
 import game.characters.*;
 import game.core.GameEntity;
+import game.core.ScreenAction;
 import game.core.ScreenListener;
 import game.items.GameItem;
 import game.map.GameMap;
 import game.map.Position;
 import game.memento.GameWorldMemento;
 
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
+import java.util.UUID;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -30,6 +29,7 @@ public class GameWorld {
     private GameMap map;
     private PlayerCharacter currentPlayer;
     private static volatile GameWorld instance = null;
+    private ScreenListener controllerListener = null;
 
     // Methods
     /**
@@ -86,6 +86,10 @@ public class GameWorld {
      */
     public static boolean isInitialized() {
         return instance != null;
+    }
+
+    public void setControllerListener(ScreenListener controllerListener) {
+        this.controllerListener = controllerListener;
     }
 
     /**
@@ -231,6 +235,7 @@ public class GameWorld {
         for(Enemy enemy : enemies) {
             enemy.setScreenListener(gameController);
             enemyScheduler.schedule(new EnemyTask(enemy, enemyScheduler, atomicBoolean), 1, TimeUnit.SECONDS);
+            EnemyTask.addScheduledEnemy(enemy);
         }
     }
 
@@ -279,12 +284,26 @@ public class GameWorld {
     public GameWorldMemento createMemento() throws CloneNotSupportedException {
         return new GameWorldMemento(players,enemies,items,getMap().getGrid());}
 
-    public void loadFromMemento(GameWorldMemento memento) {
-        clearGameWorld();
-        players.addAll(memento.getSavedPlayers());
-        enemies.addAll(memento.getSavedEnemies());
-        items.addAll(memento.getSavedItems());
-        map.getGrid().putAll(memento.getSavedMap());
+    public void loadFromMemento(GameWorldMemento memento) throws CloneNotSupportedException {
+        if(memento != null) {
+            UUID currentPlayerId = getCurrentPlayer().getId();
+            clearGameWorld();
+            players.addAll(memento.getSavedPlayers());
+            enemies.addAll(memento.getSavedEnemies());
+            items.addAll(memento.getSavedItems());
+            map.getGrid().putAll(memento.getSavedMap());
+            currentPlayer = players.stream().filter(p -> p.getId().equals(currentPlayerId))
+                    .findFirst()
+                    .orElse(players.getFirst()); // Fallback
+
+            // Launch new game window
+            if(controllerListener != null) {
+                controllerListener.onAction(ScreenAction.LOAD_DATA, (Object) null);
+            }
+            else {
+                System.err.println("No controller listener in GameWorld");
+            }
+        }
     }
 }
 

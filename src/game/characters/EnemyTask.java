@@ -43,19 +43,14 @@ public class EnemyTask implements Runnable {
      */
     @Override
     public void run() {
-        if(!running.get()) {
-            scheduledEnemies.remove(enemy); // Clean up if paused
-            return; // Don’t reschedule
-        }
-
         if (enemy.isDead()) {
             scheduledEnemies.remove(enemy); // Clean up if dead
             return; // Don’t reschedule
         }
 
-        scheduledEnemies.add(enemy); // Ensure tracking
-
-        enemy.threadAction(); // Defined in enemy
+        if(running.get()) {
+            enemy.threadAction(); // Defined in enemy, only act if not paused
+        }
 
         int nextDelayMillis = RandomUtil.getRandomInt(1500, 3001); // Random between 1500 (inclusive) and 3000 (inclusive)
         scheduler.schedule(new EnemyTask(enemy, scheduler, running), nextDelayMillis, TimeUnit.MILLISECONDS);
@@ -63,6 +58,26 @@ public class EnemyTask implements Runnable {
 
     public static int getScheduledEnemyCount() {
         return scheduledEnemies.size();
+    }
+
+    public static void addScheduledEnemy(Enemy enemy) {
+        scheduledEnemies.add(enemy);
+    }
+
+    public static void clearScheduledEnemies() {
+        scheduledEnemies.clear();
+    }
+
+    public static boolean tryScheduleAndRegisterEnemy(Enemy enemy, int maxAllowedCount, ScheduledExecutorService scheduler, AtomicBoolean running) {
+        synchronized (scheduledEnemies) {
+            if (scheduledEnemies.size() >= maxAllowedCount) return false;
+
+            if (scheduledEnemies.add(enemy)) {
+                scheduler.schedule(new EnemyTask(enemy, scheduler, running), 1, TimeUnit.SECONDS);
+                return true;
+            }
+            return false;
+        }
     }
 
     public static int calculateStartingEnemyThreadPoolSize(int mapSize) {

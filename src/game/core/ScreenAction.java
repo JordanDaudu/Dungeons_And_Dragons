@@ -42,9 +42,19 @@ public enum ScreenAction {
     END_TURN,
 
     /**
-     * Represents an action taken by an enemy unit during its turn.
+     * Represents an action taken by an enemy unit
      */
     ENEMY_ACTION,
+
+    /**
+     * Represents enemy attacking during it's action
+     */
+    ENEMY_ATTACK,
+
+    /**
+     * Representing part of the logic needed to load a save
+     */
+    LOAD_DATA,
 
     /**
      * Represents a global game event, such as weather effects, map changes, or scripted events.
