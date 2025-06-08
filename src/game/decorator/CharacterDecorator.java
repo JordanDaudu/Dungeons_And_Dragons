@@ -2,7 +2,9 @@ package game.decorator;
 
 import game.characters.AbstractCharacter;
 
-public abstract class CharacterDecorator implements Ability {
+import java.io.Serializable;
+
+public abstract class CharacterDecorator implements Ability, Serializable {
     private final AbstractCharacter character;
 
     public CharacterDecorator(AbstractCharacter character) {

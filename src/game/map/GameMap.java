@@ -626,6 +626,32 @@ public class GameMap implements Serializable {
         }
     }
 
+    /**
+     * Damages all AbstractCharacters in the 8 adjacent tiles surrounding a given position.
+     * Each character receives 2 damage.
+     *
+     * @param center the center position
+     */
+    public void damageCharactersAround(Position center, int damage) {
+        int[] dRows = {-1, -1, -1, 0, 0, 1, 1, 1};
+        int[] dCols = {-1, 0, 1, -1, 1, -1, 0, 1};
+
+        for (int i = 0; i < 8; i++) {
+            int newRow = center.getRow() + dRows[i];
+            int newCol = center.getCol() + dCols[i];
+            Position adjacent = new Position(newRow, newCol);
+
+            if (!isValidPosition(adjacent)) continue;
+
+            List<GameEntity> entities = getEntitiesAt(adjacent);
+            for (GameEntity entity : entities) {
+                if (entity instanceof AbstractCharacter character) {
+                    character.receiveDamage(damage, null);
+                }
+            }
+        }
+    }
+
     // For debugging only
     /**
      * Prints the player's view of the map.

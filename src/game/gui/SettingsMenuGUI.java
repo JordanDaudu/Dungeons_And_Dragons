@@ -258,7 +258,8 @@ public class SettingsMenuGUI extends JDialog {
                 }
                 try {
                     // Load from memento
-                    GameWorldMemento memento = manager.loadMemento(selectedIndex);
+                    int originalIndex = totalSlots - 1 - selectedIndex;
+                    GameWorldMemento memento = manager.loadMemento(originalIndex);
                     if (memento == null) {
                         JOptionPane.showMessageDialog(this, "Selected save slot is empty.", "Error", JOptionPane.ERROR_MESSAGE);
                         return;

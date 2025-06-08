@@ -5,7 +5,7 @@ import game.characters.AbstractCharacter;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class BoostedAttackDecorator extends CharacterDecorator{
+public class BoostedAttackDecorator extends CharacterDecorator {
 
     private final int boostAmount = 5;
     private final int abilityTimeInMilliseconds = 15000;

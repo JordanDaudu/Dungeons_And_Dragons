@@ -26,6 +26,7 @@ import game.map.Position;
 
 import javax.swing.*;
 import java.util.List;
+import java.util.Objects;
 import java.util.Scanner;
 import java.util.TimerTask;
 import java.util.concurrent.Executors;
@@ -465,11 +466,17 @@ public class GameController implements ScreenListener {
                 gameWorld.setCurrentPlayer(gameWorld.getPlayers().getFirst());
 
                 for(List<GameEntity> cell : map.getGrid().values()) {
-                    cell.removeIf(e -> e instanceof PlayerCharacter);
+                    cell.removeIf(Objects::nonNull);
                 }
 
                 for(PlayerCharacter player : gameWorld.getPlayers()) {
                     map.addEntity(player);
+                }
+                for(Enemy enemy : gameWorld.getEnemies()) {
+                    map.addEntity(enemy);
+                }
+                for(GameItem gameItem : gameWorld.getItems()) {
+                    map.addEntity(gameItem);
                 }
 
                 gameMapGUI.dispose();

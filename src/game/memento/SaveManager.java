@@ -1,5 +1,6 @@
 package game.memento;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -17,7 +18,7 @@ public class SaveManager {
     private static final int MAX_SLOTS = 5;
 
     // Methods
-    private SaveManager() {}
+    private SaveManager() {loadSavedFiles();}
 
     public static SaveManager getInstance() {
         return instance;
@@ -46,11 +47,23 @@ public class SaveManager {
         return new LinkedList<>(saveSlots); // prevent external modification
     }
 
+    private void loadSavedFiles() {
+        File dir = new File("saves/");
+        File[] files = dir.listFiles((d, name) -> name.endsWith(".ser"));
+        if (files != null) {
+            FileSaveAdapter adapter = new FileSaveAdapter();
+            for (File file : files) {
+                try {
+                    GameWorldMemento memento = adapter.loadFromFile(file.getPath());
+                    saveSlots.offer(memento);
+                } catch (IOException | ClassNotFoundException e) {
+                    System.err.println("Failed to load save from " + file.getName() + ": " + e.getMessage());
+                }
+            }
+        }
+    }
+
     public int getTotalSlots() {
         return saveSlots.size();
     }
-
-
-    // SaveManager.java
-
 }

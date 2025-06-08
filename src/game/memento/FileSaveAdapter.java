@@ -16,5 +16,13 @@ public class FileSaveAdapter implements SaveAdapter {
             out.writeObject(memento);
         }
     }
+
+    @Override
+    public GameWorldMemento loadFromFile(String filename) throws IOException, ClassNotFoundException {
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(filename))) {
+            return (GameWorldMemento) in.readObject();
+        }
+    }
+
 }
 
