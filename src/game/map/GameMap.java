@@ -272,31 +272,6 @@ public class GameMap implements Serializable {
         return cols;
     }
 
-    /**
-     * Creates and places a PlayerCharacter on the map based on the given type.
-     *
-     * @param name the name of the player
-     * @param choice the character class: "Warrior", "Archer", or "Mage"
-     */
-    public void createCharacter(String name, String choice) {
-        PlayerCharacter player;
-        switch (choice) {
-            case "Warrior" -> {
-                player = new Warrior(name);
-                placePlayerRandomly(player);
-            }
-            case "Archer" -> {
-                player = new Archer(name);
-                placePlayerRandomly(player);
-            }
-            case "Mage" -> {
-                player = new Mage(name);
-                placePlayerRandomly(player);
-            }
-            default -> System.err.println("Choice for player isn't available!");
-        }
-    }
-
     public void addCharacter(PlayerCharacter player) {
         placePlayerRandomly(player);
     }
