@@ -7,6 +7,7 @@ out/
 ### Project Specific ###
 Dungeons_And_Dragons.iml
 src/game/logging/game.log
+saves/
 
 ### Eclipse ###
 .apt_generated

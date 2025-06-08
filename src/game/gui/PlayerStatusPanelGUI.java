@@ -215,9 +215,10 @@ public class PlayerStatusPanelGUI extends JPanel {
             if (player != null) {
                 CharacterDecorator ability = player.getAbility1();
                 if (canUseAbility(player, ability)) {
-                    ability.useAbility();
-                    startCooldownForAbility(player, ability, abilityButton1);
-                    gameController.onAction(ScreenAction.REFRESH_GUI, player.getAbility1());
+                    if(ability.useAbility()) {
+                        startCooldownForAbility(player, ability, abilityButton1);
+                        gameController.onAction(ScreenAction.REFRESH_GUI, player.getAbility1());
+                    }
                 }
             }
         });
@@ -226,9 +227,10 @@ public class PlayerStatusPanelGUI extends JPanel {
             if (player != null) {
                 CharacterDecorator ability = player.getAbility2();
                 if (canUseAbility(player, ability)) {
-                    ability.useAbility();
-                    startCooldownForAbility(player, ability, abilityButton2);
-                    gameController.onAction(ScreenAction.REFRESH_GUI, player.getAbility2());
+                    if(ability.useAbility()) {
+                        startCooldownForAbility(player, ability, abilityButton2);
+                        gameController.onAction(ScreenAction.REFRESH_GUI, player.getAbility2());
+                    }
                 }
             }
         });
