@@ -10,7 +10,7 @@ import java.io.Serializable;
  * Abstract base class representing an item that can exist on the game map.
  * Implements {@link GameEntity} and supports positioning, visibility, and interaction logic.
  */
-public abstract class GameItem implements GameEntity, Cloneable {
+public abstract class GameItem implements GameEntity, Cloneable, Serializable {
 
     // Data Members
     private Position position;

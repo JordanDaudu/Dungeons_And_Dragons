@@ -1,10 +1,12 @@
 package game.memento;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
 public class SaveManager {
+
 
     // Caretaker (GameWorld will be used as originator)
     // Singleton instance
@@ -14,6 +16,7 @@ public class SaveManager {
     private final Queue<GameWorldMemento> saveSlots = new LinkedList<>();
     private static final int MAX_SLOTS = 5;
 
+    // Methods
     private SaveManager() {}
 
     public static SaveManager getInstance() {
@@ -25,6 +28,13 @@ public class SaveManager {
             saveSlots.poll(); // Remove oldest
         }
         saveSlots.offer(memento);
+
+        try {
+            int index = saveSlots.size() - 1;
+            new FileSaveAdapter().saveToFile(memento, "saves/slot" + index + ".ser");
+        } catch (IOException e) {
+            System.err.println("Failed to save slot to file: " + e.getMessage());
+        }
     }
 
     public GameWorldMemento loadMemento(int index) {
@@ -39,4 +49,8 @@ public class SaveManager {
     public int getTotalSlots() {
         return saveSlots.size();
     }
+
+
+    // SaveManager.java
+
 }

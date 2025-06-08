@@ -6,6 +6,7 @@ import game.engine.RandomUtil;
 import game.items.*;
 import game.logging.GameLogger;
 
+import java.io.Serializable;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -24,7 +25,7 @@ import java.util.concurrent.locks.ReentrantLock;
  *
  * Only one instance of GameMap exists during runtime.
  */
-public class GameMap {
+public class GameMap implements Serializable {
 
     // Data Members
     private final ConcurrentMap<Position, List<GameEntity>> grid;

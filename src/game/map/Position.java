@@ -1,10 +1,12 @@
 package game.map;
 
+import java.io.Serializable;
+
 /**
  * Represents a position on a 2D grid with row and column coordinates.
  * Used for placing and tracking game entities on the map.
  */
-public class Position {
+public class Position implements Serializable {
 
     // Data Members
     private final int row;

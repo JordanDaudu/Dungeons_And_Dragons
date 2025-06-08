@@ -3,13 +3,14 @@ package game.core;
 import game.map.Position;
 
 import java.awt.Image;
+import java.io.Serializable;
 
 /**
  * Represents a generic entity that exists within the game world.
  * Entities have a position on the map, a visible state, and a symbol for display.
  * Implementing classes may include characters, items, or structures.
  */
-public interface GameEntity extends Cloneable {
+public interface GameEntity extends Cloneable, Serializable {
 
     /**
      * Gets the current position of the entity on the map.

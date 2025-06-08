@@ -3,12 +3,14 @@ package game.gui;
 import game.engine.GameController;
 import game.engine.GameWorld;
 import game.engine.SoundManager;
-import game.map.GameMap;
+import game.logging.GameLogger;
 import game.memento.GameWorldMemento;
 import game.memento.SaveManager;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Queue;
 import java.awt.event.ActionEvent;
 
@@ -109,7 +111,6 @@ public class SettingsMenuGUI extends JDialog {
         loadButton = new JButton("Load Game");
         backButton = new JButton("Back");
         quitButton = new JButton("Quit Game");
-
     }
 
     /**
@@ -208,6 +209,7 @@ public class SettingsMenuGUI extends JDialog {
                 GameWorldMemento memento = GameWorld.getInstance().createMemento();
                 manager.save(memento);
                 JOptionPane.showMessageDialog(this, "Game saved successfully!", "Save", JOptionPane.INFORMATION_MESSAGE);
+                GameLogger.getInstance().log("Saving game...");
             }
             catch (CloneNotSupportedException ex) {
                 JOptionPane.showMessageDialog(this, "Failed to save game: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -226,9 +228,12 @@ public class SettingsMenuGUI extends JDialog {
                 return;
             }
 
-            String[] slotOptions = new String[totalSlots];
+            ArrayList<GameWorldMemento> reversedSaves = new ArrayList<>(saves);
+            Collections.reverse((java.util.List<?>) reversedSaves);
+
+            String[] slotOptions = new String[reversedSaves.size()];
             int i = 0;
-            for (GameWorldMemento m : saves) {
+            for (GameWorldMemento m : reversedSaves) {
                 slotOptions[i] = "Slot " + (i + 1) + " @ " + m.getFormattedTimestamp();
                 i++;
             }
@@ -251,7 +256,6 @@ public class SettingsMenuGUI extends JDialog {
                         break;
                     }
                 }
-
                 try {
                     // Load from memento
                     GameWorldMemento memento = manager.loadMemento(selectedIndex);
@@ -261,6 +265,7 @@ public class SettingsMenuGUI extends JDialog {
                     }
 
                     GameWorld.getInstance().loadFromMemento(memento);
+                    GameLogger.getInstance().log("Loading game...");
 
                     // Close settings window
                     Window window = SwingUtilities.getWindowAncestor(SettingsMenuGUI.this);

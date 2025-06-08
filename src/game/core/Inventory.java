@@ -1,6 +1,8 @@
 package game.core;
 
 import game.items.Interactable;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,7 +11,7 @@ import java.util.Map;
 /**
  * Represents the inventory of a player character, containing various game items.
  */
-public class Inventory {
+public class Inventory implements Serializable {
 
     // Data Members
     private final List<Interactable> items;

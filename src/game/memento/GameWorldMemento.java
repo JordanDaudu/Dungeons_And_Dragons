@@ -5,6 +5,7 @@ import game.core.GameEntity;
 import game.items.*;
 import game.map.Position;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -13,7 +14,7 @@ import java.util.concurrent.ConcurrentMap;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class GameWorldMemento {
+public class GameWorldMemento implements Serializable {
     // Memento
 
     private final List<PlayerCharacter> savedPlayers = new ArrayList<>();
