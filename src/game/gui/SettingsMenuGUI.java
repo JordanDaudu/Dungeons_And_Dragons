@@ -228,14 +228,11 @@ public class SettingsMenuGUI extends JDialog {
                 return;
             }
 
-            ArrayList<GameWorldMemento> reversedSaves = new ArrayList<>(saves);
-            Collections.reverse((java.util.List<?>) reversedSaves);
+            ArrayList<GameWorldMemento> saveList = new ArrayList<>(saves);
 
-            String[] slotOptions = new String[reversedSaves.size()];
-            int i = 0;
-            for (GameWorldMemento m : reversedSaves) {
-                slotOptions[i] = "Slot " + (i + 1) + " @ " + m.getFormattedTimestamp();
-                i++;
+            String[] slotOptions = new String[saveList.size()];
+            for (int i = 0; i < saveList.size(); i++) {
+                slotOptions[i] = "Slot " + (i + 1) + " @ " + saveList.get(i).getFormattedTimestamp();
             }
 
             String selected = (String) JOptionPane.showInputDialog(

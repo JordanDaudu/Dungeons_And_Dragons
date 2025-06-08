@@ -69,6 +69,10 @@ public class GameWorldMemento implements Serializable {
         return deepCopyGrid(gridCopy);
     }
 
+    public LocalDateTime getTimestamp() {
+        return timestamp;
+    }
+
     public String getFormattedTimestamp() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         return timestamp.format(formatter);

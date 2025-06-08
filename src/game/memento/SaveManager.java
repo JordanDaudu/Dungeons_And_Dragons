@@ -15,7 +15,7 @@ public class SaveManager {
 
     // Data Members
     private final Queue<GameWorldMemento> saveSlots = new LinkedList<>();
-    private static final int MAX_SLOTS = 5;
+    private static final int MAX_SLOTS = 10;
 
     // Methods
     private SaveManager() {loadSavedFiles();}
@@ -52,18 +52,23 @@ public class SaveManager {
         File[] files = dir.listFiles((d, name) -> name.endsWith(".ser"));
         if (files != null) {
             FileSaveAdapter adapter = new FileSaveAdapter();
+            ArrayList<GameWorldMemento> tempList = new ArrayList<>();
+
             for (File file : files) {
                 try {
                     GameWorldMemento memento = adapter.loadFromFile(file.getPath());
-                    saveSlots.offer(memento);
+                    tempList.add(memento);
                 } catch (IOException | ClassNotFoundException e) {
                     System.err.println("Failed to load save from " + file.getName() + ": " + e.getMessage());
                 }
             }
-        }
-    }
 
-    public int getTotalSlots() {
-        return saveSlots.size();
+            // Sort by internal timestamp, descending (latest first)
+            tempList.sort((a, b) -> b.getTimestamp().compareTo(a.getTimestamp()));
+
+            for (GameWorldMemento m : tempList) {
+                saveSlots.offer(m);
+            }
+        }
     }
 }

@@ -36,9 +36,21 @@ public class PlayerCustomizationGUI extends JDialog {
         this.playerClass = playerClass;
         setModal(true);
         setTitle("Player Class Customization - " + playerClass);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
         setSize(400, 300);
         setLocationRelativeTo(null);
+
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent e) {
+                JOptionPane.showMessageDialog(
+                        PlayerCustomizationGUI.this,
+                        "You must confirm your customization to continue.",
+                        "Action Required",
+                        JOptionPane.WARNING_MESSAGE
+                );
+            }
+        });
 
         initComponents();
     }
@@ -72,6 +84,9 @@ public class PlayerCustomizationGUI extends JDialog {
         JPanel bottomPanel = new JPanel();
         bottomPanel.add(confirmButton);
         add(bottomPanel, BorderLayout.SOUTH);
+
+        // Making Enter key press confirmButton
+        getRootPane().setDefaultButton(confirmButton);
     }
 
     private JSpinner createIntSpinner(int initial, int min, int max, int step) {
