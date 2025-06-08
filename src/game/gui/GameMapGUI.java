@@ -207,7 +207,7 @@ public class GameMapGUI extends JFrame implements ScreenListener{
                 PlayerCharacter currentPlayer = gameController.getCurrentPlayer();
                 if (currentPlayer != null) {
                     SoundManager.playEffect("playerStatusSound");
-                    PlayerStatusDialogGUI statusDialog = new PlayerStatusDialogGUI(GameMapGUI.this, currentPlayer);
+                    PlayerStatusDialogGUI statusDialog = new PlayerStatusDialogGUI(GameMapGUI.this, currentPlayer, gameController);
                     statusDialog.setVisible(true);
                 }
             }
@@ -292,12 +292,12 @@ public class GameMapGUI extends JFrame implements ScreenListener{
 
         if (show) {
             if(statusPanel == null || inventoryPanel == null) {
-                statusPanel = new PlayerStatusPanelGUI(gameController.getCurrentPlayer());
+                statusPanel = new PlayerStatusPanelGUI(gameController.getCurrentPlayer(), gameController);
                 inventoryPanel = new InventoryPanelGUI(gameController.getCurrentPlayer(), gameController);
-                statusPanel.setPreferredSize(new Dimension(300, 800));
-                inventoryPanel.setPreferredSize(new Dimension(300, 800));
+                statusPanel.setPreferredSize(new Dimension(320, 800));
+                inventoryPanel.setPreferredSize(new Dimension(320, 800));
             }
-            setPreferredSize(new Dimension(1400, 800));
+            setPreferredSize(new Dimension(1440, 800));
             statusPanel.updatePlayer(gameController.getCurrentPlayer());
             inventoryPanel.updatePlayer(gameController.getCurrentPlayer());
             add(statusPanel, BorderLayout.WEST);

@@ -1,6 +1,7 @@
 package game.gui;
 
 import game.characters.PlayerCharacter;
+import game.core.ScreenListener;
 import game.engine.SoundManager;
 
 import javax.swing.*;
@@ -20,7 +21,7 @@ public class PlayerStatusDialogGUI extends JDialog {
      * @param parentFrame the parent frame for the dialog
      * @param player the player character whose status is displayed
      */
-    public PlayerStatusDialogGUI(JFrame parentFrame, PlayerCharacter player) {
+    public PlayerStatusDialogGUI(JFrame parentFrame, PlayerCharacter player, ScreenListener gameController) {
         super(parentFrame, "Player Status", true); // modal
 
         try {
@@ -33,7 +34,7 @@ public class PlayerStatusDialogGUI extends JDialog {
         setLayout(new BorderLayout());
 
         // Add the reusable panel
-        PlayerStatusPanelGUI statusPanel = new PlayerStatusPanelGUI(player);
+        PlayerStatusPanelGUI statusPanel = new PlayerStatusPanelGUI(player, gameController);
         add(statusPanel, BorderLayout.CENTER);
 
         // Close button

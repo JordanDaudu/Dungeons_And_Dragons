@@ -64,5 +64,10 @@ public enum ScreenAction {
     /**
      * Exits the game and closes the application.
      */
-    EXIT_GAME
+    EXIT_GAME,
+
+    /**
+     * Refreshes GUI elements
+     */
+    REFRESH_GUI
 }

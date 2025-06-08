@@ -3,6 +3,7 @@ package game.characters;
 import game.combat.Combatant;
 import game.core.Inventory;
 import game.core.PlayerMovement;
+import game.decorator.CharacterDecorator;
 import game.items.Interactable;
 import game.items.Potion;
 import game.items.PowerPotion;
@@ -24,6 +25,8 @@ public abstract class PlayerCharacter extends AbstractCharacter implements Playe
     private final Inventory inventory;
     private int treasurePoints;
     private final UUID id;
+    private CharacterDecorator ability1 = null;
+    private CharacterDecorator ability2 = null;
 
 
     // Methods
@@ -34,7 +37,6 @@ public abstract class PlayerCharacter extends AbstractCharacter implements Playe
      * @param name the name of the character
      */
     public PlayerCharacter(String name) {
-
         super();
         this.name = name.substring(0, 1).toUpperCase() + name.substring(1); // making sure starts with an uppercase
         inventory = new Inventory();
@@ -48,6 +50,8 @@ public abstract class PlayerCharacter extends AbstractCharacter implements Playe
         inventory = new Inventory(other.inventory);
         treasurePoints = other.treasurePoints;
         this.id = other.id;
+        this.ability1 = other.ability1;
+        this.ability2 = other.ability2;
     }
 
     /**
@@ -113,6 +117,17 @@ public abstract class PlayerCharacter extends AbstractCharacter implements Playe
         return id;
     }
 
+    public void setAbility1(CharacterDecorator ability1) {
+        this.ability1 = ability1;
+    }
+
+    public void setAbility2(CharacterDecorator ability2) {
+        this.ability2 = ability2;
+    }
+
+    public CharacterDecorator getAbility1() {return ability1;}
+
+    public CharacterDecorator getAbility2() {return ability2;}
 
     /**
      * Adds a game item to the player's inventory.

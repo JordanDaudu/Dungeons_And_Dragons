@@ -9,6 +9,8 @@ import game.combat.RangedFighter;
 import game.core.GameEntity;
 import game.core.ScreenAction;
 import game.core.ScreenListener;
+import game.decorator.CharacterDecorator;
+import game.decorator.RegenerationDecorator;
 import game.global_events.GlobalEventManager;
 import game.global_events.MagicWaveEvent;
 import game.global_events.SandstormEvent;
@@ -25,6 +27,7 @@ import game.map.Position;
 import javax.swing.*;
 import java.util.List;
 import java.util.Scanner;
+import java.util.TimerTask;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -48,6 +51,7 @@ public class GameController implements ScreenListener {
     private static final Scanner scanner = new Scanner(System.in);
 
     private long lastEnemyAttackTime = 0; // in milliseconds
+    private int intervalBetweenEnemyAttacks = 3000; // in milliseconds
     private Timer turnTimer;
 
     // Methods
@@ -210,7 +214,7 @@ public class GameController implements ScreenListener {
     }
 
     private boolean canEnemiesAttack() {
-        if(System.currentTimeMillis() - lastEnemyAttackTime >= 1500) {
+        if(System.currentTimeMillis() - lastEnemyAttackTime >= intervalBetweenEnemyAttacks) {
             lastEnemyAttackTime = System.currentTimeMillis();
             return true;
         }
@@ -544,6 +548,38 @@ public class GameController implements ScreenListener {
                     congratulationsGUI.setVisible(true);
                     scanner.close();
                     System.exit(0);
+                }
+            }
+            case ScreenAction.REFRESH_GUI -> {
+                if(data[0] instanceof CharacterDecorator decorator) {
+                    java.util.Timer timer = new java.util.Timer();
+                    if(decorator instanceof RegenerationDecorator regenerationDecorator) {
+                        final int maxTicks = regenerationDecorator.getTotalDuration() / regenerationDecorator.getInterval();
+                        final int[] ticks = {0};
+
+                        timer.scheduleAtFixedRate(new TimerTask() {
+                            @Override
+                            public void run() {
+                                callPanelRefreshers();
+                                ticks[0]++;
+
+                                if (ticks[0] >= maxTicks) {
+                                    timer.cancel();
+                                }
+                            }
+                        }, 0, regenerationDecorator.getInterval());
+                        callPanelRefreshers();
+                    }
+                    else {
+                        callPanelRefreshers();
+                        // Refreshing the panels again after the ability is over
+                        timer.schedule(new TimerTask() {
+                            @Override
+                            public void run() {
+                                callPanelRefreshers();
+                            }
+                        }, decorator.abilityTimeInMilliseconds() + 10);
+                    }
                 }
             }
             default -> {}

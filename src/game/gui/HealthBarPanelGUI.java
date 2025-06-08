@@ -280,16 +280,29 @@ public class HealthBarPanelGUI extends JPanel {
      */
     private void triggerGlow() {
         glowX = -50f;
-        if (glowTimer != null && glowTimer.isRunning()) glowTimer.stop();
+
+        if (glowTimer != null && glowTimer.isRunning()) {
+            glowTimer.stop();
+        }
+
+        final int[] ticks = {0}; // Failsafe tick counter
 
         glowTimer = new Timer(15, e -> {
             glowX += 8;
-            if (glowX > healthBar.getWidth() + 50) {
+            ticks[0]++;
+
+            int width = healthBar.getWidth();
+
+            boolean shouldStop = (width > 0 && glowX > width + 50) || ticks[0] > 50; // ~750ms max
+
+            if (shouldStop) {
                 glowX = -1f;
                 glowTimer.stop();
             }
+
             healthBar.repaint();
         });
+
         glowTimer.start();
     }
 

@@ -1,20 +1,19 @@
 package game.gui;
 
 import game.characters.PlayerCharacter;
-import game.characters.PlayerFactory;
 import game.core.ScreenAction;
 import game.core.ScreenListener;
+import game.decorator.*;
 import game.engine.SoundManager;
 import game.logging.GameLogger;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
-import java.util.Objects;
+import java.util.*;
+import java.util.List;
+import java.util.function.Function;
 
 /**
  * A panel for creating a new player character, allowing the user to:
@@ -34,6 +33,10 @@ public class PlayerCreationPanelGUI extends JPanel {
     private ImageIcon warriorIcon, archerIcon, mageIcon;
     private ButtonGroup classGroup;
     private JPanel classPanel;
+    private JPanel abilityPanel;
+    // Map class name to available ability decorators (not instantiated)
+    private Map<String, List<Class<? extends CharacterDecorator>>> classAbilities;
+    private List<JCheckBox> abilityCheckBoxes;
     private JButton startButton;
     private String playerName;
     private String selectedClass;
@@ -118,6 +121,18 @@ public class PlayerCreationPanelGUI extends JPanel {
         classPanel.add(mageButton);
         classPanel.setBackground(bgColor);
 
+        // Abilities specific to each class
+        abilityCheckBoxes = new ArrayList<>();
+        classAbilities = Map.of(
+                "Warrior", List.of(BoostedAttackDecorator.class, RegenerationDecorator.class),
+                "Mage", List.of(BoostedAttackDecorator.class, RegenerationDecorator.class, MagicAmplifierDecorator.class),
+                "Archer", List.of(BoostedAttackDecorator.class, RegenerationDecorator.class)
+        );
+        abilityPanel = new JPanel();
+        abilityPanel.setLayout(new BoxLayout(abilityPanel, BoxLayout.Y_AXIS));
+        abilityPanel.setBackground(getBackground());
+        abilityPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
         // Class Description Panel with scroll
         classDescriptionPane = new JTextPane();
         classDescriptionPane.setEditable(false);
@@ -156,6 +171,9 @@ public class PlayerCreationPanelGUI extends JPanel {
         add(Box.createRigidArea(new Dimension(0, 10)));
         add(classPanel);
 
+        add(Box.createRigidArea(new Dimension(0, 10)));
+        add(abilityPanel);
+
         // --- Adding horizontal separator below classPanel ---
         add(Box.createRigidArea(new Dimension(0, 10)));
         JSeparator bottomSeparator = new JSeparator(SwingConstants.HORIZONTAL);
@@ -183,7 +201,7 @@ public class PlayerCreationPanelGUI extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 playerName = nameField.getText();
-                if (selectedClass != null && !playerName.trim().isEmpty()) {
+                if (selectedClass != null && !playerName.trim().isEmpty() && abilityCheckBoxes.stream().filter(JCheckBox::isSelected).count() == 2) {
                     try {
                         GameLogger.getInstance().log("Created new player: " + playerName + ", class: " + selectedClass);
                     }
@@ -198,11 +216,12 @@ public class PlayerCreationPanelGUI extends JPanel {
                     PlayerCustomizationGUI customizationGUI = new PlayerCustomizationGUI(owner, selectedClass);
                     customizationGUI.setVisible(true);
 
-                    listener.onAction(ScreenAction.START_GAME, playerName, selectedClass, customizationGUI);
+                    List<String> selectedAbilityNames = getSelectedAbilityNames();
+                    listener.onAction(ScreenAction.START_GAME, playerName, selectedClass, customizationGUI, selectedAbilityNames);
                     dialog.setVisible(false);
                 }
                 else {
-                    JOptionPane.showMessageDialog(PlayerCreationPanelGUI.this, "Please enter your name and select a class.", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(PlayerCreationPanelGUI.this, "Please enter your name and select a class.\nAlso make sure you have selected 2 abilities", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -237,6 +256,47 @@ public class PlayerCreationPanelGUI extends JPanel {
         });
     }
 
+    private List<String> getSelectedAbilityNames() {
+        List<String> selectedAbilities = new ArrayList<>();
+        for (JCheckBox box : abilityCheckBoxes) {
+            if (box.isSelected()) {
+                Class<?> clazz = (Class<?>) box.getClientProperty("abilityClass");
+                selectedAbilities.add(clazz.getSimpleName());
+            }
+        }
+        return selectedAbilities;
+    }
+
+    private void updateAbilitySelector(String selectedClass) {
+        abilityPanel.removeAll();
+        abilityCheckBoxes.clear();
+
+        List<Class<? extends CharacterDecorator>> abilities = classAbilities.getOrDefault(selectedClass, List.of());
+
+        for (Class<? extends CharacterDecorator> abilityClass : abilities) {
+            String abilityName = abilityClass.getSimpleName(); // You can replace with custom label if needed
+            JCheckBox box = new JCheckBox(abilityName);
+            box.putClientProperty("abilityClass", abilityClass);
+            box.addItemListener(createAbilityCheckListener());
+            abilityCheckBoxes.add(box);
+            abilityPanel.add(box);
+        }
+
+        abilityPanel.revalidate();
+        abilityPanel.repaint();
+    }
+
+    private ItemListener createAbilityCheckListener() {
+        return e -> {
+            long selectedCount = abilityCheckBoxes.stream().filter(AbstractButton::isSelected).count();
+            for (JCheckBox box : abilityCheckBoxes) {
+                if (!box.isSelected()) {
+                    box.setEnabled(selectedCount < 2);
+                }
+            }
+        };
+    }
+
     /**
      * Creates a radio button representing a player class, complete with image and listener.
      *
@@ -261,6 +321,7 @@ public class PlayerCreationPanelGUI extends JPanel {
             SoundManager.playEffect("clickSound");
             selectedClass = className;
             updateClassDescription(className);
+            updateAbilitySelector(className);
             updateIcons();
         });
 

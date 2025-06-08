@@ -246,6 +246,4 @@ public class Archer extends PlayerCharacter implements PhysicalAttacker, RangedF
     protected Archer clone() throws CloneNotSupportedException {
         return new Archer(this);
     }
-
-
 }

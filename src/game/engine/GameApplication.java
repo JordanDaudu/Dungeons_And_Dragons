@@ -5,11 +5,14 @@ import game.characters.PlayerCharacter;
 import game.characters.PlayerFactory;
 import game.core.ScreenAction;
 import game.core.ScreenListener;
+import game.decorator.AbilityFactory;
+import game.decorator.CharacterDecorator;
 import game.gui.PlayerCreationPanelGUI;
 import game.gui.PlayerCustomizationGUI;
 import game.gui.StartingScreenGUI;
 import game.map.GameMap;
 
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -65,6 +68,9 @@ public class GameApplication implements ScreenListener {
         game.collectEnemiesFromMap();
         game.collectItemsFromMap();
 
+        // Setting first player
+        game.setCurrentPlayer(game.getPlayers().getFirst());
+
         // Adding enemies to a thread pool so they can move in game
         ScheduledExecutorService enemyScheduler = Executors.newScheduledThreadPool(EnemyTask.calculateStartingEnemyThreadPoolSize(mapRows * mapCols));
         game.attachGameControllerToEnemies(gameApplication.controller, enemyScheduler, gameApplication.controller.getEnemyRunningFlag());
@@ -118,7 +124,7 @@ public class GameApplication implements ScreenListener {
     public boolean onAction(ScreenAction action, Object... data) {
         if (action == ScreenAction.START_GAME) {
             // Create character from data given
-            if(data[0] instanceof String name && data[1] instanceof String selectedClass && data[2] instanceof PlayerCustomizationGUI customization) {
+            if(data[0] instanceof String name && data[1] instanceof String selectedClass && data[2] instanceof PlayerCustomizationGUI customization && data[3] instanceof List<?> rawList) {
 
                 PlayerCharacter player = switch (selectedClass) {
                     case "Warrior" -> ((PlayerFactory.WarriorBuilder) PlayerFactory.getBuilder("Warrior"))
@@ -141,6 +147,25 @@ public class GameApplication implements ScreenListener {
                             .build();
                     default -> throw new IllegalArgumentException("Unknown class: " + selectedClass);
                 };
+
+                // Check if every element in the list is a String
+                boolean allStrings = rawList.stream().allMatch(element -> element instanceof String);
+                if (allStrings) {
+                    @SuppressWarnings("unchecked")
+                    List<String> abilityNames = (List<String>) rawList;
+                    if (!abilityNames.isEmpty()) {
+                        CharacterDecorator decorated1 = AbilityFactory.create(abilityNames.getFirst(), player);
+                        player.setAbility1(decorated1);
+                    }
+                    if (abilityNames.size() > 1) {
+                        CharacterDecorator decorated2 = AbilityFactory.create(abilityNames.get(1), player);
+                        player.setAbility2(decorated2);
+                    }
+                }
+                else {
+                    System.err.println("No ability for " + player.getName());
+                }
+
                 map.addCharacter(player);
                 return true;
             }
