@@ -377,7 +377,8 @@ public class GameController implements ScreenListener {
                         }
                     }
                     else if(currentEnemyPosition.distanceTo(gameWorld.getCurrentPlayer().getPosition()) <= 2) {
-                        if(enemy instanceof RangedFighter) {
+                        // Added a 50% to fail and instead  move toward player
+                        if(enemy instanceof RangedFighter && RandomUtil.getRandomInt(2) == 0) {
                             int range = enemy.getRangeModifier();
                             if(enemy.getPosition().distanceTo(getCurrentPlayer().getPosition()) <= range) {
                                 if(canEnemiesAttack()) {

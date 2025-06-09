@@ -71,6 +71,7 @@ public abstract class PlayerCharacter extends AbstractCharacter implements Playe
                 ", name = \"" + name + "\"" +
                 ", treasurePoints = " + treasurePoints +
                 ", inventory = " + inventory +
+                ", ID = " + id +
                 '}';
     }
 
