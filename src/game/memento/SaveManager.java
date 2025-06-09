@@ -15,7 +15,6 @@ public class SaveManager {
     private static final SaveManager instance = new SaveManager();
 
     // Data Members
-    //private final Queue<GameWorldMemento> saveSlots = new LinkedList<>();
     private final Deque<GameWorldMemento> saveSlots = new LinkedList<>();
     private static final int MAX_SLOTS = 10;
 
@@ -28,7 +27,7 @@ public class SaveManager {
 
     public void save(GameWorldMemento memento) {
         if (saveSlots.size() >= MAX_SLOTS) {
-            saveSlots.removeLast(); // Remove the oldest
+            saveSlots.removeLast();
         }
         saveSlots.addFirst(memento); // Add newest at top
 
@@ -50,30 +49,25 @@ public class SaveManager {
     }
 
     public Queue<GameWorldMemento> getSaveSlots() {
-        return new LinkedList<>(saveSlots); // prevent external modification
+        LinkedList<GameWorldMemento> reversed = new LinkedList<>(saveSlots);
+        java.util.Collections.reverse(reversed); // so index 0 = newest
+        return reversed;
     }
+
 
     private void loadSavedFiles() {
         File dir = new File("saves/");
         File[] files = dir.listFiles((d, name) -> name.endsWith(".ser"));
         if (files != null) {
             FileSaveAdapter adapter = new FileSaveAdapter();
-            ArrayList<GameWorldMemento> tempList = new ArrayList<>();
 
             for (File file : files) {
                 try {
                     GameWorldMemento memento = adapter.loadFromFile(file.getPath());
-                    tempList.add(memento);
+                    saveSlots.offer(memento);
                 } catch (IOException | ClassNotFoundException e) {
                     System.err.println("Failed to load save from " + file.getName() + ": " + e.getMessage());
                 }
-            }
-
-            // Sort by internal timestamp, descending (latest first)
-            tempList.sort((a, b) -> b.getTimestamp().compareTo(a.getTimestamp()));
-
-            for (GameWorldMemento m : tempList) {
-                saveSlots.offer(m);
             }
         }
     }
