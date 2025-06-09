@@ -3,6 +3,7 @@ package game.memento;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -14,7 +15,8 @@ public class SaveManager {
     private static final SaveManager instance = new SaveManager();
 
     // Data Members
-    private final Queue<GameWorldMemento> saveSlots = new LinkedList<>();
+    //private final Queue<GameWorldMemento> saveSlots = new LinkedList<>();
+    private final Deque<GameWorldMemento> saveSlots = new LinkedList<>();
     private static final int MAX_SLOTS = 10;
 
     // Methods
@@ -24,19 +26,39 @@ public class SaveManager {
         return instance;
     }
 
+//    public void save(GameWorldMemento memento) {
+//        if (saveSlots.size() >= MAX_SLOTS) {
+//            saveSlots.poll(); // Remove oldest
+//        }
+//        saveSlots.offer(memento);
+//
+//        try {
+//            int index = saveSlots.size() - 1;
+//            new FileSaveAdapter().saveToFile(memento, "saves/slot" + index + ".ser");
+//        } catch (IOException e) {
+//            System.err.println("Failed to save slot to file: " + e.getMessage());
+//        }
+//    }
+
+
     public void save(GameWorldMemento memento) {
         if (saveSlots.size() >= MAX_SLOTS) {
-            saveSlots.poll(); // Remove oldest
+            saveSlots.removeLast(); // Remove the oldest
         }
-        saveSlots.offer(memento);
+        saveSlots.addFirst(memento); // Add newest at top
 
         try {
-            int index = saveSlots.size() - 1;
-            new FileSaveAdapter().saveToFile(memento, "saves/slot" + index + ".ser");
+            // Save all current slots to disk in order
+            int index = 0;
+            for (GameWorldMemento m : saveSlots) {
+                new FileSaveAdapter().saveToFile(m, "saves/slot" + index + ".ser");
+                index++;
+            }
         } catch (IOException e) {
             System.err.println("Failed to save slot to file: " + e.getMessage());
         }
     }
+
 
     public GameWorldMemento loadMemento(int index) {
         if (index < 0 || index >= saveSlots.size()) throw new IndexOutOfBoundsException();
