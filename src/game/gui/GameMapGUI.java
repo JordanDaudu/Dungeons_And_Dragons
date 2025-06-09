@@ -304,8 +304,12 @@ public class GameMapGUI extends JFrame implements ScreenListener{
             add(inventoryPanel, BorderLayout.EAST);
         }
         else {
-            remove(statusPanel);
-            remove(inventoryPanel);
+            if (statusPanel != null) {
+                remove(statusPanel);
+            }
+            if (inventoryPanel != null) {
+                remove(inventoryPanel);
+            }
             setPreferredSize(new Dimension(800, 800));
         }
 

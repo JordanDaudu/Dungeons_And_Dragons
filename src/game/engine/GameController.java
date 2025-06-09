@@ -481,7 +481,13 @@ public class GameController implements ScreenListener {
 
                 gameMapGUI.dispose();
                 gameMapGUI = new GameMapGUI(this, map, this);
-                gameMapGUI.toggleSidePanels(true);
+                // Loading settings of GameMapGUI
+                GameSettings gameSettings = gameWorld.getGameSettings();
+                SoundManager.setMusicVolume(gameSettings.getMusicVolume());
+                SoundManager.setSFXVolume(gameSettings.getSFXVolume());
+                gameMapGUI.setShowHPBar(gameSettings.getShowHPBar());
+                gameMapGUI.toggleSidePanels(gameSettings.getShowPlayerInformation());
+                gameMapGUI.setTileBackgroundTheme(gameSettings.getSelectedTheme());
 
                 endTurn.set(false);
                 startGameLoop();

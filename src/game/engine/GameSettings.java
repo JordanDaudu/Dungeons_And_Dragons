@@ -1,5 +1,7 @@
 package game.engine;
 
+import game.gui.TileColorBackgroundTheme;
+
 import java.io.Serializable;
 
 /**
@@ -12,6 +14,12 @@ public class GameSettings implements Serializable {
     private final int players;
     private final int rows;
     private final int cols;
+
+    private float musicVolume = 0.6f;
+    private float sfxVolume = 0.6f;
+    private boolean showHPBar = true;
+    private boolean showPlayerInformation = true;
+    private TileColorBackgroundTheme selectedTheme = TileColorBackgroundTheme.CLEAR;
 
     // Methods
     /**
@@ -31,6 +39,11 @@ public class GameSettings implements Serializable {
         this.players = other.players;
         this.rows = other.getRows();
         this.cols = other.getCols();
+        this.musicVolume = other.musicVolume;
+        this.sfxVolume = other.sfxVolume;
+        this.showHPBar = other.showHPBar;
+        this.showPlayerInformation = other.showPlayerInformation;
+        this.selectedTheme = other.selectedTheme;
     }
 
     /**
@@ -59,6 +72,18 @@ public class GameSettings implements Serializable {
     public int getCols() {
         return cols;
     }
+
+    public float getMusicVolume() { return musicVolume; }
+    public float getSFXVolume() { return sfxVolume; }
+    public boolean getShowHPBar() { return showHPBar; }
+    public boolean getShowPlayerInformation() { return showPlayerInformation; }
+    public TileColorBackgroundTheme getSelectedTheme() { return selectedTheme; }
+
+    public void setMusicVolume(float musicVolume) {this.musicVolume = musicVolume;}
+    public void setSfxVolume(float sfxVolume) {this.sfxVolume = sfxVolume;}
+    public void setShowHPBar(boolean showHPBar) {this.showHPBar = showHPBar;}
+    public void setShowPlayerInformation(boolean showPlayerInformation) {this.showPlayerInformation = showPlayerInformation;}
+    public void setSelectedTheme(TileColorBackgroundTheme selectedTheme) {this.selectedTheme = selectedTheme;}
 
     /**
      * Validates whether the provided game settings are within acceptable bounds.

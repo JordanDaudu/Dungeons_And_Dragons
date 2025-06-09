@@ -201,7 +201,8 @@ public class PlayerCreationPanelGUI extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 playerName = nameField.getText();
-                if (selectedClass != null && !playerName.trim().isEmpty() && abilityCheckBoxes.stream().filter(JCheckBox::isSelected).count() == 2) {
+                long selectedCount = abilityCheckBoxes.stream().filter(JCheckBox::isSelected).count();
+                if (selectedClass != null && !playerName.trim().isEmpty() && selectedCount <= 2) {
                     try {
                         GameLogger.getInstance().log("Created new player: " + playerName + ", class: " + selectedClass);
                     }
@@ -221,7 +222,9 @@ public class PlayerCreationPanelGUI extends JPanel {
                     dialog.setVisible(false);
                 }
                 else {
-                    JOptionPane.showMessageDialog(PlayerCreationPanelGUI.this, "Please enter your name and select a class.\nAlso make sure you have selected 2 abilities", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(PlayerCreationPanelGUI.this,
+                            "Please enter your name and select a class.\nYou may select up to 2 abilities.",
+                            "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });

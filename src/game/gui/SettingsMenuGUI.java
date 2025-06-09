@@ -78,29 +78,29 @@ public class SettingsMenuGUI extends JDialog {
 
         musicPanel = new JPanel(new BorderLayout(10, 10));
         musicLabel = new JLabel("Music Volume:");
-        musicSlider = new JSlider(0, 100, (int) (SoundManager.getMusicVolume() * 100));
+        musicSlider = new JSlider(0, 100, (int) (GameWorld.getInstance().getGameSettings().getMusicVolume() * 100));
         musicSlider.setMajorTickSpacing(25);
         musicSlider.setPaintTicks(true);
         musicSlider.setPaintLabels(true);
 
         sfxPanel = new JPanel(new BorderLayout(10, 10));
         sfxLabel = new JLabel("SFX Volume:");
-        sfxSlider = new JSlider(0, 100, (int) (SoundManager.getSFXVolume() * 100));
+        sfxSlider = new JSlider(0, 100, (int) (GameWorld.getInstance().getGameSettings().getSFXVolume() * 100));
         sfxSlider.setMajorTickSpacing(25);
         sfxSlider.setPaintTicks(true);
         sfxSlider.setPaintLabels(true);
         colorThemePanel = new JPanel(new BorderLayout(10, 10));
         colorThemeLabel = new JLabel("Color Tile Background:");
         colorThemeComboBox = new JComboBox<>(TileColorBackgroundTheme.values());
-        colorThemeComboBox.setSelectedItem(lastSelectedTheme);
+        colorThemeComboBox.setSelectedItem(GameWorld.getInstance().getGameSettings().getSelectedTheme());
 
         checkBoxesPanel = new JPanel(new GridLayout(1, 2, 10, 0));
 
         showHPBarCheckbox = new JCheckBox("Show HP Bar On Map", showHPBar);
-        showHPBarCheckbox.setSelected(lastSelectedHPBar);
+        showHPBarCheckbox.setSelected(GameWorld.getInstance().getGameSettings().getShowHPBar());
 
         showPlayerInformationCheckbox = new JCheckBox("Show Player Information", showPlayerInformation);
-        showPlayerInformationCheckbox.setSelected(lastSelectedPlayerInformation);
+        showPlayerInformationCheckbox.setSelected(GameWorld.getInstance().getGameSettings().getShowPlayerInformation());
 
         buttonPanel = new JPanel();
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
@@ -161,14 +161,23 @@ public class SettingsMenuGUI extends JDialog {
      * and button clicks.
      */
     private void attachListeners() {
-        musicSlider.addChangeListener(e -> SoundManager.setMusicVolume(musicSlider.getValue() / 100f));
-        sfxSlider.addChangeListener(e -> SoundManager.setSFXVolume(sfxSlider.getValue() / 100f));
+        musicSlider.addChangeListener(e -> {
+            float volume = musicSlider.getValue() / 100f;
+            SoundManager.setMusicVolume(volume);
+            GameWorld.getInstance().getGameSettings().setMusicVolume(volume);
+        });
+        sfxSlider.addChangeListener(e -> {
+            float volume = sfxSlider.getValue() / 100f;
+            SoundManager.setSFXVolume(volume);
+            GameWorld.getInstance().getGameSettings().setSfxVolume(volume);
+        });
 
         colorThemeComboBox.addActionListener(e -> {
             SoundManager.playEffect("clickSound");
             TileColorBackgroundTheme selectedColorTheme = (TileColorBackgroundTheme) colorThemeComboBox.getSelectedItem();
             if (getParent() instanceof GameMapGUI gameMap) {
                 lastSelectedTheme = selectedColorTheme; // Save selection
+                GameWorld.getInstance().getGameSettings().setSelectedTheme(selectedColorTheme);
                 gameMap.setTileBackgroundTheme(selectedColorTheme);
             }
         });
@@ -178,6 +187,7 @@ public class SettingsMenuGUI extends JDialog {
             showHPBar = showHPBarCheckbox.isSelected();
             if (getParent() instanceof GameMapGUI gameMap) {
                 lastSelectedHPBar = showHPBarCheckbox.isSelected();
+                GameWorld.getInstance().getGameSettings().setShowHPBar(showHPBar);
                 gameMap.setShowHPBar(showHPBar);
             }
         });
@@ -187,6 +197,7 @@ public class SettingsMenuGUI extends JDialog {
             showPlayerInformation = showPlayerInformationCheckbox.isSelected();
             if (getParent() instanceof GameMapGUI gameMap) {
                 lastSelectedPlayerInformation = showPlayerInformationCheckbox.isSelected();
+                GameWorld.getInstance().getGameSettings().setShowPlayerInformation(showPlayerInformation);
                 gameMap.toggleSidePanels(showPlayerInformation);
             }
         });
@@ -232,7 +243,9 @@ public class SettingsMenuGUI extends JDialog {
 
             String[] slotOptions = new String[saveList.size()];
             for (int i = 0; i < saveList.size(); i++) {
-                slotOptions[i] = "Slot " + (i + 1) + " @ " + saveList.get(i).getFormattedTimestamp();
+                // Reverse order: show newest first
+                GameWorldMemento m = saveList.get(saveList.size() - 1 - i);
+                slotOptions[i] = "Slot " + (i + 1) + " @ " + m.getFormattedTimestamp();
             }
 
             String selected = (String) JOptionPane.showInputDialog(
@@ -255,8 +268,7 @@ public class SettingsMenuGUI extends JDialog {
                 }
                 try {
                     // Load from memento
-                    int originalIndex = totalSlots - 1 - selectedIndex;
-                    GameWorldMemento memento = manager.loadMemento(originalIndex);
+                    GameWorldMemento memento = manager.loadMemento(selectedIndex);
                     if (memento == null) {
                         JOptionPane.showMessageDialog(this, "Selected save slot is empty.", "Error", JOptionPane.ERROR_MESSAGE);
                         return;

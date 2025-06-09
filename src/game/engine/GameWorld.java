@@ -128,6 +128,9 @@ public class GameWorld {
         return map;
     }
 
+    public GameSettings getGameSettings() {
+        return gameSettings;
+    }
 
     /**
      * Gets the player whose turn is currently active.
@@ -294,6 +297,7 @@ public class GameWorld {
             map.getGrid().putAll(memento.getSavedMap());
             gameSettings = memento.getGameSettings();
 
+            // Restoring map intended size
             map.init(gameSettings.getRows(), gameSettings.getCols());
 
             currentPlayer = players.stream().filter(p -> p.getId().equals(currentPlayerId))
