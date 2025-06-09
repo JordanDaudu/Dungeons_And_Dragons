@@ -26,21 +26,6 @@ public class SaveManager {
         return instance;
     }
 
-//    public void save(GameWorldMemento memento) {
-//        if (saveSlots.size() >= MAX_SLOTS) {
-//            saveSlots.poll(); // Remove oldest
-//        }
-//        saveSlots.offer(memento);
-//
-//        try {
-//            int index = saveSlots.size() - 1;
-//            new FileSaveAdapter().saveToFile(memento, "saves/slot" + index + ".ser");
-//        } catch (IOException e) {
-//            System.err.println("Failed to save slot to file: " + e.getMessage());
-//        }
-//    }
-
-
     public void save(GameWorldMemento memento) {
         if (saveSlots.size() >= MAX_SLOTS) {
             saveSlots.removeLast(); // Remove the oldest
@@ -58,7 +43,6 @@ public class SaveManager {
             System.err.println("Failed to save slot to file: " + e.getMessage());
         }
     }
-
 
     public GameWorldMemento loadMemento(int index) {
         if (index < 0 || index >= saveSlots.size()) throw new IndexOutOfBoundsException();

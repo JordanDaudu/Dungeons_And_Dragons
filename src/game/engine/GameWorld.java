@@ -27,6 +27,7 @@ public class GameWorld {
     private List<Enemy> enemies;
     private List<GameItem> items;
     private GameMap map;
+    private GameSettings gameSettings;
     private PlayerCharacter currentPlayer;
     private static volatile GameWorld instance = null;
     private ScreenListener controllerListener = null;
@@ -35,29 +36,28 @@ public class GameWorld {
     /**
      * Constructs the game world with a map of specified size.
      *
-     * @param row number of rows in the map
-     * @param col number of columns in the map
+     * @param gameSettings settings of the game
      */
-    private GameWorld(int row, int col) {
+    private GameWorld(GameSettings gameSettings) {
         this.players = new ArrayList<>();
         this.enemies = new ArrayList<>();
         this.items = new ArrayList<>();
+        this.gameSettings = new GameSettings(gameSettings);
         this.map = GameMap.getInstance();
-        this.map.init(row, col);
+        this.map.init(gameSettings.getRows(), gameSettings.getCols());
     }
 
     // This method is called once to initialize the world with custom size
     /**
      * Initializes the singleton instance of the game world with a custom map size.
      *
-     * @param row number of rows in the map
-     * @param col number of columns in the map
+     * @param gameSettings settings of the game
      */
-    public static void initialize(int row, int col) {
+    public static void initialize(GameSettings gameSettings) {
         if (instance == null) {
             synchronized (GameWorld.class) {
                 if(instance == null) {
-                    instance = new GameWorld(row, col); // Create instance only once
+                    instance = new GameWorld(gameSettings); // Create instance only once
                 }
             }
         }
@@ -282,7 +282,7 @@ public class GameWorld {
     }
 
     public GameWorldMemento createMemento() throws CloneNotSupportedException {
-        return new GameWorldMemento(players,enemies,items,getMap().getGrid());}
+        return new GameWorldMemento(players,enemies,items,getMap().getGrid(), gameSettings);}
 
     public void loadFromMemento(GameWorldMemento memento) throws CloneNotSupportedException {
         if(memento != null) {
@@ -292,6 +292,10 @@ public class GameWorld {
             enemies.addAll(memento.getSavedEnemies());
             items.addAll(memento.getSavedItems());
             map.getGrid().putAll(memento.getSavedMap());
+            gameSettings = memento.getGameSettings();
+
+            map.init(gameSettings.getRows(), gameSettings.getCols());
+
             currentPlayer = players.stream().filter(p -> p.getId().equals(currentPlayerId))
                     .findFirst()
                     .orElse(players.getFirst()); // Fallback

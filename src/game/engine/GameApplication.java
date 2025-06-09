@@ -54,7 +54,7 @@ public class GameApplication implements ScreenListener {
         int mapRows = gameSettings.getRows();
         int mapCols = gameSettings.getCols();
 
-        GameApplication gameApplication = new GameApplication(mapRows, mapCols);
+        GameApplication gameApplication = new GameApplication(gameSettings);
         GameWorld game = GameWorld.getInstance();
 
         for(int i = 0; i < numberOfPlayers; i++) {
@@ -103,11 +103,10 @@ public class GameApplication implements ScreenListener {
      * and sets up the map and game controller.
      * </p>
      *
-     * @param rows number of rows in the game map
-     * @param cols number of columns in the game map
+     * @param gameSettings settings of the game
      */
-    public GameApplication(int rows, int cols) {
-        GameWorld.initialize(rows, cols);
+    public GameApplication(GameSettings gameSettings) {
+        GameWorld.initialize(gameSettings);
         game = GameWorld.getInstance();
         map = game.getMap();
         controller = new GameController();

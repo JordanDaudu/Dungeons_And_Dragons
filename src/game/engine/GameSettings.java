@@ -1,10 +1,12 @@
 package game.engine;
 
+import java.io.Serializable;
+
 /**
  * Encapsulates configuration settings for initializing the game, including
  * the number of players and the map dimensions (rows and columns).
  */
-public class GameSettings {
+public class GameSettings implements Serializable {
 
     // Data Members
     private final int players;
@@ -23,6 +25,12 @@ public class GameSettings {
         this.players = players;
         this.rows = rows;
         this.cols = cols;
+    }
+
+    public GameSettings(GameSettings other) {
+        this.players = other.players;
+        this.rows = other.getRows();
+        this.cols = other.getCols();
     }
 
     /**
