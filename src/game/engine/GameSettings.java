@@ -35,6 +35,11 @@ public class GameSettings implements Serializable {
         this.cols = cols;
     }
 
+    /**
+     * Copy constructor to create a new GameSettings instance by copying another.
+     *
+     * @param other the GameSettings instance to copy from
+     */
     public GameSettings(GameSettings other) {
         this.players = other.players;
         this.rows = other.getRows();
@@ -73,16 +78,74 @@ public class GameSettings implements Serializable {
         return cols;
     }
 
+    /**
+     * Gets the music volume setting.
+     *
+     * @return the music volume (0.0 to 1.0)
+     */
     public float getMusicVolume() { return musicVolume; }
+
+    /**
+     * Gets the sound effects (SFX) volume setting.
+     *
+     * @return the SFX volume (0.0 to 1.0)
+     */
     public float getSFXVolume() { return sfxVolume; }
+
+    /**
+     * Checks whether the HP bar is shown.
+     *
+     * @return true if the HP bar is shown; false otherwise
+     */
     public boolean getShowHPBar() { return showHPBar; }
+
+    /**
+     * Checks whether player information is shown.
+     *
+     * @return true if player information is shown; false otherwise
+     */
     public boolean getShowPlayerInformation() { return showPlayerInformation; }
+
+    /**
+     * Gets the selected tile color background theme.
+     *
+     * @return the selected TileColorBackgroundTheme
+     */
     public TileColorBackgroundTheme getSelectedTheme() { return selectedTheme; }
 
+    /**
+     * Sets the music volume.
+     *
+     * @param musicVolume the music volume to set (0.0 to 1.0)
+     */
     public void setMusicVolume(float musicVolume) {this.musicVolume = musicVolume;}
+
+    /**
+     * Sets the sound effects (SFX) volume.
+     *
+     * @param sfxVolume the SFX volume to set (0.0 to 1.0)
+     */
     public void setSfxVolume(float sfxVolume) {this.sfxVolume = sfxVolume;}
+
+    /**
+     * Sets whether to show the HP bar.
+     *
+     * @param showHPBar true to show the HP bar; false to hide
+     */
     public void setShowHPBar(boolean showHPBar) {this.showHPBar = showHPBar;}
+
+    /**
+     * Sets whether to show player information.
+     *
+     * @param showPlayerInformation true to show player info; false to hide
+     */
     public void setShowPlayerInformation(boolean showPlayerInformation) {this.showPlayerInformation = showPlayerInformation;}
+
+    /**
+     * Sets the selected tile color background theme.
+     *
+     * @param selectedTheme the TileColorBackgroundTheme to set
+     */
     public void setSelectedTheme(TileColorBackgroundTheme selectedTheme) {this.selectedTheme = selectedTheme;}
 
     /**

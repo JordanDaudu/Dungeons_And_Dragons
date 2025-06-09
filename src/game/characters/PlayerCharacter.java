@@ -44,6 +44,13 @@ public abstract class PlayerCharacter extends AbstractCharacter implements Playe
         this.id = UUID.randomUUID(); // Unique per player
     }
 
+    /**
+     * Copy constructor for creating a new PlayerCharacter from an existing one.
+     * Performs a deep copy of inventory and all relevant fields,
+     * while preserving the same UUID and character abilities.
+     *
+     * @param other the PlayerCharacter to copy
+     */
     public PlayerCharacter(PlayerCharacter other) {
         super(other);
         this.name = other.name;
@@ -114,20 +121,45 @@ public abstract class PlayerCharacter extends AbstractCharacter implements Playe
      */
     public Inventory getInventory() {return inventory;}
 
+    /**
+     * Gets the unique identifier (UUID) for this player.
+     *
+     * @return the player's UUID
+     */
     public UUID getId() {
         return id;
     }
 
+    /**
+     * Sets the first ability decorator for the player.
+     *
+     * @param ability1 the first ability to assign
+     */
     public void setAbility1(CharacterDecorator ability1) {
         this.ability1 = ability1;
     }
 
+    /**
+     * Sets the second ability decorator for the player.
+     *
+     * @param ability2 the second ability to assign
+     */
     public void setAbility2(CharacterDecorator ability2) {
         this.ability2 = ability2;
     }
 
+    /**
+     * Retrieves the first ability decorator applied to the player.
+     *
+     * @return the first ability decorator
+     */
     public CharacterDecorator getAbility1() {return ability1;}
 
+    /**
+     * Retrieves the second ability decorator applied to the player.
+     *
+     * @return the second ability decorator
+     */
     public CharacterDecorator getAbility2() {return ability2;}
 
     /**
@@ -195,8 +227,9 @@ public abstract class PlayerCharacter extends AbstractCharacter implements Playe
     }
 
     /**
+     * Checks whether the player's inventory is empty.
      *
-     * @return if the player inventory is empty
+     * @return true if the inventory has no items, false otherwise
      */
     public boolean isEmpty() {
         return inventory.getItems().isEmpty();

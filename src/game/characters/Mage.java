@@ -33,6 +33,15 @@ public class Mage extends PlayerCharacter implements MagicAttacker, RangedFighte
         range = 2; // default
     }
 
+    /**
+     * Constructs a Mage with specific attributes.
+     * Adds health and power to the base stats and sets the given magic element.
+     *
+     * @param name         the name of the Mage
+     * @param health       bonus health to add to the base
+     * @param power        bonus power to add to the base
+     * @param magicElement the magical element type of the Mage
+     */
     public Mage(String name, int health, int power, MagicElement magicElement) {
         super(name);
         setMaxHealth(getHealth() + health);
@@ -42,6 +51,12 @@ public class Mage extends PlayerCharacter implements MagicAttacker, RangedFighte
         range = 2; // default
     }
 
+    /**
+     * Copy constructor for Mage.
+     * Creates a new Mage with the same properties as another Mage.
+     *
+     * @param other the Mage to copy
+     */
     public Mage(Mage other){
         super(other);
         this.element = other.element;
@@ -241,6 +256,12 @@ public class Mage extends PlayerCharacter implements MagicAttacker, RangedFighte
         fightRanged(target);
     }
 
+    /**
+     * Creates and returns a deep copy of this Mage.
+     *
+     * @return a clone of this Mage
+     * @throws CloneNotSupportedException if the object cannot be cloned
+     */
     @Override
     protected Mage clone() throws CloneNotSupportedException{
         return new Mage(this);

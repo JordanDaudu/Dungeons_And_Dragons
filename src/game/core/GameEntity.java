@@ -63,5 +63,12 @@ public interface GameEntity extends Cloneable, Serializable {
      */
     default String getDescription() {return "null";}
 
+    /**
+     * Creates and returns a copy of this GameEntity.
+     * Used to enforce cloning behavior across all implementing classes.
+     *
+     * @return a cloned instance of the entity
+     * @throws CloneNotSupportedException if the entity cannot be cloned
+     */
     Object callClone() throws CloneNotSupportedException;
 }

@@ -37,6 +37,15 @@ public class Archer extends PlayerCharacter implements PhysicalAttacker, RangedF
         range = 2;
     }
 
+    /**
+     * Constructs an Archer with custom stats.
+     * Health and power are added on top of default values. Accuracy is bounded to not exceed 0.80 before the bonus.
+     *
+     * @param name     the name of the archer
+     * @param health   bonus health to add to base
+     * @param power    bonus power to add to base
+     * @param accuracy bonus accuracy to add to a base-generated value
+     */
     public Archer(String name, int health, int power, double accuracy) {
         super(name);
         setMaxHealth(getHealth() + health);
@@ -50,6 +59,12 @@ public class Archer extends PlayerCharacter implements PhysicalAttacker, RangedF
         range = 2;
     }
 
+    /**
+     * Copy constructor for Archer.
+     * Creates a new Archer with the same stats and attributes as the provided one.
+     *
+     * @param other the Archer to copy
+     */
     public Archer(Archer other){
         super(other);
         this.accuracy = other.accuracy;
@@ -242,6 +257,12 @@ public class Archer extends PlayerCharacter implements PhysicalAttacker, RangedF
         fightRanged(target);
     }
 
+    /**
+     * Creates and returns a deep copy of this Archer.
+     *
+     * @return a clone of this instance
+     * @throws CloneNotSupportedException if cloning fails
+     */
     @Override
     protected Archer clone() throws CloneNotSupportedException {
         return new Archer(this);

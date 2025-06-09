@@ -29,6 +29,7 @@ public class Dragon extends Enemy implements MagicAttacker, RangedFighter, Melee
         range = 2;
     }
 
+
     public Dragon (Dragon other){
         super(other);
         this.range = other.range;
@@ -282,6 +283,12 @@ public class Dragon extends Enemy implements MagicAttacker, RangedFighter, Melee
         return "All-around powerhouse, strong in magic, ranged, and melee attacks.";
     }
 
+    /**
+     * Creates and returns a new Dragon object that is a copy of this instance.
+     *
+     * @return a cloned Dragon instance
+     * @throws CloneNotSupportedException if cloning is not supported
+     */
     @Override
     protected Dragon clone() throws CloneNotSupportedException {
         return new Dragon(this);

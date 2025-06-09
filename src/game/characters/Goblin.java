@@ -29,6 +29,11 @@ public class Goblin extends Enemy implements PhysicalAttacker, MeleeFighter {
         this.agility = RandomUtil.getRandomInt(0, 81);
     }
 
+    /**
+     * Copy constructor for Goblin.
+     *
+     * @param other the Goblin instance to copy from
+     */
     public Goblin(Goblin other){
         super(other);
         this.agility = other.agility;
@@ -206,6 +211,12 @@ public class Goblin extends Enemy implements PhysicalAttacker, MeleeFighter {
         return "Fast and evasive, excels in melee with high dodge and swift strikes.";
     }
 
+    /**
+     * Creates and returns a copy of this Goblin.
+     *
+     * @return a cloned Goblin instance
+     * @throws CloneNotSupportedException if cloning is not supported
+     */
     @Override
     protected Goblin clone() throws CloneNotSupportedException {
         return new Goblin(this);

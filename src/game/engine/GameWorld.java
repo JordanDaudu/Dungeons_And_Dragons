@@ -128,6 +128,11 @@ public class GameWorld {
         return map;
     }
 
+    /**
+     * Gets the game settings.
+     *
+     * @return the game settings
+     */
     public GameSettings getGameSettings() {
         return gameSettings;
     }

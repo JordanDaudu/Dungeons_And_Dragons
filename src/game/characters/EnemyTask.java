@@ -56,18 +56,40 @@ public class EnemyTask implements Runnable {
         scheduler.schedule(new EnemyTask(enemy, scheduler, running), nextDelayMillis, TimeUnit.MILLISECONDS);
     }
 
+    /**
+     * Returns the number of currently scheduled enemies.
+     *
+     * @return the count of enemies in the scheduled set
+     */
     public static int getScheduledEnemyCount() {
         return scheduledEnemies.size();
     }
 
+    /**
+     * Adds an enemy to the set of scheduled enemies.
+     *
+     * @param enemy the enemy to add
+     */
     public static void addScheduledEnemy(Enemy enemy) {
         scheduledEnemies.add(enemy);
     }
 
+    /**
+     * Clears all enemies from the scheduled set.
+     */
     public static void clearScheduledEnemies() {
         scheduledEnemies.clear();
     }
 
+    /**
+     * Attempts to schedule a new enemy task if the maximum allowed number of active tasks has not been reached.
+     *
+     * @param enemy           the enemy to schedule
+     * @param maxAllowedCount the maximum number of allowed scheduled enemies
+     * @param scheduler       the scheduler used to execute the task
+     * @param running         atomic flag indicating whether the system is currently active
+     * @return true if the enemy was scheduled and added successfully, false otherwise
+     */
     public static boolean tryScheduleAndRegisterEnemy(Enemy enemy, int maxAllowedCount, ScheduledExecutorService scheduler, AtomicBoolean running) {
         synchronized (scheduledEnemies) {
             if (scheduledEnemies.size() >= maxAllowedCount) return false;
@@ -80,6 +102,13 @@ public class EnemyTask implements Runnable {
         }
     }
 
+    /**
+     * Calculates the size of the enemy thread pool based on the map size.
+     * The size is 3% of the map size, with bounds of 1 to 10.
+     *
+     * @param mapSize the total size of the game map
+     * @return the recommended thread pool size for managing enemy tasks
+     */
     public static int calculateStartingEnemyThreadPoolSize(int mapSize) {
         int poolSize = (int) Math.max(1, mapSize * 0.03);
         poolSize = Math.min(poolSize, 10);
