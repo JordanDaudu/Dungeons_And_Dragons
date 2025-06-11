@@ -100,8 +100,6 @@ public class Warrior extends PlayerCharacter implements MeleeFighter, PhysicalAt
         return defence == warrior.defence;
     }
 
-    public int getDefence() {return defence;}
-
     /**
      * Gets the type description of the warrior.
      *

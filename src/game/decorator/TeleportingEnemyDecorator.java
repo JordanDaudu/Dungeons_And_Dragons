@@ -19,7 +19,7 @@ public class TeleportingEnemyDecorator extends EnemyDecorator {
     @Override
     protected TeleportingEnemyDecorator clone() throws CloneNotSupportedException {
         Enemy clonedBase = (Enemy) getDecoratedEnemy().callClone(); // Deep clone the base character
-        return new TeleportingEnemyDecorator(clonedBase); // Correct return type
+        return new TeleportingEnemyDecorator(clonedBase);
     }
 
     @Override
@@ -41,16 +41,6 @@ public class TeleportingEnemyDecorator extends EnemyDecorator {
         GameMap.getInstance().removeEntity(this);
         GameMap.getInstance().placeEnemyRandomly(this);
     }
-
-//    @Override
-//    public String getAbilityName() {
-//        return "Teleporting";
-//    }
-//
-//    @Override
-//    public String getAbilityInfo() {
-//        return "When reduced to 30% HP, the character will teleport to a random free cell on the map";
-//    }
 
     @Override
     public int abilityTimeInMilliseconds() {

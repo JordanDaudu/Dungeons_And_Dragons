@@ -22,9 +22,6 @@ public abstract class PlayerCharacter extends AbstractCharacter implements Playe
     private final String name;
     private final Inventory inventory;
     private int treasurePoints;
-//    private CharacterDecorator ability1 = null;
-//    private CharacterDecorator ability2 = null;
-
 
     // Methods
     /**
@@ -57,12 +54,11 @@ public abstract class PlayerCharacter extends AbstractCharacter implements Playe
      */
     @Override
     public String toString() {
-        // Getting super.toString() in a clean way to append
         String parentString = super.toString();
         String cleanedParentString = parentString.substring(parentString.indexOf("{") + 1, parentString.lastIndexOf("}"));
 
         return getClass().getSimpleName() + "{" +
-                cleanedParentString +  // Remove the initial class name and '{' from the super.toString()
+                cleanedParentString +
                 ", name = \"" + name + "\"" +
                 ", treasurePoints = " + treasurePoints +
                 ", inventory = " + inventory +
@@ -107,18 +103,6 @@ public abstract class PlayerCharacter extends AbstractCharacter implements Playe
      * @return the Inventory object containing the player's items
      */
     public Inventory getInventory() {return inventory;}
-
-//    public void setAbility1(CharacterDecorator ability1) {
-//        this.ability1 = ability1;
-//    }
-//
-//    public void setAbility2(CharacterDecorator ability2) {
-//        this.ability2 = ability2;
-//    }
-//
-//    public CharacterDecorator getAbility1() {return ability1;}
-//
-//    public CharacterDecorator getAbility2() {return ability2;}
 
     /**
      * Adds a game item to the player's inventory.

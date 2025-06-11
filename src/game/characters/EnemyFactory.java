@@ -29,7 +29,7 @@ public class EnemyFactory {
         if (supplier == null) {
             throw new IllegalArgumentException("Unknown player type: " + type);
         }
-        return (T) supplier.get(); // **Safe casting ensures correct return type**
+        return (T) supplier.get();
     }
 
     // Abstract Base Builder Class
@@ -61,7 +61,6 @@ public class EnemyFactory {
             Function<Enemy, EnemyDecorator> decoratorConstructor =
                     AbilityFactory.getRandomEnemyAbilityConstructor();
 
-            // return (decoratorConstructor != null) ? decoratorConstructor.apply(baseEnemy) : baseEnemy;
             if (decoratorConstructor != null) {
                 EnemyDecorator decoratedEnemy = decoratorConstructor.apply(baseEnemy);
                 System.out.println("Applying decorator: " + decoratedEnemy.getClass().getSimpleName() + " on " + baseEnemy.getClass().getSimpleName());

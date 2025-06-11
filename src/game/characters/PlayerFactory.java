@@ -33,7 +33,7 @@ public class PlayerFactory {
         if (supplier == null) {
             throw new IllegalArgumentException("Unknown player type: " + type);
         }
-        return (T) supplier.get(); // **Safe casting ensures correct return type**
+        return (T) supplier.get();
     }
 
     // Abstract Base Builder Class
@@ -67,7 +67,7 @@ public class PlayerFactory {
             for (String ability : abilities) {
                 player = AbilityFactory.applyPlayerAbility(ability, player); // Apply decorator
                 if (player instanceof PlayerDecorator) {
-                    ((PlayerDecorator) player).useAbility(); // Call useAbility() right after adding decoration
+                    player.useAbility(); // Call useAbility() right after adding decoration
                 }
             }
             return player; // Return decorated player
@@ -85,7 +85,7 @@ public class PlayerFactory {
         @Override
         public PlayerCharacter build() {
             PlayerCharacter warrior = new Warrior(super.name, super.health, super.power, defence);
-            return applyAbilities(warrior); // No explicit casting
+            return applyAbilities(warrior);
         }
     }
 

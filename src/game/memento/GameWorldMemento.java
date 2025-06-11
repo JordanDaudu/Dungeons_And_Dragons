@@ -74,10 +74,6 @@ public class GameWorldMemento implements Serializable {
 
     public GameSettings getGameSettings() {return gameSettings;}
 
-    public LocalDateTime getTimestamp() {
-        return timestamp;
-    }
-
     public String getFormattedTimestamp() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         return timestamp.format(formatter);

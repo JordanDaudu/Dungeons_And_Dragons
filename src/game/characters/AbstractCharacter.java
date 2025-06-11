@@ -300,37 +300,7 @@ public abstract class AbstractCharacter implements Combatant, GameEntity, Clonea
     }
 
     @Override
-    public boolean isUsable() {
-        return false;
-    }
-
-    @Override
     public int abilityTimeInMilliseconds() {
         return -1;
     }
-
-//    @Override
-//    public boolean useAbility() {
-//        return false;
-//    }
-//
-//    @Override
-//    public String getAbilityName() {
-//        return "NULL";
-//    }
-//
-//    @Override
-//    public String getAbilityInfo() {
-//        return "NULL";
-//    }
-//
-//    @Override
-//    public int abilityTimeInMilliseconds() {
-//        return -1;
-//    }
-//
-//    @Override
-//    public CharacterComponent getBaseCharacter() {
-//        return this;
-//    }
 }

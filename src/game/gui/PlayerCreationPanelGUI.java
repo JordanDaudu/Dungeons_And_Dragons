@@ -32,8 +32,10 @@ public class PlayerCreationPanelGUI extends JPanel {
     private ButtonGroup classGroup;
     private JPanel classPanel;
     private JPanel abilityPanel;
+
     // Map class name to available ability decorators (not instantiated)
     private Map<String, List<Class<? extends PlayerDecorator>>> classAbilities;
+
     private List<JCheckBox> abilityCheckBoxes;
     private JButton startButton;
     private String playerName;

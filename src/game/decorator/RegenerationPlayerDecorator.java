@@ -29,21 +29,6 @@ public class RegenerationPlayerDecorator extends PlayerDecorator {
         return regenerateHealth();
     }
 
-//    @Override
-//    public String getAbilityName() {
-//        return "Regenerate Health";
-//    }
-//
-//    @Override
-//    public String getAbilityInfo() {
-//        return "Regenerate " + healAmount + " every " + interval / 1000 + " for " + totalDuration / 1000 + " seconds.";
-//    }
-//
-//    @Override
-//    public int abilityTimeInMilliseconds() {
-//        return totalDuration;
-//    }
-
     public int getInterval() {return interval;}
 
     public int getTotalDuration() {return totalDuration;}

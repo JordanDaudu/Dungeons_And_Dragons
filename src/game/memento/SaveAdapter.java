@@ -1,4 +1,3 @@
-// SaveAdapter.java
 package game.memento;
 
 import java.io.IOException;

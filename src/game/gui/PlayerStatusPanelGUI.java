@@ -32,16 +32,8 @@ public class PlayerStatusPanelGUI extends JPanel {
     private JLabel treasureLabel;
     private PassiveSkillPanelGUI passiveSkillPanelGUI;
 
-//    private final Map<String, Long> abilityCooldownEndTimes = new HashMap<>();
-
-    // Track active timers per button to cancel when switching player
-//    private Timer cooldownTimer1;
-//    private Timer cooldownTimer2;
-//
-//    private JButton abilityButton1;
-//    private JButton abilityButton2;
-
     // Methods
+
     /**
      * Constructs the panel and initializes its components based on the given player.
      *
@@ -76,11 +68,6 @@ public class PlayerStatusPanelGUI extends JPanel {
             imageLabel.setIcon(new ImageIcon(scaledImage));
             nameLabel.setText("Name: " + newPlayer.getName());
             typeLabel.setText("Type: " + newPlayer.getType());
-            // Cancel any existing cooldown timers when switching player
-//            if (cooldownTimer1 != null) cooldownTimer1.stop();
-//            if (cooldownTimer2 != null) cooldownTimer2.stop();
-
-//            updateAbilityButtons(newPlayer);
         }
 
         passiveSkillSet(newPlayer);
@@ -118,16 +105,6 @@ public class PlayerStatusPanelGUI extends JPanel {
         abilityPanel.setLayout(new BoxLayout(abilityPanel, BoxLayout.X_AXIS));
         abilityPanel.setOpaque(false);
         abilityPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
-
-//        updateAbilityButtons(player);
-
-//        abilityButton1 = new JButton(player.getAbility1().getAbilityName());
-//        abilityButton2 = new JButton(player.getAbility2().getAbilityName());
-//
-//        abilityButton1.setToolTipText(player.getAbility1().getAbilityInfo());
-//        abilityButton2.setToolTipText(player.getAbility2().getAbilityInfo());
-//        abilityButton1.setFocusable(false);
-//        abilityButton2.setFocusable(false);
 
         // === Identity Group ===
         nameLabel = createWrappedLabel("Name: " + player.getName(), new Font("Serif", Font.BOLD, 20));
@@ -200,42 +177,11 @@ public class PlayerStatusPanelGUI extends JPanel {
         add(passiveSkillPanelGUI);
     }
 
-//    private void attachListeners() {
-//        // === Ability buttons ===
-//        if (abilityButton1 != null) {
-//            abilityButton1.addActionListener(e -> {
-//                if (player != null) {
-//                    CharacterDecorator ability = player.getAbility1();
-//                    if (canUseAbility(player, ability)) {
-//                        if(ability.useAbility()) {
-//                            startCooldownForAbility(player, ability, abilityButton1);
-//                            gameController.onAction(ScreenAction.REFRESH_GUI, player.getAbility1());
-//                        }
-//                    }
-//                }
-//            });
-//        }
-//
-//        if(abilityButton2 != null) {
-//            abilityButton2.addActionListener(e -> {
-//                if (player != null) {
-//                    CharacterDecorator ability = player.getAbility2();
-//                    if (canUseAbility(player, ability)) {
-//                        if(ability.useAbility()) {
-//                            startCooldownForAbility(player, ability, abilityButton2);
-//                            gameController.onAction(ScreenAction.REFRESH_GUI, player.getAbility2());
-//                        }
-//                    }
-//                }
-//            });
-//        }
-//    }
-
     /**
      * Loads an image from a path and scales it to the specified size.
      *
-     * @param path the resource path of the image
-     * @param width the desired width
+     * @param path   the resource path of the image
+     * @param width  the desired width
      * @param height the desired height
      * @return the scaled ImageIcon
      */
@@ -277,10 +223,9 @@ public class PlayerStatusPanelGUI extends JPanel {
      */
     private void passiveSkillSet(PlayerCharacter character) {
         PlayerCharacter player;
-        if(character instanceof PlayerDecorator playerDecorator) {
+        if (character instanceof PlayerDecorator playerDecorator) {
             player = playerDecorator.getBaseCharacter();
-        }
-        else {
+        } else {
             player = character;
         }
         switch (player) {
@@ -294,129 +239,4 @@ public class PlayerStatusPanelGUI extends JPanel {
                     passiveSkillPanelGUI.updateContent(loadAndScaleIcon("/images/missing.png", 40, 40), "NULL", "NULL");
         }
     }
-
-//    private boolean canUseAbility(PlayerCharacter player, CharacterDecorator ability) {
-//        if (player == null || ability == null) return false;
-//
-//        String key = getCooldownKey(player, ability); // Unique player ID
-//        Long cooldownEnd = abilityCooldownEndTimes.get(key);
-//        return cooldownEnd == null || cooldownEnd <= System.currentTimeMillis();
-//    }
-
-//    private void startCooldownForAbility(PlayerCharacter player, CharacterDecorator ability, JButton button) {
-//        String key = getCooldownKey(player, ability); // Unique player ID
-//        long cooldownDuration = 60 * 1000; // 1 minute cooldown in ms
-//        long cooldownEndTime = System.currentTimeMillis() + cooldownDuration;
-//        abilityCooldownEndTimes.put(key, cooldownEndTime);
-//
-//        button.setEnabled(false);
-//        startCooldownTimer(button, cooldownDuration, ability.getAbilityName(), player, ability);
-//    }
-//
-//    private void checkAndStartCooldown(PlayerCharacter player, CharacterDecorator ability, JButton button) {
-//        if (player == null || ability == null || button == null) return;
-//
-//        String key = getCooldownKey(player, ability); // Unique player ID
-//        Long cooldownEnd = abilityCooldownEndTimes.get(key);
-//        long now = System.currentTimeMillis();
-//
-//        if (cooldownEnd == null || cooldownEnd <= now) {
-//            // Cooldown expired or none
-//            button.setEnabled(true);
-//            button.setText(ability.getAbilityName());
-//        }
-//        else {
-//            // Cooldown active - disable and start timer
-//            long remaining = cooldownEnd - now;
-//            button.setEnabled(false);
-//            startCooldownTimer(button, remaining, ability.getAbilityName(), player, ability);
-//        }
-//    }
-//
-//    private void startCooldownTimer(JButton button, long durationMs, String abilityName, PlayerCharacter player, CharacterDecorator ability) {
-//        if (button == null || abilityName == null || player == null) return;
-//
-//        int delay = 1000; // 1 second intervals
-//        final long endTime = System.currentTimeMillis() + durationMs;
-//
-//        // Stop previous timer on this button if any
-//        if (button == abilityButton1 && cooldownTimer1 != null) cooldownTimer1.stop();
-//        if (button == abilityButton2 && cooldownTimer2 != null) cooldownTimer2.stop();
-//
-//        Timer timer = new Timer(delay, null);
-//        timer.addActionListener(e -> {
-//            long remaining = endTime - System.currentTimeMillis();
-//            if (remaining <= 0) {
-//                button.setEnabled(true);
-//                button.setText(abilityName);
-//                timer.stop();
-//                // Remove cooldown when finished (optional)
-//                abilityCooldownEndTimes.remove(getCooldownKey(player, ability));
-//            } else {
-//                int secondsLeft = (int) (remaining / 1000);
-//                button.setText("Cooldown: " + secondsLeft + "s");
-//                button.setEnabled(false);
-//            }
-//        });
-//        timer.start();
-//
-//        // Save timer reference to stop if player changes
-//        if (button == abilityButton1) cooldownTimer1 = timer;
-//        else if (button == abilityButton2) cooldownTimer2 = timer;
-//    }
-//
-//    private void updateAbilityButtons(PlayerCharacter player) {
-//        abilityPanel.removeAll();
-//        abilityPanel.add(Box.createHorizontalGlue());
-//
-//        CharacterDecorator ability1 = player.getAbility1();
-//        CharacterDecorator ability2 = player.getAbility2();
-//
-//        if (ability1 != null) {
-//            abilityButton1 = new JButton(ability1.getAbilityName());
-//            abilityButton1.setToolTipText(ability1.getAbilityInfo());
-//            abilityButton1.setFocusable(false);
-//            abilityButton1.addActionListener(e -> {
-//                if (canUseAbility(player, ability1)) {
-//                    if (ability1.useAbility()) {
-//                        startCooldownForAbility(player, ability1, abilityButton1);
-//                        gameController.onAction(ScreenAction.REFRESH_GUI, ability1);
-//                    }
-//                }
-//            });
-//            abilityPanel.add(abilityButton1);
-//            abilityPanel.add(Box.createRigidArea(new Dimension(10, 0)));
-//            checkAndStartCooldown(player, ability1, abilityButton1);
-//        }
-//        else {
-//            abilityButton1 = null;
-//        }
-//
-//        if (ability2 != null) {
-//            abilityButton2 = new JButton(ability2.getAbilityName());
-//            abilityButton2.setToolTipText(ability2.getAbilityInfo());
-//            abilityButton2.setFocusable(false);
-//            abilityButton2.addActionListener(e -> {
-//                if (canUseAbility(player, ability2)) {
-//                    if (ability2.useAbility()) {
-//                        startCooldownForAbility(player, ability2, abilityButton2);
-//                        gameController.onAction(ScreenAction.REFRESH_GUI, ability2);
-//                    }
-//                }
-//            });
-//            abilityPanel.add(abilityButton2);
-//            checkAndStartCooldown(player, ability2, abilityButton2);
-//        }
-//        else {
-//            abilityButton2 = null;
-//        }
-//
-//        abilityPanel.add(Box.createHorizontalGlue());
-//        abilityPanel.revalidate();
-//        abilityPanel.repaint();
-//    }
-//
-//    private String getCooldownKey(PlayerCharacter player, CharacterDecorator ability) {
-//        return player.getId() + ":" + ability.getAbilityName();
-//    }
 }

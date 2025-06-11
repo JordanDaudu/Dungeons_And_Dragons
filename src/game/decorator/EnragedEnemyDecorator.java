@@ -44,38 +44,6 @@ public class EnragedEnemyDecorator extends EnemyDecorator {
         return false; // Passive
     }
 
-//    private void updateEnragedPower() {
-//        int lostHealth = getDecoratedEnemy().getMaxHealth() - getDecoratedEnemy().getHealth();
-//        double lostPercentage = (double) lostHealth / getDecoratedEnemy().getMaxHealth();
-//
-//        int newPower = originalPower + (int) Math.floor(maxPowerIncrease * lostPercentage);
-//        getDecoratedEnemy().setPower(newPower);
-//    }
-//
-//    private void startPeriodicCheck() {
-//        checkTimer.scheduleAtFixedRate(new TimerTask() {
-//            @Override
-//            public void run() {
-//                if (!getDecoratedEnemy().isDead()) {
-//                    updateEnragedPower();
-//                }
-//                else {
-//                    checkTimer.cancel(); // Stop checking when dead
-//                }
-//            }
-//        }, 0, 2000); // Check every 2 seconds
-//    }
-
-//    @Override
-//    public String getAbilityName() {
-//        return "Enraged";
-//    }
-//
-//    @Override
-//    public String getAbilityInfo() {
-//        return "Power increases with damage taken (up to +" + maxPowerIncrease + ").";
-//    }
-
     @Override
     public int abilityTimeInMilliseconds() {
         return -1; // Not a timed effect

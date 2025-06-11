@@ -53,8 +53,7 @@ public class SaveManager {
         java.util.Collections.reverse(reversed); // so index 0 = newest
         return reversed;
     }
-
-
+    
     private void loadSavedFiles() {
         File dir = new File("saves/");
         File[] files = dir.listFiles((d, name) -> name.endsWith(".ser"));

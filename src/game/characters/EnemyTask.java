@@ -19,7 +19,7 @@ public class EnemyTask implements Runnable {
     private final Enemy enemy;
     private final ScheduledExecutorService scheduler;
     private final AtomicBoolean running;
-    private static final Set<Enemy> scheduledEnemies = ConcurrentHashMap.newKeySet(); // Tracks number of scheduled enemies
+    private static final Set<Enemy> scheduledEnemies = ConcurrentHashMap.newKeySet();
 
     // Methods
     /**

@@ -67,8 +67,6 @@ public interface Combatant extends GameEntity {
      */
     boolean tryEvade();
 
-    // FROM HERE THOSE ARE MY OWN-ADDED METHODS
-
     /**
      * Initiates a fight action against the specified target.
      * This method should define how the combatant attacks   another combatant in battle.

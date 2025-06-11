@@ -34,16 +34,6 @@ public class ExplodingEnemyDecorator extends EnemyDecorator {
 
     }
 
-//    @Override
-//    public String getAbilityName() {
-//        return "Explosion";
-//    }
-//
-//    @Override
-//    public String getAbilityInfo() {
-//        return "When dying explodes and damage all adjacent positions by 2% of max HP";
-//    }
-
     @Override
     public boolean useAbility() {
         return false; // PassiveAbility when dying

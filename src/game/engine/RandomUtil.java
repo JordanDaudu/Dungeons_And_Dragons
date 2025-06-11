@@ -19,7 +19,6 @@ public class RandomUtil {
     private static final Random random = new Random();
 
     // Methods
-
     /**
      * Default Constructor
      */
@@ -60,7 +59,6 @@ public class RandomUtil {
      */
     public static String randomEnemy() {
         int roll = getRandomInt(3);
-        Enemy enemy;
         switch(roll) {
             case 0 -> {
                 return "Goblin";

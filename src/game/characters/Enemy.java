@@ -41,12 +41,11 @@ public abstract class Enemy extends AbstractCharacter implements Serializable {
      */
     @Override
     public String toString() {
-        // Getting super.toString() in a clean way to append
         String parentString = super.toString();
         String cleanedParentString = parentString.substring(parentString.indexOf("{") + 1, parentString.lastIndexOf("}"));
 
         return getClass().getSimpleName() + "{" +
-                cleanedParentString + // Remove the initial class name and '{' from the super.toString()
+                cleanedParentString +
                 ", loot=" + loot +
                 '}';
     }

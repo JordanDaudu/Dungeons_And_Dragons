@@ -236,67 +236,6 @@ public class GameWorld {
         }
     }
 
-    public void updateCharacterInWorldAndMap(PlayerCharacter newCharacter) {
-        UUID idToReplace = newCharacter.getId();
-
-        // 1. Find old character in players or enemies lists
-        PlayerCharacter oldPlayer = null;
-        Enemy oldEnemy = null;
-        Position characterPosition = null;
-        ReentrantLock mapLock = getMap().getMapLock();
-        mapLock.lock();
-        try {
-            // 2. Find old character's position in the map
-            for (PlayerCharacter p : players) {
-                if (p.getId().equals(idToReplace)) {
-                    oldPlayer = p;
-                    characterPosition = oldPlayer.getPosition();
-                    break;
-                }
-            }
-
-            if (oldPlayer == null) {
-                for (Enemy e : enemies) {
-                    if (e.getId().equals(idToReplace)) {
-                        oldEnemy = e;
-                        characterPosition = oldEnemy.getPosition();
-                        break;
-                    }
-                }
-            }
-
-            if(characterPosition == null) {
-                System.err.println("Character with ID " + idToReplace + " not found in GameWorld.");
-                GameLogger.getInstance().log("Character with ID " + idToReplace + " not found in GameWorld.");
-                return;
-            }
-
-            // 3. Remove old character from list and map
-            if (oldPlayer != null) {
-                players.remove(oldPlayer);
-                map.removeEntity(oldPlayer);
-            }
-            if (oldEnemy != null) {
-                enemies.remove(oldEnemy);
-                map.removeEntity(oldEnemy);
-            }
-
-            // 4. Add new character to list and map at the same position
-            if (newCharacter instanceof PlayerCharacter player) {
-                players.add(player);
-                currentPlayer = player;
-                map.addEntity(newCharacter);
-            }
-            else {
-                System.err.println("New character is neither PlayerCharacter nor Enemy.");
-                GameLogger.getInstance().log("New character is neither PlayerCharacter nor Enemy.");
-            }
-        }
-        finally {
-            mapLock.unlock();
-        }
-    }
-
     /**
      * Attaches the game controller (screen listener) to all enemies
      * and schedules their actions using the provided executor and atomic flag.
@@ -339,8 +278,6 @@ public class GameWorld {
         }
         return positions;
     }
-
-    public void setPlayers(List<PlayerCharacter> players) { this.players = players; }
 
     public void setEnemies(List<Enemy> enemies) { this.enemies = enemies; }
 

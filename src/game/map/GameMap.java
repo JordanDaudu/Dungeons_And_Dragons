@@ -80,6 +80,11 @@ public class GameMap implements Serializable {
         return instance;
     }
 
+    /**
+     * Returns grid of the GameMap.
+     *
+     * @return the game grid
+     */
     public ConcurrentMap<Position, List<GameEntity>> getGrid() {
         return grid;
     }
@@ -94,8 +99,6 @@ public class GameMap implements Serializable {
     public ReentrantLock getLockForPosition(Position pos) {
         return locks.computeIfAbsent(pos, k -> new ReentrantLock());
     }
-
-    public ReentrantLock getMapLock() {return mapLock;}
 
     /**
      * Adds a GameEntity to the map at its position.
@@ -124,7 +127,7 @@ public class GameMap implements Serializable {
             }
         }
         finally {
-            lock.unlock(); // Always unlock after operation
+            lock.unlock();
         }
     }
 

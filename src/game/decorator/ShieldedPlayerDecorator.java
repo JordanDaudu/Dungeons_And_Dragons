@@ -18,14 +18,9 @@ public class ShieldedPlayerDecorator extends PlayerDecorator{
     }
 
     @Override
-    public boolean isUsable() {
-        return false;
-    }
-
-    @Override
     protected ShieldedPlayerDecorator clone() throws CloneNotSupportedException {
         PlayerCharacter clonedBase = (PlayerCharacter) getDecoratedPlayer().callClone(); // Deep clone the base character
-        return new ShieldedPlayerDecorator(clonedBase); // Correct return type
+        return new ShieldedPlayerDecorator(clonedBase);
     }
 
     @Override

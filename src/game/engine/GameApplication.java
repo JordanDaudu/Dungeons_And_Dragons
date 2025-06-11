@@ -123,7 +123,7 @@ public class GameApplication implements ScreenListener {
             // Create character from data given
             if(data[0] instanceof String name && data[1] instanceof String selectedClass && data[2] instanceof PlayerCustomizationGUI customization && data[3] instanceof List<?> rawList) {
 
-                List<String> abilities = (List<String>) rawList; // Casting rawList to List<String>
+                List<String> abilities = (List<String>) rawList;
 
                 PlayerCharacter player = switch (selectedClass) {
                     case "Warrior" -> {

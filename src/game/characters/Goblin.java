@@ -241,6 +241,4 @@ public class Goblin extends Enemy implements PhysicalAttacker, MeleeFighter {
     protected Goblin clone() throws CloneNotSupportedException {
         return new Goblin(this);
     }
-
-
 }
