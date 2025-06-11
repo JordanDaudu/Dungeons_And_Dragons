@@ -2,6 +2,7 @@ package game.decorator;
 
 import game.characters.Enemy;
 import game.combat.Combatant;
+import game.engine.SoundManager;
 import game.logging.GameLogger;
 import game.map.GameMap;
 import game.map.Position;
@@ -26,6 +27,7 @@ public class ExplodingEnemyDecorator extends EnemyDecorator {
     public void receiveDamage(int amount, Combatant source) {
         super.receiveDamage(amount, source);
         if(getDecoratedEnemy().isDead()) {
+            SoundManager.playEffect("explosion");
             explode();
             GameLogger.getInstance().log(getBaseCharacter().getLogName() + " exploded after dying damaging surrounding.");
         }

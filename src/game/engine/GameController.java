@@ -290,7 +290,7 @@ public class GameController implements ScreenListener {
         System.out.println("calculateStartingEnemyThreadPoolSize: " + EnemyTask.calculateStartingEnemyThreadPoolSize(map.getRows() * map.getCols()));
 
         while (EnemyTask.getScheduledEnemyCount() < max) {
-            Enemy enemy = (Enemy) map.createEnemy(map.getLeastCommonEnemyType());
+            Enemy enemy = map.createEnemy(map.getLeastCommonEnemyType());
             enemy.setScreenListener(this);
 
             // Only schedule and proceed if scheduling succeeded

@@ -2,6 +2,7 @@ package game.decorator;
 
 import game.characters.Enemy;
 import game.combat.Combatant;
+import game.engine.SoundManager;
 import game.logging.GameLogger;
 import game.map.GameMap;
 
@@ -30,6 +31,7 @@ public class TeleportingEnemyDecorator extends EnemyDecorator {
     public void receiveDamage(int amount, Combatant source) {
         super.receiveDamage(amount, source);
         if(!isDead() && getHealth() < getMaxHealth() * 0.3) {
+            SoundManager.playEffect("teleport");
             teleporting();
             GameLogger.getInstance().log(getBaseCharacter().getLogName() + " teleported away");
         }

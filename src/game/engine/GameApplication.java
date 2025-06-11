@@ -164,14 +164,6 @@ public class GameApplication implements ScreenListener {
                 if (allStrings) {
                     @SuppressWarnings("unchecked")
                     List<String> abilityNames = (List<String>) rawList;
-//                    if (!abilityNames.isEmpty()) {
-//                        PlayerDecorator decorated1 = AbilityFactory.applyPlayerAbility(abilityNames.getFirst(), player);
-//                        player.setAbility1(decorated1);
-//                    }
-//                    if (abilityNames.size() > 1) {
-//                        CharacterDecorator decorated2 = AbilityFactory.applyPlayerAbility(abilityNames.get(1), player);
-//                        player.setAbility2(decorated2);
-//                    }
                 }
                 else {
                     System.err.println("No ability for " + player.getName());

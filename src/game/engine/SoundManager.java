@@ -54,6 +54,8 @@ public class SoundManager {
         loadEffect("inventorySound", "sounds/effects/inventoryDialogSFX.wav");
         loadEffect("openingSound", "sounds/effects/openingSFX.wav");
         loadEffect("closingSound", "sounds/effects/closingSFX.wav");
+        loadEffect("explosion", "sounds/effects/explosion.wav");
+        loadEffect("teleport", "sounds/effects/teleport.wav");
     }
 
     /**
