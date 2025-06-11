@@ -128,7 +128,7 @@ public class PowerPotion extends Potion {
     }
 
     @Override
-    public PowerPotion clone() {
+    protected Potion clone() throws CloneNotSupportedException {
         return new PowerPotion(this);
     }
 }

@@ -85,6 +85,8 @@ public class Warrior extends PlayerCharacter implements MeleeFighter, PhysicalAt
         return defence == warrior.defence;
     }
 
+    public int getDefence() {return defence;}
+
     /**
      * Gets the type description of the warrior.
      *
@@ -203,6 +205,26 @@ public class Warrior extends PlayerCharacter implements MeleeFighter, PhysicalAt
     @Override
     public void fight(Combatant target) {
         fightClose(target);
+    }
+
+    @Override
+    public boolean isPhysicalAttacker() {
+        return true;
+    }
+
+    @Override
+    public boolean isMagicAttacker() {
+        return false;
+    }
+
+    @Override
+    public boolean isMeleeFighter() {
+        return true;
+    }
+
+    @Override
+    public boolean isRangedFighter() {
+        return false;
     }
 
     /**

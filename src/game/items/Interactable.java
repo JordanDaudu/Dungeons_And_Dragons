@@ -22,6 +22,8 @@ public interface Interactable {
      */
     void setPosition(Position newPos);
 
+    Interactable callClone() throws CloneNotSupportedException;
+
     /**
      * Provides a textual description of the interaction, if any.
      * Useful for displaying contextual information to the player.

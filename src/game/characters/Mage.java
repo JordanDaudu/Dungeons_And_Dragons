@@ -242,6 +242,26 @@ public class Mage extends PlayerCharacter implements MagicAttacker, RangedFighte
     }
 
     @Override
+    public boolean isPhysicalAttacker() {
+        return false;
+    }
+
+    @Override
+    public boolean isMagicAttacker() {
+        return true;
+    }
+
+    @Override
+    public boolean isMeleeFighter() {
+        return false;
+    }
+
+    @Override
+    public boolean isRangedFighter() {
+        return true;
+    }
+
+    @Override
     protected Mage clone() throws CloneNotSupportedException{
         return new Mage(this);
     }

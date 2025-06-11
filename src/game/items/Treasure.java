@@ -15,7 +15,7 @@ import javax.swing.ImageIcon;
  * Represents a collectible treasure item in the game world.
  * A treasure can either grant treasure points or provide a random item (Potion or PowerPotion) upon interaction.
  */
-public class Treasure extends GameItem implements Interactable {
+public class Treasure extends GameItem implements Interactable, Cloneable {
 
     // Data Members
     private final int value;
@@ -157,7 +157,11 @@ public class Treasure extends GameItem implements Interactable {
     }
 
     @Override
-    public Treasure clone() {
+    protected Treasure clone() throws CloneNotSupportedException {
         return new Treasure(this);
+    }
+
+    public Interactable callClone() throws CloneNotSupportedException {
+        return clone();
     }
 }

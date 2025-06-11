@@ -29,6 +29,15 @@ public class Goblin extends Enemy implements PhysicalAttacker, MeleeFighter {
         this.agility = RandomUtil.getRandomInt(0, 81);
     }
 
+    public Goblin(int health, int power, int loot, int agility) {
+        super();
+        setMaxHealth(health);
+        setHealth(health);
+        setPower(power);
+        setLoot(loot);
+        this.agility = agility;
+    }
+
     public Goblin(Goblin other){
         super(other);
         this.agility = other.agility;
@@ -71,6 +80,8 @@ public class Goblin extends Enemy implements PhysicalAttacker, MeleeFighter {
         Goblin that = (Goblin) obj;
         return agility == that.agility;
     }
+
+    public int getAgility() {return agility;}
 
     /**
      * Returns the type(s) of combat roles the Goblin fulfills.
@@ -194,6 +205,26 @@ public class Goblin extends Enemy implements PhysicalAttacker, MeleeFighter {
     @Override
     public void fight(Combatant target) {
         fightClose(target);
+    }
+
+    @Override
+    public boolean isPhysicalAttacker() {
+        return true;
+    }
+
+    @Override
+    public boolean isMagicAttacker() {
+        return false;
+    }
+
+    @Override
+    public boolean isMeleeFighter() {
+        return true;
+    }
+
+    @Override
+    public boolean isRangedFighter() {
+        return false;
     }
 
     /**

@@ -27,7 +27,13 @@ public class Inventory implements Serializable {
 
     public Inventory(Inventory other) {
         items = new ArrayList<>();
-        items.addAll(other.items);
+        for (Interactable item : other.items) {
+            try {
+                items.add(item.callClone()); // ✅ Deep copy each item
+            } catch (CloneNotSupportedException e) {
+                throw new RuntimeException("Item cloning failed: " + e.getMessage(), e);
+            }
+        }
     }
 
     /**

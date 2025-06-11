@@ -1,16 +1,14 @@
 package game.engine;
 
 import game.characters.Enemy;
-import game.characters.EnemyFactory;
 import game.characters.EnemyTask;
-import game.characters.PlayerCharacter;
 import game.combat.CombatSystem;
-import game.combat.RangedFighter;
 import game.core.GameEntity;
 import game.core.ScreenAction;
 import game.core.ScreenListener;
-import game.decorator.CharacterDecorator;
-import game.decorator.RegenerationDecorator;
+import game.decorator.EnemyDecorator;
+import game.decorator.PlayerDecorator;
+import game.decorator.RegenerationPlayerDecorator;
 import game.global_events.GlobalEventManager;
 import game.global_events.MagicWaveEvent;
 import game.global_events.SandstormEvent;
@@ -77,7 +75,7 @@ public class GameController implements ScreenListener {
         // checks if the turn has ended, if it did switches to the next current player
         turnTimer = new Timer(200, e -> {
             if (endTurn.get()) {
-                PlayerCharacter currentPlayer = gameWorld.getCurrentPlayer();
+                game.characters.PlayerCharacter currentPlayer = gameWorld.getCurrentPlayer();
                 endTurn.set(false); // Reset for next turn
 
                 // Advance to next player
@@ -87,7 +85,7 @@ public class GameController implements ScreenListener {
 
                 for (int i = 0; i < size; i++) {
                     int nextIndex = (currentIndex + 1 + i) % size;
-                    PlayerCharacter nextPlayer = gameWorld.getPlayers().get(nextIndex);
+                    game.characters.PlayerCharacter nextPlayer = gameWorld.getPlayers().get(nextIndex);
                     if (!nextPlayer.isDead()) {
                         gameWorld.setCurrentPlayer(nextPlayer);
                         GameMap.getInstance().updatePlayerView(nextPlayer.getPosition());
@@ -200,7 +198,7 @@ public class GameController implements ScreenListener {
      *
      * @return the current PlayerCharacter
      */
-    public PlayerCharacter getCurrentPlayer() {
+    public game.characters.PlayerCharacter getCurrentPlayer() {
         return gameWorld.getCurrentPlayer();
     }
 
@@ -269,7 +267,7 @@ public class GameController implements ScreenListener {
         System.out.println("calculateStartingEnemyThreadPoolSize: " + EnemyTask.calculateStartingEnemyThreadPoolSize(map.getRows() * map.getCols()));
 
         while (EnemyTask.getScheduledEnemyCount() < max) {
-            Enemy enemy = EnemyFactory.createEnemy(map.getLeastCommonEnemyType());
+            Enemy enemy = (Enemy) map.createEnemy(map.getLeastCommonEnemyType());
             enemy.setScreenListener(this);
 
             // Only schedule and proceed if scheduling succeeded
@@ -316,10 +314,8 @@ public class GameController implements ScreenListener {
                     return false;
                 }
 
-                PlayerCharacter player = gameWorld.getCurrentPlayer();
-                int range = 1; // default
-                if (player instanceof RangedFighter)
-                    range = player.getRangeModifier();
+                game.characters.PlayerCharacter player = gameWorld.getCurrentPlayer();
+                int range = player.getRangeModifier(); // default
 
                 if(player.getPosition().distanceTo(enemy.getPosition()) <= range) {
                     // Combat resolution
@@ -339,7 +335,7 @@ public class GameController implements ScreenListener {
             }
             case ScreenAction.PICKUP -> {
                 Position pos;
-                PlayerCharacter player = gameWorld.getCurrentPlayer();
+                game.characters.PlayerCharacter player = gameWorld.getCurrentPlayer();
                 if(data[0] instanceof Position p)
                     pos = p;
                 else
@@ -368,7 +364,12 @@ public class GameController implements ScreenListener {
                 return false;
             }
             case ScreenAction.ENEMY_ACTION -> {
+                System.out.println("onAction received enemy: " + data[0].getClass().getSimpleName());
                 if(data[0] instanceof Enemy enemy) {
+                    if(enemy instanceof EnemyDecorator)
+                        System.out.println("I AM A DECORATOR");
+                    else
+                        System.out.println("I AM NOT A DECORATOR RIGHT NOW");
                     Position currentEnemyPosition = enemy.getPosition();
                     if(currentEnemyPosition.distanceTo(gameWorld.getCurrentPlayer().getPosition()) <= 1) {
                         if(canEnemiesAttack()) {
@@ -378,13 +379,10 @@ public class GameController implements ScreenListener {
                     }
                     else if(currentEnemyPosition.distanceTo(gameWorld.getCurrentPlayer().getPosition()) <= 2) {
                         // Added a 50% to fail and instead  move toward player
-                        if(enemy instanceof RangedFighter && RandomUtil.getRandomInt(2) == 0) {
-                            int range = enemy.getRangeModifier();
-                            if(enemy.getPosition().distanceTo(getCurrentPlayer().getPosition()) <= range) {
-                                if(canEnemiesAttack()) {
-                                    onAction(ScreenAction.ENEMY_ATTACK, enemy);
-                                    return true;
-                                }
+                        if(enemy.getRangeModifier() >= enemy.getPosition().distanceTo(getCurrentPlayer().getPosition()) && RandomUtil.getRandomInt(2) == 0) {
+                            if(canEnemiesAttack()) {
+                                onAction(ScreenAction.ENEMY_ATTACK, enemy);
+                                return true;
                             }
                         }
                         // Move toward player
@@ -437,12 +435,10 @@ public class GameController implements ScreenListener {
                     return false;
                 }
 
-                PlayerCharacter player = gameWorld.getCurrentPlayer();
+                game.characters.PlayerCharacter player = gameWorld.getCurrentPlayer();
                 if (player.isDead())
                     return false;
-                int range = 1; // default
-                if (sourceEnemy instanceof RangedFighter)
-                    range = ((RangedFighter) enemy).getRange();
+                int range = sourceEnemy.getRangeModifier(); // default
 
                 if (sourceEnemy.getPosition().distanceTo(player.getPosition()) <= range) {
                     // Combat resolution
@@ -470,7 +466,7 @@ public class GameController implements ScreenListener {
                     cell.removeIf(Objects::nonNull);
                 }
 
-                for(PlayerCharacter player : gameWorld.getPlayers()) {
+                for(game.characters.PlayerCharacter player : gameWorld.getPlayers()) {
                     map.addEntity(player);
                 }
                 for(Enemy enemy : gameWorld.getEnemies()) {
@@ -507,7 +503,7 @@ public class GameController implements ScreenListener {
                     gameMapGUI.sandstormAnimation();
                     map.updatePlayerView(gameWorld.getCurrentPlayer().getPosition());
                 }
-                for(PlayerCharacter player : gameWorld.getPlayers()) {
+                for(game.characters.PlayerCharacter player : gameWorld.getPlayers()) {
                     if(player.isDead()) {
                         player.defeat();
                     }
@@ -531,7 +527,7 @@ public class GameController implements ScreenListener {
             case ScreenAction.EXIT_GAME -> {
                 boolean gameIsOver = true;
                 boolean gameIsWon = false;
-                for(PlayerCharacter player : gameWorld.getPlayers()) {
+                for(game.characters.PlayerCharacter player : gameWorld.getPlayers()) {
                     if(!player.isDead()) {
                         gameIsOver = false;
                         break;
@@ -543,7 +539,7 @@ public class GameController implements ScreenListener {
 
                 if(gameIsOver) {
                     GameLogger.getInstance().log("Game Over!");
-                    for(PlayerCharacter p : gameWorld.getPlayers())
+                    for(game.characters.PlayerCharacter p : gameWorld.getPlayers())
                         GameLogger.getInstance().log(p.getName() + " - Treasure Points: " + p.getTreasurePoints());
                     shutDownThreads();
                     GameOverGUI gameOver = new GameOverGUI(gameMapGUI, gameWorld.getPlayers());
@@ -554,7 +550,7 @@ public class GameController implements ScreenListener {
                 }
                 else if(gameIsWon) {
                     GameLogger.getInstance().log("Game Won!");
-                    for(PlayerCharacter p : gameWorld.getPlayers())
+                    for(game.characters.PlayerCharacter p : gameWorld.getPlayers())
                         GameLogger.getInstance().log(p.getName() + " - Treasure Points: " + p.getTreasurePoints());
                     shutDownThreads();
                     CongratulationsGUI congratulationsGUI = new CongratulationsGUI(gameMapGUI, gameWorld.getPlayers());
@@ -565,9 +561,9 @@ public class GameController implements ScreenListener {
                 }
             }
             case ScreenAction.REFRESH_GUI -> {
-                if(data[0] instanceof CharacterDecorator decorator) {
+                if(data[0] instanceof PlayerDecorator decorator) {
                     java.util.Timer timer = new java.util.Timer();
-                    if(decorator instanceof RegenerationDecorator regenerationDecorator) {
+                    if(decorator instanceof RegenerationPlayerDecorator regenerationDecorator) {
                         final int maxTicks = regenerationDecorator.getTotalDuration() / regenerationDecorator.getInterval();
                         final int[] ticks = {0};
 

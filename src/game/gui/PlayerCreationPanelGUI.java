@@ -1,6 +1,5 @@
 package game.gui;
 
-import game.characters.PlayerCharacter;
 import game.core.ScreenAction;
 import game.core.ScreenListener;
 import game.decorator.*;
@@ -13,7 +12,6 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.util.*;
 import java.util.List;
-import java.util.function.Function;
 
 /**
  * A panel for creating a new player character, allowing the user to:
@@ -35,7 +33,7 @@ public class PlayerCreationPanelGUI extends JPanel {
     private JPanel classPanel;
     private JPanel abilityPanel;
     // Map class name to available ability decorators (not instantiated)
-    private Map<String, List<Class<? extends CharacterDecorator>>> classAbilities;
+    private Map<String, List<Class<? extends PlayerDecorator>>> classAbilities;
     private List<JCheckBox> abilityCheckBoxes;
     private JButton startButton;
     private String playerName;
@@ -124,9 +122,9 @@ public class PlayerCreationPanelGUI extends JPanel {
         // Abilities specific to each class
         abilityCheckBoxes = new ArrayList<>();
         classAbilities = Map.of(
-                "Warrior", List.of(BoostedAttackDecorator.class, RegenerationDecorator.class),
-                "Mage", List.of(BoostedAttackDecorator.class, RegenerationDecorator.class, MagicAmplifierDecorator.class),
-                "Archer", List.of(BoostedAttackDecorator.class, RegenerationDecorator.class)
+                "Warrior", List.of(BoostedAttackPlayerDecorator.class, RegenerationPlayerDecorator.class, ShieldedPlayerDecorator.class),
+                "Mage", List.of(BoostedAttackPlayerDecorator.class, RegenerationPlayerDecorator.class, ShieldedPlayerDecorator.class),
+                "Archer", List.of(BoostedAttackPlayerDecorator.class, RegenerationPlayerDecorator.class, ShieldedPlayerDecorator.class)
         );
         abilityPanel = new JPanel();
         abilityPanel.setLayout(new BoxLayout(abilityPanel, BoxLayout.Y_AXIS));
@@ -274,9 +272,9 @@ public class PlayerCreationPanelGUI extends JPanel {
         abilityPanel.removeAll();
         abilityCheckBoxes.clear();
 
-        List<Class<? extends CharacterDecorator>> abilities = classAbilities.getOrDefault(selectedClass, List.of());
+        List<Class<? extends PlayerDecorator>> abilities = classAbilities.getOrDefault(selectedClass, List.of());
 
-        for (Class<? extends CharacterDecorator> abilityClass : abilities) {
+        for (Class<? extends PlayerDecorator> abilityClass : abilities) {
             String abilityName = abilityClass.getSimpleName(); // You can replace with custom label if needed
             JCheckBox box = new JCheckBox(abilityName);
             box.putClientProperty("abilityClass", abilityClass);

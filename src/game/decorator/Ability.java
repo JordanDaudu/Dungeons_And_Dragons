@@ -3,7 +3,8 @@ package game.decorator;
 public interface Ability {
 
     boolean useAbility();
-    String getAbilityName();
-    String getAbilityInfo();
+    boolean isUsable();
+//    String getAbilityName();
+//    String getAbilityInfo();
     int abilityTimeInMilliseconds();
 }

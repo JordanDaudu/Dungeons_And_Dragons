@@ -13,7 +13,7 @@ import javax.swing.ImageIcon;
  * Represents a health potion that can be picked up and used by a {@link PlayerCharacter}.
  * When interacted with, it heals the character by a random amount between 10 and 50 HP.
  */
-public class Potion extends GameItem implements Interactable {
+public class Potion extends GameItem implements Interactable, Cloneable {
 
     // Data Members
     private final int increaseAmount;
@@ -166,7 +166,11 @@ public class Potion extends GameItem implements Interactable {
     }
 
     @Override
-    protected Potion clone() {
+    protected Potion clone() throws CloneNotSupportedException {
         return new Potion(this);
+    }
+
+    public Interactable callClone() throws CloneNotSupportedException {
+        return clone();
     }
 }

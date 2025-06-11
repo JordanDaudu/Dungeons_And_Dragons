@@ -16,8 +16,8 @@ import java.io.Serializable;
 public abstract class Enemy extends AbstractCharacter implements Serializable {
 
     // Data Members
-    private final int loot;
-    private ScreenListener screenListener = null;
+    private int loot;
+    private transient ScreenListener screenListener = null;
 
     // Methods
     /**
@@ -32,6 +32,7 @@ public abstract class Enemy extends AbstractCharacter implements Serializable {
     public Enemy(Enemy other){
         super(other);
         loot = other.loot;
+        this.screenListener = other.screenListener;
     }
     /**
      * Returns a string representation of the Enemy, including health and loot.
@@ -82,10 +83,14 @@ public abstract class Enemy extends AbstractCharacter implements Serializable {
         return 50;
     }
 
+    public void setLoot(int loot) {this.loot = loot;}
+
     public boolean setScreenListener(ScreenListener screenListener) {
         this.screenListener = screenListener;
         return true;
     }
+
+    public ScreenListener getScreenListener() {return screenListener;}
 
     /**
      * Returns the symbol used to display this enemy on the game map.
@@ -146,8 +151,13 @@ public abstract class Enemy extends AbstractCharacter implements Serializable {
     }
 
     public void threadAction() {
+        System.out.println("Calling threadAction() from: " + this.getClass().getSimpleName());
         if(screenListener != null) {
             screenListener.onAction(ScreenAction.ENEMY_ACTION, this);
         }
+    }
+
+    public Enemy getBaseCharacter() {
+        return this;
     }
 }

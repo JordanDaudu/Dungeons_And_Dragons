@@ -1,8 +1,12 @@
 package game.characters;
 
 import game.combat.MagicElement;
+import game.decorator.AbilityFactory;
+import game.decorator.PlayerDecorator;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -37,6 +41,7 @@ public class PlayerFactory {
         private String name;
         private int health;
         private int power;
+        private final List<String> abilities = new ArrayList<>();
 
         public PlayerBuilder<T> setName(String name) {
             this.name = name;
@@ -53,7 +58,22 @@ public class PlayerFactory {
             return this;
         }
 
-        public abstract T build();
+        public PlayerBuilder<T> addAbility(String ability) {
+            abilities.add(ability);
+            return this;
+        }
+
+        protected PlayerCharacter applyAbilities(PlayerCharacter player) {
+            for (String ability : abilities) {
+                player = AbilityFactory.applyPlayerAbility(ability, player); // Apply decorator
+                if (player instanceof PlayerDecorator) {
+                    ((PlayerDecorator) player).useAbility(); // Call useAbility() right after adding decoration
+                }
+            }
+            return player; // Return decorated player
+        }
+
+        public abstract PlayerCharacter build();
     }
 
     // Warrior Builder
@@ -63,8 +83,9 @@ public class PlayerFactory {
         public WarriorBuilder setDefence(int defence) { this.defence = defence; return this; }
 
         @Override
-        public Warrior build() {
-            return new Warrior(super.name, super.health, super.power, defence);
+        public PlayerCharacter build() {
+            PlayerCharacter warrior = new Warrior(super.name, super.health, super.power, defence);
+            return applyAbilities(warrior); // No explicit casting
         }
     }
 
@@ -75,8 +96,9 @@ public class PlayerFactory {
         public ArcherBuilder setAccuracy(double accuracy) { this.accuracy = accuracy; return this; }
 
         @Override
-        public Archer build() {
-            return new Archer(super.name, super.health, super.power, accuracy);
+        public PlayerCharacter build() {
+            PlayerCharacter archer = new Archer(super.name, super.health, super.power, accuracy);
+            return applyAbilities(archer);
         }
     }
 
@@ -87,105 +109,9 @@ public class PlayerFactory {
         public MageBuilder setMagicElement(MagicElement magicElement) { this.magicElement = magicElement; return this; }
 
         @Override
-        public Mage build() {
-            return new Mage(super.name, super.health, super.power, magicElement);
+        public PlayerCharacter build() {
+            PlayerCharacter mage = new Mage(super.name, super.health, super.power, magicElement);
+            return applyAbilities(mage);
         }
     }
-
-
-
-//    // Abstract base builder with common fields
-//    public static abstract class PlayerBuilder<T extends PlayerBuilder<T>> {
-//        private String name;
-//        private int power;
-//
-//        public T name(String name) {
-//            this.name = name;
-//            return self();
-//        }
-//
-//        public T power(int power) {
-//            this.power = power;
-//            return self();
-//        }
-//
-//        protected abstract T self();
-//
-//        public abstract PlayerCharacter build();
-//    }
-//
-//    public static class WarriorBuilder extends PlayerBuilder<WarriorBuilder> {
-//        private int health;
-//        private int defense;
-//
-//        public WarriorBuilder health(int health) {
-//            this.health = health;
-//            return this;
-//        }
-//
-//        public WarriorBuilder defense(int defense) {
-//            this.defense = defense;
-//            return this;
-//        }
-//
-//        @Override
-//        protected WarriorBuilder self() {
-//            return this;
-//        }
-//
-//        @Override
-//        public Warrior build() {
-//            return new Warrior(super.name, health, super.power, defense);
-//        }
-//    }
-//
-//    public static class ArcherBuilder extends PlayerBuilder<ArcherBuilder> {
-//        private int health;
-//        private double accuracy;
-//
-//        public ArcherBuilder health(int health) {
-//            this.health = health;
-//            return this;
-//        }
-//
-//        public ArcherBuilder accuracy(double accuracy) {
-//            this.accuracy = accuracy;
-//            return this;
-//        }
-//
-//        @Override
-//        protected ArcherBuilder self() {
-//            return this;
-//        }
-//
-//        @Override
-//        public Archer build() {
-//            return new Archer(super.name, health, super.power, accuracy);
-//        }
-//    }
-//
-//    public static class MageBuilder extends PlayerBuilder<MageBuilder> {
-//        private int health;
-//        private MagicElement magicElement = null;
-//
-//        public MageBuilder health(int health) {
-//            this.health = health;
-//            return this;
-//        }
-//
-//        public MageBuilder magicElement(MagicElement magicElement) {
-//            this.magicElement = magicElement;
-//            return this;
-//        }
-//
-//        @Override
-//        protected MageBuilder self() {
-//            return this;
-//        }
-//
-//        @Override
-//        public Mage build() {
-//            return new Mage(super.name, health, super.power, magicElement);
-//        }
-//    }
 }

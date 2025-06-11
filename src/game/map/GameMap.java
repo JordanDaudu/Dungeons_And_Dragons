@@ -1,6 +1,7 @@
 package game.map;
 
 import game.characters.*;
+import game.combat.MagicElement;
 import game.core.GameEntity;
 import game.engine.RandomUtil;
 import game.items.*;
@@ -93,6 +94,8 @@ public class GameMap implements Serializable {
     public ReentrantLock getLockForPosition(Position pos) {
         return locks.computeIfAbsent(pos, k -> new ReentrantLock());
     }
+
+    public ReentrantLock getMapLock() {return mapLock;}
 
     /**
      * Adds a GameEntity to the map at its position.
@@ -352,7 +355,8 @@ public class GameMap implements Serializable {
                 }
                 else if (roll < 0.40) {
                     // Next 30% → Random enemy
-                    Enemy enemy = EnemyFactory.createEnemy(RandomUtil.randomEnemy());
+                    String enemyName = RandomUtil.randomEnemy();
+                    Enemy enemy = createEnemy(enemyName);
                     enemy.setPosition(pos);
                     addEntity(enemy);
                     //System.out.println("Placing Enemy at: " + pos);
@@ -390,7 +394,7 @@ public class GameMap implements Serializable {
             for (int row = 0; row < rows; row++) {
                 for (int col = 0; col < cols; col++) {
                     Position pos = new Position(row, col);
-                    if (playerPos.distanceTo(pos) <= 2) {
+                    if (playerPos.distanceTo(pos) <= 200) {
                         List<GameEntity> list = grid.get(pos);
                         if (list != null) {
                             synchronized (list) {
@@ -563,6 +567,31 @@ public class GameMap implements Serializable {
                 .orElse(null);
     }
 
+    public Enemy createEnemy(String enemyName) {
+        System.out.println("Trying to create an enemy");
+        return switch (enemyName) {
+            case "Goblin" -> ((EnemyFactory.GoblinBuilder) EnemyFactory.getBuilder("Goblin"))
+                    .setAgility(RandomUtil.getRandomInt(0, 81))
+                    .setHealth(50)
+                    .setPower(RandomUtil.getRandomInt(4, 15))
+                    .setLoot(RandomUtil.getRandomInt(100, 301))
+                    .build();
+            case "Orc" -> ((EnemyFactory.OrcBuilder) EnemyFactory.getBuilder("Orc"))
+                    .setResistance(getRandomResistanceForOrcCreation())
+                    .setHealth(50)
+                    .setPower(RandomUtil.getRandomInt(4, 15))
+                    .setLoot(RandomUtil.getRandomInt(100, 301))
+                    .build();
+            case "Dragon" -> ((EnemyFactory.DragonBuilder) EnemyFactory.getBuilder("Dragon"))
+                    .setMagicElement(MagicElement.values()[RandomUtil.getRandomInt(4)])
+                    .setHealth(50)
+                    .setPower(RandomUtil.getRandomInt(4, 15))
+                    .setLoot(RandomUtil.getRandomInt(100, 301))
+                    .build();
+            default -> throw new IllegalArgumentException("Unknown class: " + enemyName);
+        };
+    }
+
     /**
      * Attempts to place the given enemy on a random unoccupied tile on the map.
      *
@@ -714,4 +743,12 @@ public class GameMap implements Serializable {
         }
     }
 
+    private double getRandomResistanceForOrcCreation() {
+        double resistance;
+        do {
+            resistance = RandomUtil.getRandomDouble();
+        }
+        while(resistance > 0.50);
+        return resistance;
+    }
 }

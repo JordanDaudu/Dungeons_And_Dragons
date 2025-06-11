@@ -3,14 +3,12 @@ package game.characters;
 import game.combat.Combatant;
 import game.core.Inventory;
 import game.core.PlayerMovement;
-import game.decorator.CharacterDecorator;
 import game.items.Interactable;
 import game.items.Potion;
 import game.items.PowerPotion;
 import game.logging.GameLogger;
 import game.map.Position;
 
-import java.util.UUID;
 import java.io.Serializable;
 
 /**
@@ -24,9 +22,8 @@ public abstract class PlayerCharacter extends AbstractCharacter implements Playe
     private final String name;
     private final Inventory inventory;
     private int treasurePoints;
-    private final UUID id;
-    private CharacterDecorator ability1 = null;
-    private CharacterDecorator ability2 = null;
+//    private CharacterDecorator ability1 = null;
+//    private CharacterDecorator ability2 = null;
 
 
     // Methods
@@ -41,7 +38,6 @@ public abstract class PlayerCharacter extends AbstractCharacter implements Playe
         this.name = name.substring(0, 1).toUpperCase() + name.substring(1); // making sure starts with an uppercase
         inventory = new Inventory();
         treasurePoints = 0;
-        this.id = UUID.randomUUID(); // Unique per player
     }
 
     public PlayerCharacter(PlayerCharacter other) {
@@ -49,9 +45,8 @@ public abstract class PlayerCharacter extends AbstractCharacter implements Playe
         this.name = other.name;
         inventory = new Inventory(other.inventory);
         treasurePoints = other.treasurePoints;
-        this.id = other.id;
-        this.ability1 = other.ability1;
-        this.ability2 = other.ability2;
+//        this.ability1 = other.ability1;
+//        this.ability2 = other.ability2;
     }
 
     /**
@@ -71,7 +66,6 @@ public abstract class PlayerCharacter extends AbstractCharacter implements Playe
                 ", name = \"" + name + "\"" +
                 ", treasurePoints = " + treasurePoints +
                 ", inventory = " + inventory +
-                ", ID = " + id +
                 '}';
     }
 
@@ -95,7 +89,7 @@ public abstract class PlayerCharacter extends AbstractCharacter implements Playe
         PlayerCharacter that = (PlayerCharacter) obj;
         return treasurePoints == that.treasurePoints &&
                 name.equals(that.name) &&
-                inventory.equals(that.inventory) && id.equals(that.id);
+                inventory.equals(that.inventory);
     }
 
     /**
@@ -114,21 +108,17 @@ public abstract class PlayerCharacter extends AbstractCharacter implements Playe
      */
     public Inventory getInventory() {return inventory;}
 
-    public UUID getId() {
-        return id;
-    }
-
-    public void setAbility1(CharacterDecorator ability1) {
-        this.ability1 = ability1;
-    }
-
-    public void setAbility2(CharacterDecorator ability2) {
-        this.ability2 = ability2;
-    }
-
-    public CharacterDecorator getAbility1() {return ability1;}
-
-    public CharacterDecorator getAbility2() {return ability2;}
+//    public void setAbility1(CharacterDecorator ability1) {
+//        this.ability1 = ability1;
+//    }
+//
+//    public void setAbility2(CharacterDecorator ability2) {
+//        this.ability2 = ability2;
+//    }
+//
+//    public CharacterDecorator getAbility1() {return ability1;}
+//
+//    public CharacterDecorator getAbility2() {return ability2;}
 
     /**
      * Adds a game item to the player's inventory.
@@ -285,5 +275,19 @@ public abstract class PlayerCharacter extends AbstractCharacter implements Playe
     @Override
     public String getLogName() {
         return "Player: " + getName();
+    }
+
+    public PlayerCharacter getBaseCharacter() {
+        return this;
+    }
+
+    @Override
+    protected PlayerCharacter clone() throws CloneNotSupportedException {
+        try {
+            return this.getClass().getDeclaredConstructor(this.getClass()).newInstance(this); // Clone correct subclass
+        }
+        catch (Exception e) {
+            throw new CloneNotSupportedException("Failed to clone: " + e.getMessage());
+        }
     }
 }

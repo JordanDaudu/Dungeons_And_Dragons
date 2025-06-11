@@ -33,6 +33,15 @@ public class Orc extends Enemy implements MeleeFighter, PhysicalAttacker {
         while(this.resistance > 0.50);
     }
 
+    public Orc(int health, int power, int loot, double resistance) {
+        super();
+        setMaxHealth(health);
+        setHealth(health);
+        setPower(power);
+        setLoot(loot);
+        this.resistance = resistance;
+    }
+
     public Orc(Orc other){
         super(other);
         this.resistance = other.resistance;
@@ -74,6 +83,8 @@ public class Orc extends Enemy implements MeleeFighter, PhysicalAttacker {
         Orc that = (Orc) obj;
         return Double.compare(that.resistance, resistance) == 0;
     }
+
+    public double getResistance() {return resistance;}
 
     /**
      * Returns the type(s) of combat roles the Orc fulfills.
@@ -189,6 +200,26 @@ public class Orc extends Enemy implements MeleeFighter, PhysicalAttacker {
         fightClose(target);
     }
 
+    @Override
+    public boolean isPhysicalAttacker() {
+        return true;
+    }
+
+    @Override
+    public boolean isMagicAttacker() {
+        return false;
+    }
+
+    @Override
+    public boolean isMeleeFighter() {
+        return true;
+    }
+
+    @Override
+    public boolean isRangedFighter() {
+        return false;
+    }
+
     /**
      * Provides a textual description of the Orc for the GUI.
      *
@@ -203,5 +234,4 @@ public class Orc extends Enemy implements MeleeFighter, PhysicalAttacker {
     protected Orc clone() throws CloneNotSupportedException {
         return new Orc(this);
     }
-
 }

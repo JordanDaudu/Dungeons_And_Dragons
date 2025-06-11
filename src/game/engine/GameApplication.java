@@ -5,8 +5,6 @@ import game.characters.PlayerCharacter;
 import game.characters.PlayerFactory;
 import game.core.ScreenAction;
 import game.core.ScreenListener;
-import game.decorator.AbilityFactory;
-import game.decorator.CharacterDecorator;
 import game.gui.PlayerCreationPanelGUI;
 import game.gui.PlayerCustomizationGUI;
 import game.gui.StartingScreenGUI;
@@ -125,25 +123,39 @@ public class GameApplication implements ScreenListener {
             // Create character from data given
             if(data[0] instanceof String name && data[1] instanceof String selectedClass && data[2] instanceof PlayerCustomizationGUI customization && data[3] instanceof List<?> rawList) {
 
+                List<String> abilities = (List<String>) rawList; // Casting rawList to List<String>
+
                 PlayerCharacter player = switch (selectedClass) {
-                    case "Warrior" -> ((PlayerFactory.WarriorBuilder) PlayerFactory.getBuilder("Warrior"))
-                            .setDefence(customization.getDefenseMod())
-                            .setName(name)
-                            .setPower(customization.getPowerMod())
-                            .setHealth(customization.getHealthMod())
-                            .build();
-                    case "Archer" -> ((PlayerFactory.ArcherBuilder) PlayerFactory.getBuilder("Archer"))
-                            .setAccuracy(customization.getAccuracyMod())
-                            .setName(name)
-                            .setPower(customization.getPowerMod())
-                            .setHealth(customization.getHealthMod())
-                            .build();
-                    case "Mage" -> ((PlayerFactory.MageBuilder) PlayerFactory.getBuilder("Mage"))
-                            .setMagicElement(customization.getSelectedElement())
-                            .setName(name)
-                            .setPower(customization.getPowerMod())
-                            .setHealth(customization.getHealthMod())
-                            .build();
+                    case "Warrior" -> {
+                        PlayerFactory.WarriorBuilder builder = PlayerFactory.getBuilder("Warrior"); // Explicit cast
+                        builder.setDefence(customization.getDefenseMod())
+                                .setName(name)
+                                .setPower(customization.getPowerMod())
+                                .setHealth(customization.getHealthMod());
+
+                        abilities.forEach(builder::addAbility); // Apply abilities
+                        yield builder.build();
+                    }
+                    case "Archer" -> {
+                        PlayerFactory.ArcherBuilder builder = PlayerFactory.getBuilder("Archer");
+                        builder.setAccuracy(customization.getAccuracyMod())
+                                .setName(name)
+                                .setPower(customization.getPowerMod())
+                                .setHealth(customization.getHealthMod());
+
+                        abilities.forEach(builder::addAbility);
+                        yield builder.build();
+                    }
+                    case "Mage" -> {
+                        PlayerFactory.MageBuilder builder = PlayerFactory.getBuilder("Mage");
+                        builder.setMagicElement(customization.getSelectedElement())
+                                .setName(name)
+                                .setPower(customization.getPowerMod())
+                                .setHealth(customization.getHealthMod());
+
+                        abilities.forEach(builder::addAbility);
+                        yield builder.build();
+                    }
                     default -> throw new IllegalArgumentException("Unknown class: " + selectedClass);
                 };
 
@@ -152,14 +164,14 @@ public class GameApplication implements ScreenListener {
                 if (allStrings) {
                     @SuppressWarnings("unchecked")
                     List<String> abilityNames = (List<String>) rawList;
-                    if (!abilityNames.isEmpty()) {
-                        CharacterDecorator decorated1 = AbilityFactory.create(abilityNames.getFirst(), player);
-                        player.setAbility1(decorated1);
-                    }
-                    if (abilityNames.size() > 1) {
-                        CharacterDecorator decorated2 = AbilityFactory.create(abilityNames.get(1), player);
-                        player.setAbility2(decorated2);
-                    }
+//                    if (!abilityNames.isEmpty()) {
+//                        PlayerDecorator decorated1 = AbilityFactory.applyPlayerAbility(abilityNames.getFirst(), player);
+//                        player.setAbility1(decorated1);
+//                    }
+//                    if (abilityNames.size() > 1) {
+//                        CharacterDecorator decorated2 = AbilityFactory.applyPlayerAbility(abilityNames.get(1), player);
+//                        player.setAbility2(decorated2);
+//                    }
                 }
                 else {
                     System.err.println("No ability for " + player.getName());

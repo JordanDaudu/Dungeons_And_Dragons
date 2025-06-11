@@ -1,7 +1,12 @@
 package game.characters;
 
+import game.combat.MagicElement;
+import game.decorator.AbilityFactory;
+import game.decorator.EnemyDecorator;
+
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
@@ -9,26 +14,100 @@ import java.util.function.Supplier;
  */
 public class EnemyFactory {
 
-    private static final Map<String, Supplier<Enemy>> ENEMY_CREATORS = new HashMap<>();
+    // Map of player type names to builder suppliers
+    private static final Map<String, Supplier<? extends EnemyFactory.EnemyBuilder<?>>> builders = new HashMap<>();
 
     static {
-        ENEMY_CREATORS.put("Dragon", Dragon::new);
-        ENEMY_CREATORS.put("Goblin", Goblin::new);
-        ENEMY_CREATORS.put("Orc", Orc::new);
+        builders.put("Dragon", DragonBuilder::new);
+        builders.put("Goblin", GoblinBuilder::new);
+        builders.put("Orc", OrcBuilder::new);
     }
 
-    /**
-     * Creates an Enemy instance based on the given type name.
-     *
-     * @param type the name of the enemy type (e.g., "Dragon", "Goblin", "Orc")
-     * @return a new Enemy instance, or null if the type is unknown
-     */
-    public static Enemy createEnemy(String type) {
-        Supplier<Enemy> creator = ENEMY_CREATORS.get(type);
-        if (creator != null) {
-            return creator.get();
+    @SuppressWarnings("unchecked")
+    public static <T extends EnemyFactory.EnemyBuilder<?>> T getBuilder(String type) {
+        Supplier<? extends EnemyFactory.EnemyBuilder<?>> supplier = builders.get(type);
+        if (supplier == null) {
+            throw new IllegalArgumentException("Unknown player type: " + type);
         }
-        throw new IllegalArgumentException("Unknown enemy type: " + type);
+        return (T) supplier.get(); // **Safe casting ensures correct return type**
+    }
+
+    // Abstract Base Builder Class
+    public static abstract class EnemyBuilder<T extends Enemy> {
+        private int health;
+        private int power;
+        private int loot;
+
+        public EnemyFactory.EnemyBuilder<T> setLoot(int loot) {
+            this.loot = loot;
+            return this;
+        }
+
+        public EnemyFactory.EnemyBuilder<T> setHealth(int health) {
+            this.health = health;
+            return this;
+        }
+
+        public EnemyFactory.EnemyBuilder<T> setPower(int power) {
+            this.power = power;
+            return this;
+        }
+
+        public abstract T buildBase(); // Separate base enemy creation
+
+        public Enemy build() {
+            T baseEnemy = buildBase();
+
+            Function<Enemy, EnemyDecorator> decoratorConstructor =
+                    AbilityFactory.getRandomEnemyAbilityConstructor();
+
+            // return (decoratorConstructor != null) ? decoratorConstructor.apply(baseEnemy) : baseEnemy;
+            if (decoratorConstructor != null) {
+                EnemyDecorator decoratedEnemy = decoratorConstructor.apply(baseEnemy);
+                System.out.println("Applying decorator: " + decoratedEnemy.getClass().getSimpleName() + " on " + baseEnemy.getClass().getSimpleName());
+                return decoratedEnemy;
+            }
+            else {
+                System.out.println("No decorator applied, returning base enemy: " + baseEnemy.getClass().getSimpleName());
+                return baseEnemy;
+            }
+        }
+    }
+
+    // Goblin Builder
+    public static class GoblinBuilder extends EnemyFactory.EnemyBuilder<Goblin> {
+        private int agility;
+
+        public EnemyFactory.GoblinBuilder setAgility(int agility) { this.agility = agility; return this; }
+
+        @Override
+        public Goblin buildBase() {
+            return new Goblin(super.health, super.power, super.loot, agility);
+        }
+    }
+
+    // Orc Builder
+    public static class OrcBuilder extends EnemyFactory.EnemyBuilder<Orc> {
+        private double resistance;
+
+        public EnemyFactory.OrcBuilder setResistance(double resistance) { this.resistance = resistance; return this; }
+
+        @Override
+        public Orc buildBase() {
+            return new Orc(super.health, super.power, super.loot, resistance);
+        }
+    }
+
+    // Dragon Builder
+    public static class DragonBuilder extends EnemyFactory.EnemyBuilder<Dragon> {
+        private MagicElement magicElement;
+
+        public EnemyFactory.DragonBuilder setMagicElement(MagicElement magicElement) { this.magicElement = magicElement; return this; }
+
+        @Override
+        public Dragon buildBase() {
+            return new Dragon(super.health, super.power, super.loot, magicElement);
+        }
     }
 }
 

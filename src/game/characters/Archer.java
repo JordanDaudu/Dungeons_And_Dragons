@@ -96,6 +96,8 @@ public class Archer extends PlayerCharacter implements PhysicalAttacker, RangedF
         return Double.compare(archer.accuracy, accuracy) == 0 && range == archer.range;
     }
 
+    public double getAccuracy() {return accuracy;}
+
     /**
      * Returns the combat type(s) of the character.
      *
@@ -240,6 +242,26 @@ public class Archer extends PlayerCharacter implements PhysicalAttacker, RangedF
     @Override
     public void fight(Combatant target) {
         fightRanged(target);
+    }
+
+    @Override
+    public boolean isPhysicalAttacker() {
+        return true;
+    }
+
+    @Override
+    public boolean isMagicAttacker() {
+        return false;
+    }
+
+    @Override
+    public boolean isMeleeFighter() {
+        return false;
+    }
+
+    @Override
+    public boolean isRangedFighter() {
+        return true;
     }
 
     @Override

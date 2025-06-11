@@ -29,6 +29,16 @@ public class Dragon extends Enemy implements MagicAttacker, RangedFighter, Melee
         range = 2;
     }
 
+    public Dragon(int health, int power, int loot, MagicElement element) {
+        super();
+        setMaxHealth(health);
+        setHealth(health);
+        setPower(power);
+        setLoot(loot);
+        this.element = element;
+        range = 2;
+    }
+
     public Dragon (Dragon other){
         super(other);
         this.range = other.range;
@@ -270,6 +280,26 @@ public class Dragon extends Enemy implements MagicAttacker, RangedFighter, Melee
     @Override
     public void fight(Combatant target) {
         attack(target);
+    }
+
+    @Override
+    public boolean isPhysicalAttacker() {
+        return true;
+    }
+
+    @Override
+    public boolean isMagicAttacker() {
+        return true;
+    }
+
+    @Override
+    public boolean isMeleeFighter() {
+        return true;
+    }
+
+    @Override
+    public boolean isRangedFighter() {
+        return true;
     }
 
     /**

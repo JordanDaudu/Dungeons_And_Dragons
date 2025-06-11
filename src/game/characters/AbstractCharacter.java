@@ -2,15 +2,18 @@ package game.characters;
 
 import game.combat.Combatant;
 import game.core.GameEntity;
+import game.decorator.Ability;
 import game.map.Position;
 import game.engine.RandomUtil;
+
+import java.util.UUID;
 
 /**
  * Represents a base class for all characters in the game (both players and enemies).
  * Implements common functionality shared by all character types.
  */
 
-public abstract class AbstractCharacter implements Combatant, GameEntity, Cloneable {
+public abstract class AbstractCharacter implements Combatant, GameEntity, Cloneable, Ability {
 
     // Data Members
     private Position position;
@@ -20,16 +23,18 @@ public abstract class AbstractCharacter implements Combatant, GameEntity, Clonea
     private final double evasionChance = 0.25;
     private int lastDamageReceived = 0; // Will be used for animations
     private boolean visible;
+    private final UUID id;
 
     // Methods
     /**
      * Default constructor initializing position, health, and power randomly.
      */
     public AbstractCharacter(){
-        this.position = null;
+        this.position = new Position(-1, -1);
         this.health = getMaxHealth();
         this.power = RandomUtil.getRandomInt(4, 15);
         visible = false;
+        this.id = UUID.randomUUID();
     }
 
     public AbstractCharacter(AbstractCharacter other) {
@@ -39,6 +44,7 @@ public abstract class AbstractCharacter implements Combatant, GameEntity, Clonea
         this.visible = other.visible;
         this.lastDamageReceived = other.getLastDamageReceived();
         this.maxHealth = other.getMaxHealth();
+        this.id = other.id;
     }
 
     /**
@@ -52,6 +58,7 @@ public abstract class AbstractCharacter implements Combatant, GameEntity, Clonea
                 ", power = " + power +
                 ", evasionChance = " + evasionChance +
                 ", visible = " + visible +
+                ", ID = " + id +
                 '}';
     }
 
@@ -72,7 +79,8 @@ public abstract class AbstractCharacter implements Combatant, GameEntity, Clonea
                 power == that.power &&
                 Double.compare(that.evasionChance, evasionChance) == 0 &&
                 visible == that.visible &&
-                position.equals(that.position);
+                position.equals(that.position) &&
+                id.equals(that.id);
     }
 
     /**
@@ -132,6 +140,10 @@ public abstract class AbstractCharacter implements Combatant, GameEntity, Clonea
     public boolean setVisible(boolean visible) {
         this.visible = visible;
         return true;
+    }
+
+    public UUID getId() {
+        return id;
     }
 
     /**
@@ -262,4 +274,44 @@ public abstract class AbstractCharacter implements Combatant, GameEntity, Clonea
     public Object callClone() throws CloneNotSupportedException {
         return clone();
     }
+
+    @Override
+    public boolean useAbility() {
+        return false;
+    }
+
+    @Override
+    public boolean isUsable() {
+        return false;
+    }
+
+    @Override
+    public int abilityTimeInMilliseconds() {
+        return -1;
+    }
+
+//    @Override
+//    public boolean useAbility() {
+//        return false;
+//    }
+//
+//    @Override
+//    public String getAbilityName() {
+//        return "NULL";
+//    }
+//
+//    @Override
+//    public String getAbilityInfo() {
+//        return "NULL";
+//    }
+//
+//    @Override
+//    public int abilityTimeInMilliseconds() {
+//        return -1;
+//    }
+//
+//    @Override
+//    public CharacterComponent getBaseCharacter() {
+//        return this;
+//    }
 }

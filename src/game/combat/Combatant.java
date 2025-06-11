@@ -17,6 +17,13 @@ public interface Combatant extends GameEntity {
     int getHealth();
 
     /**
+     * Returns the max health of the combatant.
+     *
+     * @return the max health value
+     */
+    int getMaxHealth();
+
+    /**
      * Sets the combatant's health to the given value.
      *
      * @param health the new health value
@@ -75,6 +82,11 @@ public interface Combatant extends GameEntity {
      * This can include game over logic, status changes, or triggering events.
      */
     void defeat();
+
+    boolean isPhysicalAttacker();
+    boolean isMagicAttacker();
+    boolean isMeleeFighter();
+    boolean isRangedFighter();
 
     /**
      * Attempts to evade an attack using a custom multiplier to modify the evasion chance.
