@@ -1,5 +1,11 @@
 package game.core;
 
+/**
+ * Utility class that provides methods to validate stat balance rules
+ * for different character classes (Warrior, Archer, Mage).
+ * Each method ensures that custom stat modifications sum to a balanced state,
+ * preventing overpowering characters during customization.
+ */
 public class StatBalanceValidator {
 
     /**

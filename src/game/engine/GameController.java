@@ -48,7 +48,6 @@ public class GameController implements ScreenListener {
     private static final AtomicBoolean enemyRunningFlag = new AtomicBoolean(true);
     private static GlobalEventManager manager;
     private static final Scanner scanner = new Scanner(System.in);
-
     private long lastEnemyAttackTime = 0; // in milliseconds
     private int intervalBetweenEnemyAttacks = 3000; // in milliseconds
     private Timer turnTimer;
@@ -102,6 +101,9 @@ public class GameController implements ScreenListener {
         turnTimer.start();
     }
 
+    /**
+     * Stops the main turn-based game loop timer if running.
+     */
     public void stopGameLoop() {
         if (turnTimer != null) {
             turnTimer.stop();
@@ -115,10 +117,16 @@ public class GameController implements ScreenListener {
      */
     public AtomicBoolean getEnemyRunningFlag() {return enemyRunningFlag;}
 
+    /**
+     * Pauses enemy tasks by setting the running flag to false.
+     */
     public static void pauseEnemyTasks() {
         enemyRunningFlag.set(false);
     }
 
+    /**
+     * Resumes enemy tasks by setting the running flag to true.
+     */
     public static void resumeEnemyTasks() {
         enemyRunningFlag.set(true);
     }
@@ -162,6 +170,12 @@ public class GameController implements ScreenListener {
         }
     }
 
+    /**
+     * Restarts the enemy scheduler by shutting down the current one,
+     * setting the running flag to true, and creating a new thread pool
+     * with the size based on the map size.
+     * Also attaches the game controller to all enemies for scheduling.
+     */
     public void restartEnemyScheduler() {
         shutdownEnemyScheduler(); // Always stop the old one first
         enemyRunningFlag.set(true);
@@ -212,6 +226,11 @@ public class GameController implements ScreenListener {
         return gameWorld.getCurrentPlayer().getPosition().distanceTo(clickedPos) <= 2;
     }
 
+    /**
+     * Checks if enemies are allowed to attack based on the time since last attack.
+     *
+     * @return true if the cooldown has passed and enemies can attack, false otherwise
+     */
     private boolean canEnemiesAttack() {
         if(System.currentTimeMillis() - lastEnemyAttackTime >= intervalBetweenEnemyAttacks) {
             lastEnemyAttackTime = System.currentTimeMillis();
@@ -261,6 +280,10 @@ public class GameController implements ScreenListener {
         GameLogger.getInstance().stop();
     }
 
+    /**
+     * Checks if new enemies should spawn based on current active enemy count and max allowed.
+     * Creates and schedules new enemies if slots are available in the scheduler.
+     */
     private void checkIfNewEnemySpawning() {
         int max = EnemyTask.calculateStartingEnemyThreadPoolSize(map.getRows() * map.getCols());
         System.out.println("Active threads: " + EnemyTask.getScheduledEnemyCount());

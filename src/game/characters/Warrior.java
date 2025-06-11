@@ -32,6 +32,15 @@ public class Warrior extends PlayerCharacter implements MeleeFighter, PhysicalAt
         defence = RandomUtil.getRandomInt(0, 121);
     }
 
+    /**
+     * Constructs a Warrior with custom stats.
+     * Health and power are added to base values. Defence is randomized and increased by the given value.
+     *
+     * @param name    the name of the warrior
+     * @param health  bonus health to add to base
+     * @param power   bonus power to add to base
+     * @param defence bonus defense to add to a randomly generated base
+     */
     public Warrior(String name, int health, int power, int defence) {
         super(name);
         setMaxHealth(getHealth() + health);
@@ -40,6 +49,12 @@ public class Warrior extends PlayerCharacter implements MeleeFighter, PhysicalAt
         this.defence = RandomUtil.getRandomInt(0, 121) + defence;
     }
 
+    /**
+     * Copy constructor for Warrior.
+     * Initializes a new Warrior with the same state as the given one.
+     *
+     * @param other the Warrior to copy
+     */
     public Warrior(Warrior other){
         super(other);
         defence = other.defence;
@@ -94,7 +109,7 @@ public class Warrior extends PlayerCharacter implements MeleeFighter, PhysicalAt
      */
     @Override
     public String getType() {
-        return "MagicAttacker, RangedFighter";
+        return "PhysicalAttacker, MeleeFighter";
     }
 
     /**
@@ -237,6 +252,12 @@ public class Warrior extends PlayerCharacter implements MeleeFighter, PhysicalAt
         return "swordSwing";
     }
 
+    /**
+     * Creates and returns a deep copy of this Warrior.
+     *
+     * @return a clone of this Warrior
+     * @throws CloneNotSupportedException if the Warrior cannot be cloned
+     */
     @Override
     protected Warrior clone() throws CloneNotSupportedException {
         return new Warrior(this);

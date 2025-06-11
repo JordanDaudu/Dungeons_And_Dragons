@@ -37,6 +37,11 @@ public abstract class AbstractCharacter implements Combatant, GameEntity, Clonea
         this.id = UUID.randomUUID();
     }
 
+    /**
+     * Copy constructor for creating a new AbstractCharacter based on another.
+     * Performs a deep copy of position and copies all relevant fields.
+     * @param other the AbstractCharacter to copy from
+     */
     public AbstractCharacter(AbstractCharacter other) {
         this.position = new Position(other.position);
         this.health = other.getHealth();
@@ -109,6 +114,11 @@ public abstract class AbstractCharacter implements Combatant, GameEntity, Clonea
         return maxHealth;
     }
 
+    /**
+     * Sets the maximum health of the character.
+     * @param value the new maximum health value
+     * @return true always
+     */
     public boolean setMaxHealth(int value) {
         maxHealth = value;
         return true;
@@ -168,6 +178,11 @@ public abstract class AbstractCharacter implements Combatant, GameEntity, Clonea
         return true;
     }
 
+    /**
+     * Sets the character's power.
+     * @param power the new power value
+     * @return true if the power is non-negative, false otherwise
+     */
     public boolean setPower(int power) {
         if(power >= 0) {
             this.power = power;
@@ -269,7 +284,11 @@ public abstract class AbstractCharacter implements Combatant, GameEntity, Clonea
         return power;
     }
 
-
+    /**
+     * Clones the character object.
+     * @return a clone of the object
+     * @throws CloneNotSupportedException if cloning is not supported
+     */
     @Override
     public Object callClone() throws CloneNotSupportedException {
         return clone();

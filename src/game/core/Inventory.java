@@ -25,6 +25,12 @@ public class Inventory implements Serializable {
         items = new ArrayList<>();
     }
 
+    /**
+     * Constructs a new Inventory by copying the contents of another.
+     * Performs a shallow copy of the items list.
+     *
+     * @param other the inventory to copy from
+     */
     public Inventory(Inventory other) {
         items = new ArrayList<>();
         for (Interactable item : other.items) {
