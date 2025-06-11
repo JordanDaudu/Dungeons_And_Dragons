@@ -8,6 +8,7 @@ out/
 Dungeons_And_Dragons.iml
 src/game/logging/game.log
 saves/
+savegame.dat
 
 ### Eclipse ###
 .apt_generated
