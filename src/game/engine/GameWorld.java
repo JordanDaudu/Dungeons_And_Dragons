@@ -4,9 +4,7 @@ import game.characters.*;
 import game.core.GameEntity;
 import game.core.ScreenAction;
 import game.core.ScreenListener;
-import game.decorator.PlayerDecorator;
 import game.items.GameItem;
-import game.logging.GameLogger;
 import game.map.GameMap;
 import game.map.Position;
 import game.memento.GameWorldMemento;
@@ -17,7 +15,6 @@ import java.util.UUID;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Main class for running the Dungeons & Dragons-like game.
@@ -109,12 +106,7 @@ public class GameWorld {
      *
      * @return list of enemy characters
      */
-    public List<Enemy> getEnemies() {
-        for (Enemy e : enemies) {
-            System.out.println("Stored enemy in GameWorld: " + e.getClass().getSimpleName());
-        }
-        return enemies;
-    }
+    public List<Enemy> getEnemies() {return enemies;}
 
     /**
      * Gets the list of all items in the game.
@@ -220,7 +212,6 @@ public class GameWorld {
         for (GameEntity entity : map.getAllEntities()) {
             if (entity instanceof Enemy enemy) {
                 enemies.add(enemy);
-                System.out.println("Added enemy: " + enemy.getClass().getSimpleName());
             }
         }
     }

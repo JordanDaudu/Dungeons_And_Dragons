@@ -214,7 +214,6 @@ public abstract class PlayerDecorator extends PlayerCharacter {
 
     @Override
     public void setPosition(Position pos) {
-        super.setPosition(pos);
         decoratedPlayer.setPosition(pos);
     }
 

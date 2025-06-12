@@ -188,7 +188,6 @@ public abstract class EnemyDecorator extends Enemy {
 
     @Override
     public void setPosition(Position pos) {
-        super.setPosition(pos);
         decoratedEnemy.setPosition(pos);
     }
 

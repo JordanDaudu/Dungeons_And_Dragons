@@ -6,7 +6,6 @@ import game.combat.CombatSystem;
 import game.core.GameEntity;
 import game.core.ScreenAction;
 import game.core.ScreenListener;
-import game.decorator.EnemyDecorator;
 import game.decorator.PlayerDecorator;
 import game.decorator.RegenerationPlayerDecorator;
 import game.global_events.GlobalEventManager;
@@ -422,7 +421,7 @@ public class GameController implements ScreenListener {
                                     GameLogger.getInstance().log("Enemy: " + enemy.getClass().getSimpleName() +
                                             " moved towards player " + getCurrentPlayer().getName() + " to position " + bestMove + ".");
                                     map.updatePlayerView(gameWorld.getCurrentPlayer().getPosition());
-                                    SwingUtilities.invokeLater(() -> getGameMapGUI().repaint());
+                                    SwingUtilities.invokeLater(() -> gameMapGUI.repaint());
                                     return true;
                                 }
                             }
@@ -433,7 +432,7 @@ public class GameController implements ScreenListener {
                         Position newEnemyPosition = RandomUtil.getRandomAdjacentPosition(enemy.getPosition());
                         if(map.tryMoveEnemy(enemy, newEnemyPosition)) {
                             map.updatePlayerView(gameWorld.getCurrentPlayer().getPosition());
-                            SwingUtilities.invokeLater(() -> getGameMapGUI().repaint());
+                            SwingUtilities.invokeLater(() -> gameMapGUI.repaint());
                             return true;
                         }
                     }

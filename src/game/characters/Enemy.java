@@ -150,7 +150,6 @@ public abstract class Enemy extends AbstractCharacter implements Serializable {
     }
 
     public void threadAction() {
-        System.out.println("Calling threadAction() from: " + this.getClass().getSimpleName());
         if(screenListener != null) {
             screenListener.onAction(ScreenAction.ENEMY_ACTION, this);
         }

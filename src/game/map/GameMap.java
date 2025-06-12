@@ -577,7 +577,6 @@ public class GameMap implements Serializable {
     }
 
     public Enemy createEnemy(String enemyName) {
-        System.out.println("Trying to create an enemy");
         return switch (enemyName) {
             case "Goblin" -> ((EnemyFactory.GoblinBuilder) EnemyFactory.getBuilder("Goblin"))
                     .setAgility(RandomUtil.getRandomInt(0, 81))
