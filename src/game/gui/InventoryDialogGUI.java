@@ -2,6 +2,7 @@ package game.gui;
 
 import game.characters.PlayerCharacter;
 import game.core.ScreenListener;
+import game.engine.GameController;
 import game.engine.SoundManager;
 
 import javax.swing.*;
@@ -24,7 +25,7 @@ public class InventoryDialogGUI extends JDialog {
      * @param player             the PlayerCharacter whose inventory is displayed
      * @param controllerListener the ScreenListener that handles inventory interactions
      */
-    public InventoryDialogGUI(JFrame parent, PlayerCharacter player, ScreenListener controllerListener) {
+    public InventoryDialogGUI(JFrame parent, PlayerCharacter player, ScreenListener controllerListener, GameController gameController) {
         super(parent, "Inventory - " + player.getName(), true);
 
         setLayout(new BorderLayout());
@@ -32,9 +33,16 @@ public class InventoryDialogGUI extends JDialog {
         InventoryPanelGUI panel = new InventoryPanelGUI(player, controllerListener);
         add(panel, BorderLayout.CENTER);
 
+        // Pausing threads
+        GameController.pauseEnemyTasks();
+        GameController.pauseManagerEvent();
+
         JButton close = new JButton("Close");
         close.addActionListener(e -> {
             SoundManager.playEffect("closingSound");
+            // Activating threads back
+            GameController.resumeEnemyTasks();
+            GameController.resumeManagerEvent();
             dispose();
         });
 
@@ -46,7 +54,21 @@ public class InventoryDialogGUI extends JDialog {
             @Override
             public void actionPerformed(ActionEvent e) {
                 SoundManager.playEffect("closingSound");
+                GameController.resumeEnemyTasks();
+                GameController.resumeManagerEvent();
                 dispose();
+            }
+        });
+
+        // Set custom close operation
+        setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent e) {
+                SoundManager.playEffect("closingSound");
+                GameController.resumeEnemyTasks();
+                GameController.resumeManagerEvent();
+                dispose(); // Closes the window manually
             }
         });
 

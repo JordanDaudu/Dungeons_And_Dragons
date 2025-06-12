@@ -61,18 +61,20 @@ public class GlobalEventManager {
         scheduler.schedule(() -> {
             if (!running.get()) return;
 
-            try {
-                GlobalEvent event = eventPool.get(RandomUtil.getRandomInt(eventPool.size()));
-                event.execute(map, gameController);
-                GameLogger.getInstance().log("Global Event: " + event.getName());
-            }
-            catch (Exception e) {
-                e.printStackTrace(); // Log and continue
-            }
+            synchronized (this) {
+                try {
+                    GlobalEvent event = eventPool.get(RandomUtil.getRandomInt(eventPool.size()));
+                    event.execute(map, gameController);
+                    GameLogger.getInstance().log("Global Event: " + event.getName());
+                }
+                catch (Exception e) {
+                    e.printStackTrace(); // Log and continue
+                }
 
-            // If still running, schedule the next event
-            if (running.get()) {
-                scheduleNextEvent();
+                // If still running, schedule the next event
+                if (running.get()) {
+                    scheduleNextEvent();
+                }
             }
         }, delayMillis, TimeUnit.MILLISECONDS);
     }

@@ -293,6 +293,17 @@ public class SettingsMenuGUI extends JDialog {
                 }
             }
         });
+        // Set custom close operation
+        setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent e) {
+                SoundManager.playEffect("closingSound");
+                GameController.resumeEnemyTasks();
+                GameController.resumeManagerEvent();
+                dispose(); // Closes the window manually
+            }
+        });
     }
     /**
      * Configures the Escape key to close the dialog when pressed.

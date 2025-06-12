@@ -194,7 +194,7 @@ public class GameMapGUI extends JFrame implements ScreenListener{
                 PlayerCharacter currentPlayer = gameController.getCurrentPlayer();
                 if (currentPlayer != null) {
                     SoundManager.playEffect("inventorySound");
-                    inventoryDialogGUI = new InventoryDialogGUI(GameMapGUI.this, currentPlayer, controllerListener);
+                    inventoryDialogGUI = new InventoryDialogGUI(GameMapGUI.this, currentPlayer, controllerListener, gameController);
                     inventoryDialogGUI.setVisible(true);
                 }
             }
@@ -207,7 +207,7 @@ public class GameMapGUI extends JFrame implements ScreenListener{
                 PlayerCharacter currentPlayer = gameController.getCurrentPlayer();
                 if (currentPlayer != null) {
                     SoundManager.playEffect("playerStatusSound");
-                    PlayerStatusDialogGUI statusDialog = new PlayerStatusDialogGUI(GameMapGUI.this, currentPlayer, gameController);
+                    PlayerStatusDialogGUI statusDialog = new PlayerStatusDialogGUI(GameMapGUI.this, currentPlayer, gameController, gameController);
                     statusDialog.setVisible(true);
                 }
             }
@@ -726,7 +726,7 @@ public class GameMapGUI extends JFrame implements ScreenListener{
         private void handleMiddleClick() {
             PlayerCharacter currentPlayer = gameController.getCurrentPlayer();
             if (currentPlayer != null) {
-                inventoryDialogGUI = new InventoryDialogGUI(GameMapGUI.this, currentPlayer, controllerListener);
+                inventoryDialogGUI = new InventoryDialogGUI(GameMapGUI.this, currentPlayer, controllerListener, gameController);
                 inventoryDialogGUI.setVisible(true);  // Blocks until closed if modal
             }
         }

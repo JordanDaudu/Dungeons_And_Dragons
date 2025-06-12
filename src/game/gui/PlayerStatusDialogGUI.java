@@ -2,6 +2,7 @@ package game.gui;
 
 import game.characters.PlayerCharacter;
 import game.core.ScreenListener;
+import game.engine.GameController;
 import game.engine.SoundManager;
 
 import javax.swing.*;
@@ -21,7 +22,7 @@ public class PlayerStatusDialogGUI extends JDialog {
      * @param parentFrame the parent frame for the dialog
      * @param player the player character whose status is displayed
      */
-    public PlayerStatusDialogGUI(JFrame parentFrame, PlayerCharacter player, ScreenListener gameController) {
+    public PlayerStatusDialogGUI(JFrame parentFrame, PlayerCharacter player, ScreenListener screenListener, GameController gameController) {
         super(parentFrame, "Player Status", true); // modal
 
         try {
@@ -33,14 +34,20 @@ public class PlayerStatusDialogGUI extends JDialog {
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        // Add the reusable panel
-        PlayerStatusPanelGUI statusPanel = new PlayerStatusPanelGUI(player, gameController);
+        PlayerStatusPanelGUI statusPanel = new PlayerStatusPanelGUI(player, screenListener);
         add(statusPanel, BorderLayout.CENTER);
+
+        // Pausing threads
+        GameController.pauseEnemyTasks();
+        GameController.pauseManagerEvent();
 
         // Close button
         JButton closeButton = new JButton("Close");
         closeButton.addActionListener(e -> {
             SoundManager.playEffect("closingSound");
+            // Activating threads back
+            GameController.resumeEnemyTasks();
+            GameController.resumeManagerEvent();
             dispose();
         });
 
@@ -52,7 +59,22 @@ public class PlayerStatusDialogGUI extends JDialog {
             @Override
             public void actionPerformed(ActionEvent e) {
                 SoundManager.playEffect("closingSound");
+                // Activating threads back
+                GameController.resumeEnemyTasks();
+                GameController.resumeManagerEvent();
                 dispose();
+            }
+        });
+
+        // Set custom close operation
+        setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent e) {
+                SoundManager.playEffect("closingSound");
+                GameController.resumeEnemyTasks();
+                GameController.resumeManagerEvent();
+                dispose(); // Closes the window manually
             }
         });
 

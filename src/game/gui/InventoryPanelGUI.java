@@ -3,6 +3,7 @@ package game.gui;
 import game.characters.PlayerCharacter;
 import game.core.ScreenAction;
 import game.core.ScreenListener;
+import game.engine.GameController;
 import game.items.Interactable;
 import game.items.Potion;
 import game.items.PowerPotion;
@@ -140,6 +141,9 @@ public class InventoryPanelGUI extends JPanel {
                 controllerListener.onAction(ScreenAction.END_TURN, (Object) null);
                 Window window = SwingUtilities.getWindowAncestor(this);
                 if (window instanceof JDialog) {
+                    // Activating threads back
+                    GameController.resumeEnemyTasks();
+                    GameController.resumeManagerEvent();
                     window.dispose(); // Close dialog if inside one
                 }
             }
