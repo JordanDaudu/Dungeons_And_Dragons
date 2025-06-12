@@ -890,7 +890,7 @@ public class GameMapGUI extends JFrame implements ScreenListener{
             }
             else if (entity instanceof Enemy enemy) {
                 addEnemyHealthBar(enemy);
-                addDisabledItem("Enemy: " + enemy.getClass().getSimpleName());
+                addDisabledItem("Enemy: " + enemy.getEnemyTypeName());
                 addDisabledItem("Type: " + enemy.getType());
 
                 if(enemy instanceof MagicAttacker)

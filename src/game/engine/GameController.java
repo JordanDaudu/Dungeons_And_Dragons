@@ -288,7 +288,7 @@ public class GameController implements ScreenListener {
         System.out.println("Active threads: " + EnemyTask.getScheduledEnemyCount());
         System.out.println("calculateStartingEnemyThreadPoolSize: " + EnemyTask.calculateStartingEnemyThreadPoolSize(map.getRows() * map.getCols()));
 
-        while (EnemyTask.getScheduledEnemyCount() < max) {
+        while (EnemyTask.getScheduledEnemyCount() <= max) {
             Enemy enemy = map.createEnemy(map.getLeastCommonEnemyType());
             enemy.setScreenListener(this);
 
@@ -536,6 +536,7 @@ public class GameController implements ScreenListener {
                     onAction(ScreenAction.END_TURN, (Object) null);
                 }
                 callPanelRefreshers();
+                SwingUtilities.invokeLater(() -> gameMapGUI.repaint());
             }
             case ScreenAction.END_TURN -> {
                 endTurn.set(true);
