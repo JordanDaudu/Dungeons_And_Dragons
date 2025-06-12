@@ -3,6 +3,7 @@ package game.map;
 import game.characters.*;
 import game.combat.MagicElement;
 import game.core.GameEntity;
+import game.decorator.EnemyDecorator;
 import game.engine.RandomUtil;
 import game.items.*;
 import game.logging.GameLogger;
@@ -550,7 +551,12 @@ public class GameMap implements Serializable {
             synchronized (entities) {
                 for (GameEntity entity : entities) {
                     if (entity instanceof Enemy enemy) {
-                        String typeName = enemy.getClass().getSimpleName(); // Or enemy.getType() if you have one
+                        String typeName;
+                        if(enemy instanceof EnemyDecorator enemyDecorator)
+                            typeName = enemyDecorator.getBaseCharacter().getClass().getSimpleName(); // If decorated find base class simpleName
+                        else
+                            typeName = enemy.getClass().getSimpleName(); // If not decorated get simpleName
+
                         enemyCounts.put(typeName, enemyCounts.getOrDefault(typeName, 0) + 1);
                     }
                 }
