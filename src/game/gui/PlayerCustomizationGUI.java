@@ -2,6 +2,7 @@ package game.gui;
 
 import game.combat.MagicElement;
 import game.core.StatBalanceValidator;
+import game.logging.GameLogger;
 
 import javax.swing.*;
 import java.awt.*;
@@ -173,6 +174,7 @@ public class PlayerCustomizationGUI extends JDialog {
             }
 
             JOptionPane.showMessageDialog(this, "Stats are balanced! Ready to create player.");
+            GameLogger.getInstance().log("Stats were successfully chosen and balanced");
             dispose();  // Close dialog and unblock caller
         } else {
             JOptionPane.showMessageDialog(this,

@@ -398,7 +398,7 @@ public class GameMap implements Serializable {
             for (int row = 0; row < rows; row++) {
                 for (int col = 0; col < cols; col++) {
                     Position pos = new Position(row, col);
-                    if (playerPos.distanceTo(pos) <= 2) {
+                    if (playerPos.distanceTo(pos) <= 200) {
                         List<GameEntity> list = grid.get(pos);
                         if (list != null) {
                             synchronized (list) {

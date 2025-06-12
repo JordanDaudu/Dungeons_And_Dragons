@@ -387,12 +387,7 @@ public class GameController implements ScreenListener {
                 return false;
             }
             case ScreenAction.ENEMY_ACTION -> {
-                System.out.println("onAction received enemy: " + data[0].getClass().getSimpleName());
                 if(data[0] instanceof Enemy enemy) {
-                    if(enemy instanceof EnemyDecorator)
-                        System.out.println("I AM A DECORATOR");
-                    else
-                        System.out.println("I AM NOT A DECORATOR RIGHT NOW");
                     Position currentEnemyPosition = enemy.getPosition();
                     if(currentEnemyPosition.distanceTo(gameWorld.getCurrentPlayer().getPosition()) <= 1) {
                         if(canEnemiesAttack()) {

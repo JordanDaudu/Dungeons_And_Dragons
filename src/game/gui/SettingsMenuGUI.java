@@ -211,7 +211,10 @@ public class SettingsMenuGUI extends JDialog {
             dispose();
             GameController.resumeEnemyTasks();
         });
-        quitButton.addActionListener(e -> System.exit(0));
+        quitButton.addActionListener(e -> {
+            GameLogger.getInstance().log("Quitting game...");
+            System.exit(0);
+        });
 
         saveButton.addActionListener(e -> {
             SoundManager.playEffect("clickSound");

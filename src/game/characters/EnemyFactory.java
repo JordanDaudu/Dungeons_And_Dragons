@@ -3,6 +3,7 @@ package game.characters;
 import game.combat.MagicElement;
 import game.decorator.AbilityFactory;
 import game.decorator.EnemyDecorator;
+import game.logging.GameLogger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -63,11 +64,11 @@ public class EnemyFactory {
 
             if (decoratorConstructor != null) {
                 EnemyDecorator decoratedEnemy = decoratorConstructor.apply(baseEnemy);
-                System.out.println("Applying decorator: " + decoratedEnemy.getClass().getSimpleName() + " on " + baseEnemy.getClass().getSimpleName());
+                GameLogger.getInstance().log("Applying decorator: " + decoratedEnemy.getClass().getSimpleName() + " on " + baseEnemy.getClass().getSimpleName());
                 return decoratedEnemy;
             }
             else {
-                System.out.println("No decorator applied, returning base enemy: " + baseEnemy.getClass().getSimpleName());
+                GameLogger.getInstance().log("No decorator applied, returning base enemy: " + baseEnemy.getClass().getSimpleName());
                 return baseEnemy;
             }
         }

@@ -267,8 +267,14 @@ public class PlayerCreationPanelGUI extends JPanel {
                 selectedAbilities.add(clazz.getSimpleName());
             }
         }
+        if (selectedAbilities.isEmpty())
+            GameLogger.getInstance().log("No decorator(s) selected.");
+        else
+            GameLogger.getInstance().log("Selected decorator(s): " + String.join(", ", selectedAbilities));
+
         return selectedAbilities;
     }
+
 
     private void updateAbilitySelector(String selectedClass) {
         abilityPanel.removeAll();

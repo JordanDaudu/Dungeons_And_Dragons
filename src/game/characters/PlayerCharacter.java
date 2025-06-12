@@ -42,8 +42,6 @@ public abstract class PlayerCharacter extends AbstractCharacter implements Playe
         this.name = other.name;
         inventory = new Inventory(other.inventory);
         treasurePoints = other.treasurePoints;
-//        this.ability1 = other.ability1;
-//        this.ability2 = other.ability2;
     }
 
     /**
