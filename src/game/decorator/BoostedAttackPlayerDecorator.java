@@ -5,8 +5,10 @@ import game.characters.PlayerCharacter;
 
 public class BoostedAttackPlayerDecorator extends PlayerDecorator {
 
+    // Data Members
     private final int boostAmount = 5;
 
+    // Methods
     public BoostedAttackPlayerDecorator(PlayerCharacter character) {
         super(character);
     }
@@ -36,9 +38,6 @@ public class BoostedAttackPlayerDecorator extends PlayerDecorator {
         int boostedPower = currentPower + boostAmount;
         if(getDecoratedPlayer() instanceof AbstractCharacter character) {
             character.setPower(boostedPower);
-            System.out.println("BOOSTEDATTACK");
-
-
             return true;
         }
         return false;

@@ -176,7 +176,6 @@ public abstract class EnemyDecorator extends Enemy {
     @Override
     public void threadAction() {
         if (getDecoratedEnemy().getScreenListener() != null) {
-            System.out.println("Calling threadAction() from: " + this.getClass().getSimpleName());
             decoratedEnemy.getScreenListener().onAction(ScreenAction.ENEMY_ACTION, this); // Ensure the decorator itself is passed
         }
     }

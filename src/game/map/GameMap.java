@@ -630,7 +630,7 @@ public class GameMap implements Serializable {
             Position chosen = freePositions.get(RandomUtil.getRandomInt(0, freePositions.size()));
             enemy.setPosition(chosen);
             addEntity(enemy);
-            GameLogger.getInstance().log("Placed " + enemy.getClass().getSimpleName() + " at position: " + enemy.getPosition());
+            GameLogger.getInstance().log("Placed " + enemy.getEnemyTypeName() + " at position: " + enemy.getPosition());
             return true;
         }
         finally {

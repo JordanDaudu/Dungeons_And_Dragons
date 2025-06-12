@@ -129,7 +129,7 @@ public class CombatSystem {
         if (defender.isDead()) {
             if (defender instanceof Enemy) {
                 defender.defeat();
-                GameLogger.getInstance().log(defender.getClass().getSimpleName() + " was defeated!");
+                GameLogger.getInstance().log(((Enemy) defender).getEnemyTypeName() + " was defeated!");
                 changeBattleMusic(attacker, defender);
             } else {
                 defender.defeat();

@@ -418,7 +418,7 @@ public class GameController implements ScreenListener {
 
                             if (bestMove != null) {
                                 if(gameWorld.getMap().tryMoveEnemy(enemy, bestMove)) {
-                                    GameLogger.getInstance().log("Enemy: " + enemy.getClass().getSimpleName() +
+                                    GameLogger.getInstance().log("Enemy: " + enemy.getEnemyTypeName() +
                                             " moved towards player " + getCurrentPlayer().getName() + " to position " + bestMove + ".");
                                     map.updatePlayerView(gameWorld.getCurrentPlayer().getPosition());
                                     SwingUtilities.invokeLater(() -> gameMapGUI.repaint());

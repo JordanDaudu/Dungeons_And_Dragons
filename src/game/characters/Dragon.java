@@ -316,4 +316,10 @@ public class Dragon extends Enemy implements MagicAttacker, RangedFighter, Melee
     protected Dragon clone() throws CloneNotSupportedException {
         return new Dragon(this);
     }
+
+    @Override
+    public String getEnemyTypeName(){
+        return "Dragon";
+    }
+
 }

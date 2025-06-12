@@ -158,4 +158,8 @@ public abstract class Enemy extends AbstractCharacter implements Serializable {
     public Enemy getBaseCharacter() {
         return this;
     }
+
+    public String getEnemyTypeName(){
+        return "Enemy";
+    }
 }

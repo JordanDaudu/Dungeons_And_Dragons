@@ -234,4 +234,10 @@ public class Orc extends Enemy implements MeleeFighter, PhysicalAttacker {
     protected Orc clone() throws CloneNotSupportedException {
         return new Orc(this);
     }
+
+    @Override
+    public String getEnemyTypeName(){
+        return "Orc";
+    }
+
 }
