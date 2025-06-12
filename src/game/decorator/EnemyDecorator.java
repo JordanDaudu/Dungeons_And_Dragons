@@ -31,6 +31,11 @@ public abstract class EnemyDecorator extends Enemy {
         return decoratedEnemy;
     }
 
+    @Override
+    public String getEnemyTypeName() {
+        return decoratedEnemy.getEnemyTypeName();
+    }
+
     public Enemy getDecoratedEnemy() {return decoratedEnemy;}
 
     @Override
