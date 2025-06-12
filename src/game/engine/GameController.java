@@ -46,6 +46,7 @@ public class GameController implements ScreenListener {
     private ScheduledExecutorService enemyScheduler;
     private static final AtomicBoolean enemyRunningFlag = new AtomicBoolean(true);
     private static GlobalEventManager manager;
+    private static final AtomicBoolean globalEventRunning = new AtomicBoolean(true);
     private static final Scanner scanner = new Scanner(System.in);
     private long lastEnemyAttackTime = 0; // in milliseconds
     private int intervalBetweenEnemyAttacks = 3000; // in milliseconds
@@ -134,8 +135,22 @@ public class GameController implements ScreenListener {
      * Starts the global event manager for the current map and controller.
      */
     public void startManagerEvent() {
-        manager = new GlobalEventManager(map, this);
+        manager = new GlobalEventManager(map, this, globalEventRunning);
         manager.start();
+    }
+
+    public static void pauseManagerEvent() {globalEventRunning.set(false);}
+
+    public static void resumeManagerEvent() {
+        if (!globalEventRunning.get()) { // Only restart if previously paused
+            globalEventRunning.set(true);
+
+            if (manager.isSchedulerShutdown()) { // Check if scheduler is inactive
+                manager.restartScheduler(); // Restart it properly
+            }
+
+            manager.start(); // Resume scheduling new events
+        }
     }
 
     /**

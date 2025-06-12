@@ -63,6 +63,7 @@ public class SettingsMenuGUI extends JDialog {
         setLocationRelativeTo(parent);
 
         GameController.pauseEnemyTasks();
+        GameController.pauseManagerEvent();
         initComponents();
         layoutComponents();
         attachListeners();
@@ -210,6 +211,7 @@ public class SettingsMenuGUI extends JDialog {
             SoundManager.playEffect("closingSound");
             dispose();
             GameController.resumeEnemyTasks();
+            GameController.resumeManagerEvent();
         });
         quitButton.addActionListener(e -> {
             GameLogger.getInstance().log("Quitting game...");
@@ -305,6 +307,7 @@ public class SettingsMenuGUI extends JDialog {
                 SoundManager.playEffect("closingSound");
                 dispose();
                 GameController.resumeEnemyTasks();
+                GameController.resumeManagerEvent();
             }
         });
     }
