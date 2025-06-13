@@ -27,9 +27,15 @@ public class PowerPotion extends Potion {
         super(position, blocksMovement, description);
     }
 
+    /**
+     * Copy constructor. Creates a new PowerPotion by copying another one.
+     *
+     * @param other the PowerPotion to copy
+     */
     public PowerPotion (PowerPotion other) {
         super(other);
     }
+
     /**
      * Returns a string representation of this power potion, including inherited potion fields.
      *
@@ -127,6 +133,12 @@ public class PowerPotion extends Potion {
         return RandomUtil.getRandomInt(1, 6);
     }
 
+    /**
+     * Creates and returns a deep copy of this {@code PowerPotion}.
+     *
+     * @return a cloned {@code PowerPotion} object
+     * @throws CloneNotSupportedException if cloning is not supported
+     */
     @Override
     protected Potion clone() throws CloneNotSupportedException {
         return new PowerPotion(this);

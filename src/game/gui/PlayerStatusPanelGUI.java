@@ -50,7 +50,6 @@ public class PlayerStatusPanelGUI extends JPanel {
 
         initComponents();
         layoutComponents();
-//        attachListeners();
     }
 
     /**

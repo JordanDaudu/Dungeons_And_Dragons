@@ -44,6 +44,7 @@ public class PlayerCreationPanelGUI extends JPanel {
     private JTextPane classDescriptionPane;
     private JScrollPane scrollPane;
     private final ScreenListener listener;
+
     // Methods
     /**
      * Constructs a new PlayerCreationPanel with the required listener.
@@ -259,6 +260,12 @@ public class PlayerCreationPanelGUI extends JPanel {
         });
     }
 
+    /**
+     * Returns the list of selected ability class names based on checked checkboxes.
+     * Also logs the selection using GameLogger.
+     *
+     * @return a list of selected ability class simple names
+     */
     private List<String> getSelectedAbilityNames() {
         List<String> selectedAbilities = new ArrayList<>();
         for (JCheckBox box : abilityCheckBoxes) {
@@ -275,7 +282,12 @@ public class PlayerCreationPanelGUI extends JPanel {
         return selectedAbilities;
     }
 
-
+    /**
+     * Updates the ability selection panel based on the currently selected class.
+     * Dynamically creates checkboxes for abilities tied to the chosen class.
+     *
+     * @param selectedClass the class name selected by the player
+     */
     private void updateAbilitySelector(String selectedClass) {
         abilityPanel.removeAll();
         abilityCheckBoxes.clear();
@@ -295,6 +307,12 @@ public class PlayerCreationPanelGUI extends JPanel {
         abilityPanel.repaint();
     }
 
+    /**
+     * Creates a listener to limit the number of selected ability checkboxes to 2.
+     * Disables unselected boxes if the limit is reached.
+     *
+     * @return an ItemListener enforcing selection limit behavior
+     */
     private ItemListener createAbilityCheckListener() {
         return e -> {
             long selectedCount = abilityCheckBoxes.stream().filter(AbstractButton::isSelected).count();

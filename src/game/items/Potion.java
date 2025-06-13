@@ -34,6 +34,11 @@ public class Potion extends GameItem implements Interactable, Cloneable {
         isUsed = false;
     }
 
+    /**
+     * Copy constructor. Creates a deep copy of another potion.
+     *
+     * @param other the potion to copy
+     */
     public Potion(Potion other) {
         super(other);
         increaseAmount = other.increaseAmount;
@@ -165,11 +170,24 @@ public class Potion extends GameItem implements Interactable, Cloneable {
         return RandomUtil.getRandomInt(10, 51);
     }
 
+    /**
+     * Creates and returns a deep copy of this Potion.
+     *
+     * @return a cloned {@code Potion} object identical to this one
+     * @throws CloneNotSupportedException if the cloning process fails
+     */
     @Override
     protected Potion clone() throws CloneNotSupportedException {
         return new Potion(this);
     }
 
+    /**
+     * Returns a cloned instance of this Potion as an {@link Interactable}.
+     * Useful for generic cloning without exposing the concrete type.
+     *
+     * @return a cloned {@code Interactable} version of this Potion
+     * @throws CloneNotSupportedException if cloning is not supported
+     */
     public Interactable callClone() throws CloneNotSupportedException {
         return clone();
     }

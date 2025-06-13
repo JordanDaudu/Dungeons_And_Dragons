@@ -259,32 +259,54 @@ public class Archer extends PlayerCharacter implements PhysicalAttacker, RangedF
         fightRanged(target);
     }
 
+
+
     /**
-     * Creates and returns a deep copy of this Archer.
+     * Indicates that this character is a physical attacker.
      *
-     * @return a clone of this instance
-     * @throws CloneNotSupportedException if cloning fails
+     * @return true, as the Archer uses physical attacks
      */
     @Override
     public boolean isPhysicalAttacker() {
         return true;
     }
 
+    /**
+     * Indicates that this character is not a magic attacker.
+     *
+     * @return false, as the Archer does not use magic
+     */
     @Override
     public boolean isMagicAttacker() {
         return false;
     }
 
+    /**
+     * Indicates that this character is not a melee fighter.
+     *
+     * @return false, as the Archer does not use melee attacks
+     */
     @Override
     public boolean isMeleeFighter() {
         return false;
     }
 
+    /**
+     * Indicates that this character is a ranged fighter.
+     *
+     * @return true, as the Archer uses ranged attacks
+     */
     @Override
     public boolean isRangedFighter() {
         return true;
     }
 
+    /**
+     * Creates and returns a deep copy of this Archer.
+     *
+     * @return a clone of this instance
+     * @throws CloneNotSupportedException if cloning fails
+     */
     @Override
     protected Archer clone() throws CloneNotSupportedException {
         return new Archer(this);

@@ -21,7 +21,7 @@ public abstract class Enemy extends AbstractCharacter implements Serializable {
 
     // Methods
     /**
-     * Constructs a default Enemy with 50 health and no loot.
+     * Constructs a default Enemy with full health and randomly assigned loot (100–300).
      */
     public Enemy() {
         super();
@@ -29,13 +29,18 @@ public abstract class Enemy extends AbstractCharacter implements Serializable {
         loot = RandomUtil.getRandomInt(100, 301);
     }
 
+    /**
+     * Copy constructor for creating a deep copy of another Enemy.
+     *
+     * @param other the enemy to copy
+     */
     public Enemy(Enemy other){
         super(other);
         loot = other.loot;
         this.screenListener = other.screenListener;
     }
     /**
-     * Returns a string representation of the Enemy, including health and loot.
+     * Returns a string representation of the Enemy, including type, health, and loot.
      *
      * @return a string describing the enemy
      */
@@ -51,10 +56,10 @@ public abstract class Enemy extends AbstractCharacter implements Serializable {
     }
 
     /**
-     * Compares this Enemy with another object for logical equality.
+     * Checks whether this Enemy is logically equal to another object.
      *
      * @param obj the object to compare
-     * @return true if the objects are logically equal
+     * @return true if both objects are of the same class and have equal fields
      */
     @Override
     public boolean equals(Object obj) {
@@ -82,13 +87,29 @@ public abstract class Enemy extends AbstractCharacter implements Serializable {
         return 50;
     }
 
+    /**
+     * Sets the amount of loot this enemy will drop.
+     *
+     * @param loot the loot value to set
+     */
     public void setLoot(int loot) {this.loot = loot;}
 
+    /**
+     * Registers a screen listener to this enemy.
+     *
+     * @param screenListener the listener to register
+     * @return true if the listener was set successfully
+     */
     public boolean setScreenListener(ScreenListener screenListener) {
         this.screenListener = screenListener;
         return true;
     }
 
+    /**
+     * Retrieves the screen listener registered to this enemy.
+     *
+     * @return the screen listener, or null if none is set
+     */
     public ScreenListener getScreenListener() {return screenListener;}
 
     /**
@@ -149,16 +170,31 @@ public abstract class Enemy extends AbstractCharacter implements Serializable {
         System.out.println("Choose a enemy type to be able to fight");
     }
 
+    /**
+     * Triggers the screen listener with an {@link ScreenAction#ENEMY_ACTION} event,
+     * typically used for animating or updating the UI on enemy turns.
+     */
     public void threadAction() {
         if(screenListener != null) {
             screenListener.onAction(ScreenAction.ENEMY_ACTION, this);
         }
     }
 
+    /**
+     * Returns the base character instance. Useful for decorator compatibility.
+     *
+     * @return this enemy instance
+     */
     public Enemy getBaseCharacter() {
         return this;
     }
 
+    /**
+     * Returns a readable name for this enemy type.
+     * Subclasses may override to return more specific names.
+     *
+     * @return the string "Enemy"
+     */
     public String getEnemyTypeName(){
         return "Enemy";
     }

@@ -4,7 +4,6 @@ import game.characters.*;
 import game.combat.Combatant;
 import game.combat.MagicAttacker;
 import game.combat.MagicElement;
-import game.combat.PhysicalAttacker;
 import game.core.GameEntity;
 import game.engine.GameController;
 import game.core.ScreenAction;

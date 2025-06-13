@@ -81,9 +81,32 @@ public interface Combatant extends GameEntity {
      */
     void defeat();
 
+    /**
+     * Indicates whether the combatant deals physical damage.
+     *
+     * @return true if a physical attacker
+     */
     boolean isPhysicalAttacker();
+
+    /**
+     * Indicates whether the combatant deals magical damage.
+     *
+     * @return true if a magic attacker
+     */
     boolean isMagicAttacker();
+
+    /**
+     * Indicates whether the combatant uses melee attacks.
+     *
+     * @return true if a melee fighter
+     */
     boolean isMeleeFighter();
+
+    /**
+     * Indicates whether the combatant uses ranged attacks.
+     *
+     * @return true if a ranged fighter
+     */
     boolean isRangedFighter();
 
     /**

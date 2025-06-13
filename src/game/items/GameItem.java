@@ -1,7 +1,6 @@
 package game.items;
 
 import game.core.GameEntity;
-import game.map.GameMap;
 import game.map.Position;
 
 import java.io.Serializable;
@@ -33,6 +32,11 @@ public abstract class GameItem implements GameEntity, Cloneable, Serializable {
         this.description = description;
     }
 
+    /**
+     * Copy constructor. Creates a deep copy of another GameItem.
+     *
+     * @param other the GameItem to copy.
+     */
     public GameItem(GameItem other){
         this.position = new Position(other.getPosition());
         this.blocksMovement = other.blocksMovement;
@@ -133,6 +137,12 @@ public abstract class GameItem implements GameEntity, Cloneable, Serializable {
         return this.visible;
     }
 
+    /**
+     * Calls the {@code clone()} method.
+     *
+     * @return a clone of this GameItem.
+     * @throws CloneNotSupportedException if the clone operation fails.
+     */
     public Object callClone() throws CloneNotSupportedException {
         return clone();
     }

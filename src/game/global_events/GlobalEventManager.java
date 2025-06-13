@@ -88,10 +88,19 @@ public class GlobalEventManager {
         scheduler.shutdownNow(); // interrupt any waiting
     }
 
+    /**
+     * Returns whether the scheduler has been shutdown or terminated.
+     *
+     * @return true if the scheduler is shutdown or terminated, false otherwise
+     */
     public boolean isSchedulerShutdown() {
         return scheduler.isShutdown() || scheduler.isTerminated();
     }
 
+    /**
+     * Restarts the scheduler by reinitializing the ScheduledExecutorService.
+     * This allows scheduling of events again after being stopped.
+     */
     public void restartScheduler() {
         scheduler = Executors.newSingleThreadScheduledExecutor(); // Reinitialize scheduler
     }

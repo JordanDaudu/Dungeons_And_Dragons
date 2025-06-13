@@ -220,21 +220,41 @@ public class Warrior extends PlayerCharacter implements MeleeFighter, PhysicalAt
         fightClose(target);
     }
 
+    /**
+     * Indicates that this character is a physical attacker.
+     *
+     * @return true, as the Warrior uses physical attacks
+     */
     @Override
     public boolean isPhysicalAttacker() {
         return true;
     }
 
+    /**
+     * Indicates that this character is not a magic attacker.
+     *
+     * @return false, as the Warrior does not use magic
+     */
     @Override
     public boolean isMagicAttacker() {
         return false;
     }
 
+    /**
+     * Indicates that this character is a melee fighter.
+     *
+     * @return true, as the Warrior engages in close-range combat
+     */
     @Override
     public boolean isMeleeFighter() {
         return true;
     }
 
+    /**
+     * Indicates that this character is not a ranged fighter.
+     *
+     * @return false, as the Warrior does not fight from range
+     */
     @Override
     public boolean isRangedFighter() {
         return false;
@@ -254,7 +274,7 @@ public class Warrior extends PlayerCharacter implements MeleeFighter, PhysicalAt
      * Creates and returns a deep copy of this Warrior.
      *
      * @return a clone of this Warrior
-     * @throws CloneNotSupportedException if the Warrior cannot be cloned
+     * @throws CloneNotSupportedException if cloning is not supported
      */
     @Override
     protected Warrior clone() throws CloneNotSupportedException {

@@ -139,8 +139,15 @@ public class GameController implements ScreenListener {
         manager.start();
     }
 
+    /**
+     * Pauses all global events by setting the global event running flag to false.
+     */
     public static void pauseManagerEvent() {globalEventRunning.set(false);}
 
+    /**
+     * Resumes global events if previously paused.
+     * Restarts the scheduler if it has been shutdown.
+     */
     public static void resumeManagerEvent() {
         if (!globalEventRunning.get()) { // Only restart if previously paused
             globalEventRunning.set(true);

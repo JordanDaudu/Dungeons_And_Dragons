@@ -88,6 +88,11 @@ public class GameWorld {
         return instance != null;
     }
 
+    /**
+     * Sets the controller listener to receive screen events and actions.
+     *
+     * @param controllerListener the screen listener to be set
+     */
     public void setControllerListener(ScreenListener controllerListener) {
         this.controllerListener = controllerListener;
     }
@@ -190,6 +195,11 @@ public class GameWorld {
         map.removeEntity(item);
     }
 
+    /**
+     * Adds an enemy to the enemy list.
+     *
+     * @param enemy the enemy to add
+     */
     public void addEnemy(Enemy enemy) {
         enemies.add(enemy);
     }
@@ -270,12 +280,31 @@ public class GameWorld {
         return positions;
     }
 
+    /**
+     * Sets the list of enemies currently in the game.
+     *
+     * @param enemies the new list of enemies
+     */
     public void setEnemies(List<Enemy> enemies) { this.enemies = enemies; }
 
+    /**
+     * Sets the list of items currently in the game.
+     *
+     * @param items the new list of game items
+     */
     public void setItems(List<GameItem> items) { this.items = items; }
 
+    /**
+     * Sets the current game map.
+     *
+     * @param map the new game map to set
+     */
     public void setMap(GameMap map) { this.map = map; }
 
+    /**
+     * Clears the game world by removing all players, enemies, items,
+     * and clearing the map grid.
+     */
     public void clearGameWorld() {
         players.clear();
         enemies.clear();
@@ -283,9 +312,24 @@ public class GameWorld {
         map.getGrid().clear();
     }
 
+    /**
+     * Creates a memento (snapshot) of the current game world state.
+     * This includes players, enemies, items, the map grid, and game settings.
+     *
+     * @return a GameWorldMemento representing the saved state
+     * @throws CloneNotSupportedException if cloning entities fails
+     */
     public GameWorldMemento createMemento() throws CloneNotSupportedException {
         return new GameWorldMemento(players,enemies,items,getMap().getGrid(), gameSettings);}
 
+    /**
+     * Loads the game world state from the provided memento.
+     * Restores players, enemies, items, map grid, game settings,
+     * and attempts to restore the current player by ID.
+     *
+     * @param memento the saved game world state to restore
+     * @throws CloneNotSupportedException if cloning entities fails
+     */
     public void loadFromMemento(GameWorldMemento memento) throws CloneNotSupportedException {
         if(memento != null) {
             UUID currentPlayerId = getCurrentPlayer().getId();

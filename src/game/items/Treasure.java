@@ -1,9 +1,7 @@
 package game.items;
 
 import game.characters.PlayerCharacter;
-import game.engine.GameController;
 import game.engine.RandomUtil;
-import game.engine.SoundManager;
 import game.logging.GameLogger;
 import game.map.Position;
 
@@ -36,6 +34,11 @@ public class Treasure extends GameItem implements Interactable, Cloneable {
         collected = false;
     }
 
+    /**
+     * Copy constructor. Creates a new Treasure by copying another Treasure.
+     *
+     * @param other the Treasure to copy
+     */
     public Treasure(Treasure other) {
         super(other);
         this.value = other.value;
@@ -156,11 +159,23 @@ public class Treasure extends GameItem implements Interactable, Cloneable {
         return value;
     }
 
+    /**
+     * Creates and returns a deep copy of this {@code Treasure}.
+     *
+     * @return a cloned {@code Treasure} object
+     * @throws CloneNotSupportedException if cloning is not supported
+     */
     @Override
     protected Treasure clone() throws CloneNotSupportedException {
         return new Treasure(this);
     }
 
+    /**
+     * Clones the treasure and returns it as an {@link Interactable}.
+     *
+     * @return a cloned Interactable treasure
+     * @throws CloneNotSupportedException if cloning is not supported
+     */
     public Interactable callClone() throws CloneNotSupportedException {
         return clone();
     }

@@ -152,6 +152,10 @@ public abstract class AbstractCharacter implements Combatant, GameEntity, Clonea
         return true;
     }
 
+    /**
+     * Returns the unique identifier for this character.
+     * @return the UUID of the character
+     */
     public UUID getId() {
         return id;
     }
@@ -294,11 +298,19 @@ public abstract class AbstractCharacter implements Combatant, GameEntity, Clonea
         return clone();
     }
 
+    /**
+     * Uses the character's special ability.
+     * @return false by default; should be overridden by subclasses
+     */
     @Override
     public boolean useAbility() {
         return false;
     }
 
+    /**
+     * Returns the duration of the ability's effect in milliseconds.
+     * @return -1 by default; should be overridden by subclasses
+     */
     @Override
     public int abilityTimeInMilliseconds() {
         return -1;

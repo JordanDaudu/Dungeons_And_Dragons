@@ -22,6 +22,11 @@ public class Wall extends GameItem {
      */
     public Wall(Position position, String description) { super(position, true, description); }
 
+    /**
+     * Copy constructor to create a new Wall by copying another Wall.
+     *
+     * @param other the Wall to copy
+     */
     public Wall(Wall other) { super(other); }
 
     /**
@@ -76,6 +81,11 @@ public class Wall extends GameItem {
         return icon.getImage();
     }
 
+    /**
+     * Creates and returns a deep copy of this Wall.
+     *
+     * @return a cloned Wall object
+     */
     @Override
     public Wall clone() {
         return new Wall(this);

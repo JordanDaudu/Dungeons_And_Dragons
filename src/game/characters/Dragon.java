@@ -29,6 +29,14 @@ public class Dragon extends Enemy implements MagicAttacker, RangedFighter, Melee
         range = 2;
     }
 
+    /**
+     * Constructs a Dragon with specified health, power, loot, and magic element.
+     *
+     * @param health  the health points of the dragon
+     * @param power   the attack power of the dragon
+     * @param loot    the loot value dropped by the dragon
+     * @param element the magic element of the dragon
+     */
     public Dragon(int health, int power, int loot, MagicElement element) {
         super();
         setMaxHealth(health);
@@ -39,6 +47,11 @@ public class Dragon extends Enemy implements MagicAttacker, RangedFighter, Melee
         range = 2;
     }
 
+    /**
+     * Copy constructor that creates a new Dragon based on another Dragon's state.
+     *
+     * @param other the Dragon instance to copy
+     */
     public Dragon (Dragon other){
         super(other);
         this.range = other.range;
@@ -282,21 +295,41 @@ public class Dragon extends Enemy implements MagicAttacker, RangedFighter, Melee
         attack(target);
     }
 
+    /**
+     * Indicates if the dragon performs physical attacks.
+     *
+     * @return true
+     */
     @Override
     public boolean isPhysicalAttacker() {
         return true;
     }
 
+    /**
+     * Indicates if the dragon performs magic attacks.
+     *
+     * @return true
+     */
     @Override
     public boolean isMagicAttacker() {
         return true;
     }
 
+    /**
+     * Indicates if the dragon is a melee fighter.
+     *
+     * @return true
+     */
     @Override
     public boolean isMeleeFighter() {
         return true;
     }
 
+    /**
+     * Indicates if the dragon is a ranged fighter.
+     *
+     * @return true
+     */
     @Override
     public boolean isRangedFighter() {
         return true;
@@ -312,11 +345,23 @@ public class Dragon extends Enemy implements MagicAttacker, RangedFighter, Melee
         return "All-around powerhouse, strong in magic, ranged, and melee attacks.";
     }
 
+
+    /**
+     * Creates and returns a deep copy of this Dragon.
+     *
+     * @return a clone of this Dragon
+     * @throws CloneNotSupportedException if cloning fails
+     */
     @Override
     protected Dragon clone() throws CloneNotSupportedException {
         return new Dragon(this);
     }
 
+    /**
+     * Returns the enemy type name.
+     *
+     * @return the string "Dragon"
+     */
     @Override
     public String getEnemyTypeName(){
         return "Dragon";

@@ -37,6 +37,12 @@ public abstract class PlayerCharacter extends AbstractCharacter implements Playe
         treasurePoints = 0;
     }
 
+    /**
+     * Copy constructor that creates a deep copy of another PlayerCharacter.
+     * Copies name, inventory, and treasure points.
+     *
+     * @param other the PlayerCharacter to copy
+     */
     public PlayerCharacter(PlayerCharacter other) {
         super(other);
         this.name = other.name;
@@ -259,10 +265,23 @@ public abstract class PlayerCharacter extends AbstractCharacter implements Playe
         return "Player: " + getName();
     }
 
+    /**
+     * Returns the base PlayerCharacter reference.
+     * Useful when working with decorated or subclassed player types.
+     *
+     * @return the base PlayerCharacter instance
+     */
     public PlayerCharacter getBaseCharacter() {
         return this;
     }
 
+    /**
+     * Creates and returns a deep clone of this PlayerCharacter.
+     * Uses reflection to call the appropriate subclass constructor.
+     *
+     * @return a cloned PlayerCharacter instance
+     * @throws CloneNotSupportedException if cloning fails
+     */
     @Override
     protected PlayerCharacter clone() throws CloneNotSupportedException {
         try {

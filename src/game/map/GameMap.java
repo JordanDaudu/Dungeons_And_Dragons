@@ -279,6 +279,11 @@ public class GameMap implements Serializable {
         return cols;
     }
 
+    /**
+     * Adds a player character by placing them randomly on the map.
+     *
+     * @param player the PlayerCharacter to add
+     */
     public void addCharacter(PlayerCharacter player) {
         placePlayerRandomly(player);
     }
@@ -576,6 +581,16 @@ public class GameMap implements Serializable {
                 .orElse(null);
     }
 
+    /**
+     * Creates and returns an Enemy object based on the given enemy name.
+     *
+     * Supported enemy names are "Goblin", "Orc", and "Dragon".
+     * Each enemy has randomized attributes appropriate for its type.
+     *
+     * @param enemyName the type of enemy to create
+     * @return a new Enemy instance with randomized stats
+     * @throws IllegalArgumentException if the enemyName is not recognized
+     */
     public Enemy createEnemy(String enemyName) {
         return switch (enemyName) {
             case "Goblin" -> ((EnemyFactory.GoblinBuilder) EnemyFactory.getBuilder("Goblin"))
@@ -751,6 +766,14 @@ public class GameMap implements Serializable {
         }
     }
 
+    /**
+     * Generates a random resistance value for an Orc character creation.
+     * <p>
+     * The resistance is a double value between 0.0 (inclusive) and 0.5 (inclusive).
+     * This method repeatedly generates random doubles until a value less than or equal to 0.5 is produced.
+     *
+     * @return a random resistance value in the range [0.0, 0.5]
+     */
     private double getRandomResistanceForOrcCreation() {
         double resistance;
         do {

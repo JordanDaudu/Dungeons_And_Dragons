@@ -29,6 +29,14 @@ public class Goblin extends Enemy implements PhysicalAttacker, MeleeFighter {
         this.agility = RandomUtil.getRandomInt(0, 81);
     }
 
+    /**
+     * Constructs a Goblin with specified attributes.
+     *
+     * @param health the goblin's maximum and current health
+     * @param power the goblin's attack power
+     * @param loot the loot value dropped by the goblin upon defeat
+     * @param agility the goblin's agility, used for evasion chances
+     */
     public Goblin(int health, int power, int loot, int agility) {
         super();
         setMaxHealth(health);
@@ -38,6 +46,11 @@ public class Goblin extends Enemy implements PhysicalAttacker, MeleeFighter {
         this.agility = agility;
     }
 
+    /**
+     * Copy constructor for Goblin.
+     *
+     * @param other the Goblin instance to copy
+     */
     public Goblin(Goblin other){
         super(other);
         this.agility = other.agility;
@@ -81,6 +94,11 @@ public class Goblin extends Enemy implements PhysicalAttacker, MeleeFighter {
         return agility == that.agility;
     }
 
+    /**
+     * Returns the goblin's agility value.
+     *
+     * @return the agility stat
+     */
     public int getAgility() {return agility;}
 
     /**
@@ -207,21 +225,41 @@ public class Goblin extends Enemy implements PhysicalAttacker, MeleeFighter {
         fightClose(target);
     }
 
+    /**
+     * Indicates whether the goblin uses physical attacks.
+     *
+     * @return true
+     */
     @Override
     public boolean isPhysicalAttacker() {
         return true;
     }
 
+    /**
+     * Indicates whether the goblin uses magic attacks.
+     *
+     * @return false
+     */
     @Override
     public boolean isMagicAttacker() {
         return false;
     }
 
+    /**
+     * Indicates whether the goblin is a melee fighter.
+     *
+     * @return true
+     */
     @Override
     public boolean isMeleeFighter() {
         return true;
     }
 
+    /**
+     * Indicates whether the goblin is a ranged fighter.
+     *
+     * @return false
+     */
     @Override
     public boolean isRangedFighter() {
         return false;
@@ -237,11 +275,22 @@ public class Goblin extends Enemy implements PhysicalAttacker, MeleeFighter {
         return "Fast and evasive, excels in melee with high dodge and swift strikes.";
     }
 
+    /**
+     * Creates a clone of this Goblin.
+     *
+     * @return a cloned Goblin object
+     * @throws CloneNotSupportedException if cloning is not supported
+     */
     @Override
     protected Goblin clone() throws CloneNotSupportedException {
         return new Goblin(this);
     }
 
+    /**
+     * Returns the display name of this enemy type.
+     *
+     * @return the string "Goblin"
+     */
     @Override
     public String getEnemyTypeName(){
         return "Goblin";

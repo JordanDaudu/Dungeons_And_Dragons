@@ -257,31 +257,51 @@ public class Mage extends PlayerCharacter implements MagicAttacker, RangedFighte
     }
 
     /**
-     * Creates and returns a deep copy of this Mage.
+     * Indicates whether this character is a physical attacker.
      *
-     * @return a clone of this Mage
-     * @throws CloneNotSupportedException if the object cannot be cloned
+     * @return false, since a Mage does not perform physical attacks
      */
     @Override
     public boolean isPhysicalAttacker() {
         return false;
     }
 
+    /**
+     * Indicates whether this character is a magic attacker.
+     *
+     * @return true, since a Mage uses magic attacks
+     */
     @Override
     public boolean isMagicAttacker() {
         return true;
     }
 
+    /**
+     * Indicates whether this character is a melee fighter.
+     *
+     * @return false, since a Mage does not engage in melee combat
+     */
     @Override
     public boolean isMeleeFighter() {
         return false;
     }
 
+    /**
+     * Indicates whether this character is a ranged fighter.
+     *
+     * @return true, since a Mage attacks from range
+     */
     @Override
     public boolean isRangedFighter() {
         return true;
     }
 
+    /**
+     * Creates and returns a deep copy of this Mage.
+     *
+     * @return a clone of this Mage
+     * @throws CloneNotSupportedException if the object cannot be cloned
+     */
     @Override
     protected Mage clone() throws CloneNotSupportedException{
         return new Mage(this);

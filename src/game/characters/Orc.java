@@ -33,6 +33,14 @@ public class Orc extends Enemy implements MeleeFighter, PhysicalAttacker {
         while(this.resistance > 0.50);
     }
 
+    /**
+     * Constructs an Orc with specified attributes.
+     *
+     * @param health     the orc's health
+     * @param power      the orc's attack power
+     * @param loot       the loot dropped upon defeat
+     * @param resistance the orc's magic resistance (0.0 to 0.5)
+     */
     public Orc(int health, int power, int loot, double resistance) {
         super();
         setMaxHealth(health);
@@ -42,10 +50,16 @@ public class Orc extends Enemy implements MeleeFighter, PhysicalAttacker {
         this.resistance = resistance;
     }
 
+    /**
+     * Constructs a new Orc as a copy of another.
+     *
+     * @param other the Orc to copy
+     */
     public Orc(Orc other){
         super(other);
         this.resistance = other.resistance;
     }
+
     /**
      * Returns a string representation of the Orc, including inherited values and resistance.
      *
@@ -84,6 +98,11 @@ public class Orc extends Enemy implements MeleeFighter, PhysicalAttacker {
         return Double.compare(that.resistance, resistance) == 0;
     }
 
+    /**
+     * Returns the orc's resistance to magic attacks.
+     *
+     * @return the resistance value
+     */
     public double getResistance() {return resistance;}
 
     /**
@@ -200,21 +219,41 @@ public class Orc extends Enemy implements MeleeFighter, PhysicalAttacker {
         fightClose(target);
     }
 
+    /**
+     * Indicates whether the orc uses physical attacks.
+     *
+     * @return true
+     */
     @Override
     public boolean isPhysicalAttacker() {
         return true;
     }
 
+    /**
+     * Indicates whether the orc uses magic attacks.
+     *
+     * @return false
+     */
     @Override
     public boolean isMagicAttacker() {
         return false;
     }
 
+    /**
+     * Indicates whether the orc is a melee fighter.
+     *
+     * @return true
+     */
     @Override
     public boolean isMeleeFighter() {
         return true;
     }
 
+    /**
+     * Indicates whether the orc is a ranged fighter.
+     *
+     * @return false
+     */
     @Override
     public boolean isRangedFighter() {
         return false;
@@ -235,6 +274,11 @@ public class Orc extends Enemy implements MeleeFighter, PhysicalAttacker {
         return new Orc(this);
     }
 
+    /**
+     * Returns the display name of this enemy type.
+     *
+     * @return the string "Orc"
+     */
     @Override
     public String getEnemyTypeName(){
         return "Orc";
