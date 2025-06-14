@@ -58,8 +58,7 @@ public class SettingsMenuGUI extends JDialog {
         super(parent, "Settings", true);  // modal
         setLayout(new BorderLayout());
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        setSize(450, 400);
-        setLocationRelativeTo(parent);
+        setResizable(false);
 
         GameController.pauseEnemyTasks();
         GameController.pauseManagerEvent();
@@ -67,6 +66,9 @@ public class SettingsMenuGUI extends JDialog {
         layoutComponents();
         attachListeners();
         setupEscapeKey();
+
+        pack(); // Dynamically sizes the dialog to fit content
+        setLocationRelativeTo(parent); // Center on parent
     }
 
     /**
@@ -74,8 +76,10 @@ public class SettingsMenuGUI extends JDialog {
      * including sliders, checkboxes, combo boxes, and buttons.
      */
     private void initComponents() {
-        mainPanel = new JPanel(new GridLayout(4, 1, 10, 10));
+        // Main content panel
+        mainPanel = new JPanel();
 
+        // Music settings
         musicPanel = new JPanel(new BorderLayout(10, 10));
         musicLabel = new JLabel("Music Volume:");
         musicSlider = new JSlider(0, 100, (int) (GameWorld.getInstance().getGameSettings().getMusicVolume() * 100));
@@ -83,34 +87,39 @@ public class SettingsMenuGUI extends JDialog {
         musicSlider.setPaintTicks(true);
         musicSlider.setPaintLabels(true);
 
+        // SFX settings
         sfxPanel = new JPanel(new BorderLayout(10, 10));
         sfxLabel = new JLabel("SFX Volume:");
         sfxSlider = new JSlider(0, 100, (int) (GameWorld.getInstance().getGameSettings().getSFXVolume() * 100));
         sfxSlider.setMajorTickSpacing(25);
         sfxSlider.setPaintTicks(true);
         sfxSlider.setPaintLabels(true);
+
+        // Color theme selection
         colorThemePanel = new JPanel(new BorderLayout(10, 10));
         colorThemeLabel = new JLabel("Color Tile Background:");
         colorThemeComboBox = new JComboBox<>(TileColorBackgroundTheme.values());
         colorThemeComboBox.setSelectedItem(GameWorld.getInstance().getGameSettings().getSelectedTheme());
 
-        checkBoxesPanel = new JPanel(new GridLayout(1, 2, 10, 0));
+        // Checkboxes
+        showHPBarCheckbox = new JCheckBox("Show HP Bar On Map", GameWorld.getInstance().getGameSettings().getShowHPBar());
+        showPlayerInformationCheckbox = new JCheckBox("Show Player Information", GameWorld.getInstance().getGameSettings().getShowPlayerInformation());
 
-        showHPBarCheckbox = new JCheckBox("Show HP Bar On Map", showHPBar);
-        showHPBarCheckbox.setSelected(GameWorld.getInstance().getGameSettings().getShowHPBar());
-
-        showPlayerInformationCheckbox = new JCheckBox("Show Player Information", showPlayerInformation);
-        showPlayerInformationCheckbox.setSelected(GameWorld.getInstance().getGameSettings().getShowPlayerInformation());
-
-        buttonPanel = new JPanel();
-        buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
-        buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 100, 10, 100));
-
+        // Buttons
         viewControlsButton = new JButton("View Controls");
         saveButton = new JButton("Save Game");
         loadButton = new JButton("Load Game");
         backButton = new JButton("Back");
         quitButton = new JButton("Quit Game");
+
+        Dimension buttonSize = new Dimension(140, 30);
+        JButton[] buttons = { viewControlsButton, saveButton, loadButton, backButton, quitButton };
+        for (JButton button : buttons) {
+            button.setMaximumSize(buttonSize);
+        }
+
+        // Button panel container
+        buttonPanel = new JPanel();
     }
 
     /**
@@ -118,42 +127,76 @@ public class SettingsMenuGUI extends JDialog {
      * Groups panels and adds them to the dialog.
      */
     private void layoutComponents() {
+        // Set layout and spacing for the main panel
+        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        // Group 1: Audio Settings
+        JPanel audioSettingsPanel = new JPanel();
+        audioSettingsPanel.setLayout(new BoxLayout(audioSettingsPanel, BoxLayout.Y_AXIS));
+        audioSettingsPanel.setBorder(BorderFactory.createTitledBorder("Audio Settings"));
+
         musicPanel.add(musicLabel, BorderLayout.WEST);
         musicPanel.add(musicSlider, BorderLayout.CENTER);
+        audioSettingsPanel.add(musicPanel);
+        audioSettingsPanel.add(Box.createVerticalStrut(10));
 
         sfxPanel.add(sfxLabel, BorderLayout.WEST);
         sfxPanel.add(sfxSlider, BorderLayout.CENTER);
+        audioSettingsPanel.add(sfxPanel);
 
-        mainPanel.add(musicPanel);
-        mainPanel.add(sfxPanel);
-        add(mainPanel, BorderLayout.CENTER);
+        // Group 2: Display Options
+        JPanel displaySettingsPanel = new JPanel();
+        displaySettingsPanel.setLayout(new BoxLayout(displaySettingsPanel, BoxLayout.Y_AXIS));
+        displaySettingsPanel.setBorder(BorderFactory.createTitledBorder("Display Options"));
 
         colorThemePanel.add(colorThemeLabel, BorderLayout.WEST);
         colorThemePanel.add(colorThemeComboBox, BorderLayout.CENTER);
-        mainPanel.add(colorThemePanel);
+        displaySettingsPanel.add(colorThemePanel);
+        displaySettingsPanel.add(Box.createVerticalStrut(10));
 
-        checkBoxesPanel.add(showHPBarCheckbox);
-        checkBoxesPanel.add(showPlayerInformationCheckbox);
-        mainPanel.add(checkBoxesPanel);
+        JPanel checkBoxPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 5));
+        checkBoxPanel.add(showHPBarCheckbox);
+        checkBoxPanel.add(showPlayerInformationCheckbox);
+        displaySettingsPanel.add(checkBoxPanel);
 
-        viewControlsButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        backButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        quitButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        saveButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        loadButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        // Add grouped panels to the main content panel
+        mainPanel.add(audioSettingsPanel);
+        mainPanel.add(Box.createVerticalStrut(15));
+        mainPanel.add(displaySettingsPanel);
 
-        buttonPanel.add(viewControlsButton);
-        buttonPanel.add(Box.createVerticalStrut(10));
-        buttonPanel.add(backButton);
-        buttonPanel.add(Box.createVerticalStrut(10));
-        buttonPanel.add(quitButton);
-        buttonPanel.add(Box.createVerticalStrut(10));
-        buttonPanel.add(saveButton);
-        buttonPanel.add(Box.createVerticalStrut(10));
-        buttonPanel.add(loadButton);
+        // Set consistent width for grouped panels
+        Dimension fixedWidth = new Dimension(400, audioSettingsPanel.getPreferredSize().height);
+        audioSettingsPanel.setMaximumSize(fixedWidth);
+        displaySettingsPanel.setMaximumSize(fixedWidth);
 
+        // Center the main panel horizontally
+        JPanel centerWrapper = new JPanel(new BorderLayout());
+        centerWrapper.add(mainPanel, BorderLayout.CENTER);
+        add(centerWrapper, BorderLayout.CENTER);
+
+        // Group 3: Navigation Buttons
+        JPanel navPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+        navPanel.setBorder(BorderFactory.createTitledBorder("Navigation"));
+        navPanel.add(viewControlsButton);
+        navPanel.add(backButton);
+
+        // Group 4: Game Management Buttons
+        JPanel filePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+        filePanel.setBorder(BorderFactory.createTitledBorder("Game Management"));
+        filePanel.add(saveButton);
+        filePanel.add(loadButton);
+        filePanel.add(quitButton);
+
+        // Assemble button panel at the bottom
+        buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));        buttonPanel.add(navPanel);
+        buttonPanel.add(Box.createVerticalStrut(10));
+        buttonPanel.add(filePanel);
         add(buttonPanel, BorderLayout.SOUTH);
     }
+
+
 
     /**
      * Attaches listeners to UI components to respond to user input,

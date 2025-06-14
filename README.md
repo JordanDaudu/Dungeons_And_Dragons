@@ -13,7 +13,7 @@ This project simulates a simplified action turn-based role-playing game (ARPG), 
 ## 🌟 Key Features
 
 - 🎮 **Up to 4-Player Local Co-op** – Team up and explore a grid-based world together.
-- 🛡️ **Character Creation** – Choose a name and class: Warrior, Mage, or Archer.
+- 🛡️ **Flexible Character Creation** – Choose a name and class Customize your Warrior, Archer, or Mage’s stats with a unique attributes and abilities before starting your quest.
 - 🗺️ **Customizable Grid** – Start with a grid size of at least 10x10.
 - ⚔️ **Turn-Based Combat** – Strategically move, attack, or interact each turn.
 - 💥️ **Magic and physical attacks** – Each character class uses distinct attack types with hit chance and evade mechanics
@@ -22,13 +22,16 @@ This project simulates a simplified action turn-based role-playing game (ARPG), 
 - 🍾 **Item System** – Pick up potions, power potions, and treasure from defeated enemies.
 - 🎒 **Inventory & Status Panels** – Use E/middle mouse to manage items, Q for player stats.
 - 🧌 **Enemy Types** – Face off against Goblins, Orcs, and mighty Dragons.
+- 👾 **Evolving Enemies** – Beware of enemies with unpredictable behaviors—some explode on death, go berserk when hurt, or teleport unexpectedly!
+- 🧪 **Endless Adventure Mode** – New enemies spawn endlessly when numbers run low, keeping the challenge alive forever.
 - 🌪️ **Global Events** – Random world events like sandstorms that force entity movement or magic waves that damage all characters.
+- 🏁 **Game Over Screen** – Endgame summary with a ranked treasure score list.
+- 💾 **Save and Load Progress** – Save your adventure mid-game and pick up right where you left off.
 - 🧰 **Toggleable UI Panels** – Through the settings menu, players can toggle the visibility of HP bars and side panels that display player status and inventory.
-- 📜 **Game Logging System** – Every action (movement, attacks, pickups) is logged in real-time via an in-game logger.
+- 📜 **Game Logging System** – Every action (movement, attacks, pickups) is logged in real-time via a background logger.
 - 🔊 **Dynamic Sound & Music** – Audio reacts to combat events (e.g., low HP or dragon battles).
 - 🎛️ **SFX for UI and Combat** – Button clicks, interactable items and player attacks come with satisfying sound effects for a responsive and immersive experience.
 - 🎨 **Customizable Settings** – Change SFX/music volume and grid colors on the fly.
-- 🏁 **Victory & Game Over Screens** – Endgame summary with a ranked treasure score list.
 - 📦 **Centralized Resource Management** - All sounds, images, and configuration files are organized in a dedicated resources folder
 
 ---
@@ -83,7 +86,7 @@ For the IDE, you can use **IntelliJ IDEA** or **Eclipse**, which will automatica
 
 To ensure **sound files**, **images**, and other essential resources load correctly during runtime, it’s **crucial** that your IDE recognizes the resources folder as a **Resources Root**.
 
-### 🧠 Why is This Important?
+### ❗ Why is This Important?
 If the resources folder is not properly set, your game may fail to load crucial files like sound effects, images, or configuration files, causing errors or unexpected behavior during gameplay.
 
 ---
@@ -135,6 +138,24 @@ There are **two ways** to mark the resources folder correctly:
 | Custom Audio Engine     | Handles dynamic sound effects and adaptive background music                                                         |
 | IntelliJ / Eclipse      | Development environment and debugging support                                                                       |
 
+
+---
+
+## 🧠 Implemented Design Patterns
+
+This project showcases a variety of software design patterns to demonstrate modular, scalable, and maintainable architecture:
+
+| Pattern             | Purpose / Usage                                                                                    |
+|---------------------|----------------------------------------------------------------------------------------------------|
+| **Factory Method**  | Used to create player characters, enemies, and abilities while encapsulating their creation logic. |
+| **Builder**         | Enables customizable configuration for PlayerCharacter and Enemy objects.                          |
+| **Decorator**       | Adds dynamic behavior to characters during runtime (e.g., shielding, regeneration, explosion).     |
+| **Memento**         | Implements saving and loading game state while preserving encapsulation.                           |
+| **Singleton**       | Ensures a single instance of key game systems like `GameMap`, `SaveManager`, and `GameLogger`.     |
+| **Thread Pool**     | Manages enemy action scheduling for concurrency and automatic enemy replenishment.                 |
+| **Observer**        | Used to notify UI components and systems of game state changes, like HP or inventory updates.      |
+| **MVC (Model-View-Controller)** | Cleanly separates game data (Model), display (View), and interaction (Controller).                 |
+| **Adapter**         | Provides compatibility layers for legacy UI elements or resource loaders.                          |
 
 ---
 
@@ -249,11 +270,6 @@ A visual tour of the game features and interface:
 <img src="Photos/Main photo for ReadMe/GameOver.png" alt="Game Over" width="720">
 
 > Shown when all players are defeated. This will show the scores of each player in descending order.
-
-**Victory Screen**  
-<img src="Photos/Main photo for ReadMe/Winning.png" alt="Victory Screen" width="720">
-
-> Displayed when players defeat all enemies. This will show the scores of each player in descending order
 
 ---
 
