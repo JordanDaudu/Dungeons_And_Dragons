@@ -68,8 +68,8 @@ public class PlayerStatusPanelGUI extends JPanel {
             imageLabel.setIcon(new ImageIcon(scaledImage));
             nameLabel.setText("Name: " + newPlayer.getName());
             typeLabel.setText("Type: " + newPlayer.getType());
-            if(player.getElementType() != null) {
-                magicElementLabel.setText("Element: " + player.getElementType());
+            if(newPlayer.getElementType() != null) {
+                magicElementLabel.setText("Element: " + newPlayer.getElementType());
             }
             else {
                 magicElementLabel.setText("");
