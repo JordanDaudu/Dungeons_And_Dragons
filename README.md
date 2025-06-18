@@ -163,7 +163,11 @@ This project showcases a variety of software design patterns to demonstrate modu
 To better understand the class structure, relationships, and project flow, here's a visual representation of the game's architecture.<br>
 It includes core components of the game file.
 
+**Architecture Diagram**
 <img src="Photos/Diagrams/Advanced Object Oriented Programming.png" alt="Architecture Diagram" width="768">
+
+**Class Diagram**
+<img src="Photos/Diagrams/Dungeons_And_Dragons.png" alt="Class Diagram" width="768">
 
 ---
 
