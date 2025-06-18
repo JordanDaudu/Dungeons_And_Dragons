@@ -68,8 +68,8 @@ public class PlayerStatusPanelGUI extends JPanel {
             imageLabel.setIcon(new ImageIcon(scaledImage));
             nameLabel.setText("Name: " + newPlayer.getName());
             typeLabel.setText("Type: " + newPlayer.getType());
-            if(newPlayer instanceof MagicAttacker magicAttacker) {
-                magicElementLabel.setText("Element: " + magicAttacker.getElement());
+            if(player.getElementType() != null) {
+                magicElementLabel.setText("Element: " + player.getElementType());
             }
             else {
                 magicElementLabel.setText("");
@@ -109,8 +109,8 @@ public class PlayerStatusPanelGUI extends JPanel {
         // === Identity Group ===
         nameLabel = createWrappedLabel("Name: " + player.getName(), new Font("Serif", Font.BOLD, 20));
         typeLabel = createWrappedLabel("Type: " + player.getType(), new Font("SansSerif", Font.BOLD, 14));
-        if(player instanceof MagicAttacker magicAttacker) {
-            magicElementLabel = createWrappedLabel("Element: " + magicAttacker.getElement(), new Font("SansSerif", Font.BOLD, 14));
+        if(player.getElementType() != null) {
+            magicElementLabel = createWrappedLabel("Element: " + player.getElementType(), new Font("SansSerif", Font.BOLD, 14));
         }
         else {
             magicElementLabel = createWrappedLabel("", new Font("SansSerif", Font.BOLD, 14));

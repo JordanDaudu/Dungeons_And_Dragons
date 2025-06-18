@@ -901,8 +901,9 @@ public class GameMapGUI extends JFrame implements ScreenListener{
                 addDisabledItem("Name: " + player.getName());
                 addDisabledItem("Type: " + player.getType());
                 addDisabledItem("Power: " + player.getPower());
-                if(player instanceof MagicAttacker)
+                if(player.getElementType() != null) {
                     addDisabledItem("Element: " + player.getElementType());
+                }
                 addDisabledItem("Treasure Points: " + player.getTreasurePoints());
             }
             else if (entity instanceof GameItem item) {
