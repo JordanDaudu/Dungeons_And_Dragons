@@ -307,8 +307,6 @@ public class GameController implements ScreenListener {
      */
     private void checkIfNewEnemySpawning() {
         int max = EnemyTask.calculateStartingEnemyThreadPoolSize(map.getRows() * map.getCols());
-        System.out.println("Active threads: " + EnemyTask.getScheduledEnemyCount());
-        System.out.println("calculateStartingEnemyThreadPoolSize: " + EnemyTask.calculateStartingEnemyThreadPoolSize(map.getRows() * map.getCols()));
 
         while (EnemyTask.getScheduledEnemyCount() <= max) {
             Enemy enemy = map.createEnemy(map.getLeastCommonEnemyType());
