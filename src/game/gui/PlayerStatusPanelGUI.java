@@ -4,6 +4,7 @@ import game.characters.Archer;
 import game.characters.Mage;
 import game.characters.PlayerCharacter;
 import game.characters.Warrior;
+import game.combat.MagicAttacker;
 import game.core.ScreenListener;
 import game.decorator.PlayerDecorator;
 
@@ -23,9 +24,9 @@ public class PlayerStatusPanelGUI extends JPanel {
     private PlayerCharacter player;
     private final ScreenListener gameController;
     private JLabel imageLabel;
-    private JPanel abilityPanel;
     private JTextArea nameLabel;
     private JTextArea typeLabel;
+    private JTextArea magicElementLabel;
     private JLabel healthLabel;
     private HealthBarPanelGUI healthBar;
     private JLabel powerLabel;
@@ -67,6 +68,12 @@ public class PlayerStatusPanelGUI extends JPanel {
             imageLabel.setIcon(new ImageIcon(scaledImage));
             nameLabel.setText("Name: " + newPlayer.getName());
             typeLabel.setText("Type: " + newPlayer.getType());
+            if(newPlayer instanceof MagicAttacker magicAttacker) {
+                magicElementLabel.setText("Element: " + magicAttacker.getElement());
+            }
+            else {
+                magicElementLabel.setText("");
+            }
         }
 
         passiveSkillSet(newPlayer);
@@ -99,15 +106,15 @@ public class PlayerStatusPanelGUI extends JPanel {
         imageLabel = new JLabel(new ImageIcon(scaledImage));
         imageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // === Ability buttons ===
-        abilityPanel = new JPanel();
-        abilityPanel.setLayout(new BoxLayout(abilityPanel, BoxLayout.X_AXIS));
-        abilityPanel.setOpaque(false);
-        abilityPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
-
         // === Identity Group ===
         nameLabel = createWrappedLabel("Name: " + player.getName(), new Font("Serif", Font.BOLD, 20));
         typeLabel = createWrappedLabel("Type: " + player.getType(), new Font("SansSerif", Font.BOLD, 14));
+        if(player instanceof MagicAttacker magicAttacker) {
+            magicElementLabel = createWrappedLabel("Element: " + magicAttacker.getElement(), new Font("SansSerif", Font.BOLD, 14));
+        }
+        else {
+            magicElementLabel = createWrappedLabel("", new Font("SansSerif", Font.BOLD, 14));
+        }
 
         // === Stats Group ===
         healthLabel = new JLabel("Health: " + player.getHealth() + "/" + player.getMaxHealth(), heartIcon, JLabel.LEFT);
@@ -144,9 +151,6 @@ public class PlayerStatusPanelGUI extends JPanel {
         // === Player Image ===
         add(imageLabel);
 
-        // === Ability Buttons ===
-        add(abilityPanel);
-
         // === Identity Group ===
         JPanel identityPanel = new JPanel();
         identityPanel.setLayout(new BoxLayout(identityPanel, BoxLayout.Y_AXIS));
@@ -154,6 +158,7 @@ public class PlayerStatusPanelGUI extends JPanel {
         identityPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
         identityPanel.add(nameLabel);
         identityPanel.add(typeLabel);
+        identityPanel.add(magicElementLabel);
         add(identityPanel);
 
         // === Stats Group ===

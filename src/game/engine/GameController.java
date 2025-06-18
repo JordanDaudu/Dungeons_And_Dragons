@@ -498,15 +498,15 @@ public class GameController implements ScreenListener {
             case ScreenAction.LOAD_DATA -> {
                 // Launch new game window
                 stopGameLoop();
-                endTurn.set(true);
-                gameWorld.setCurrentPlayer(gameWorld.getPlayers().getFirst());
+                endTurn.set(false);
 
                 for(List<GameEntity> cell : map.getGrid().values()) {
                     cell.removeIf(Objects::nonNull);
                 }
 
                 for(game.characters.PlayerCharacter player : gameWorld.getPlayers()) {
-                    map.addEntity(player);
+                    if(!player.isDead())
+                        map.addEntity(player);
                 }
                 for(Enemy enemy : gameWorld.getEnemies()) {
                     map.addEntity(enemy);

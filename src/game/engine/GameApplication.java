@@ -66,9 +66,6 @@ public class GameApplication implements ScreenListener {
         game.collectEnemiesFromMap();
         game.collectItemsFromMap();
 
-        // Setting first player
-        game.setCurrentPlayer(game.getPlayers().getFirst());
-
         // Adding enemies to a thread pool so they can move in game
         ScheduledExecutorService enemyScheduler = Executors.newScheduledThreadPool(EnemyTask.calculateStartingEnemyThreadPoolSize(mapRows * mapCols));
         game.attachGameControllerToEnemies(gameApplication.controller, enemyScheduler, gameApplication.controller.getEnemyRunningFlag());

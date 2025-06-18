@@ -3,6 +3,7 @@ package game.memento;
 import game.characters.*;
 import game.core.GameEntity;
 import game.engine.GameSettings;
+import game.engine.GameWorld;
 import game.items.*;
 import game.map.Position;
 
@@ -25,6 +26,7 @@ public class GameWorldMemento implements Serializable {
     private final List<PlayerCharacter> savedPlayers = new ArrayList<>();
     private final List<Enemy> savedEnemies = new ArrayList<>();
     private final List<GameItem> savedItems = new ArrayList<>();
+    private final PlayerCharacter currentPlayer;
     private final GameSettings gameSettings;
     private final ConcurrentMap<Position , List<GameEntity>> gridCopy;
     private final LocalDateTime timestamp;
@@ -40,7 +42,7 @@ public class GameWorldMemento implements Serializable {
      * @param gameSettings the current game settings to save
      * @throws CloneNotSupportedException if cloning of any entity fails
      */
-    public GameWorldMemento(List<PlayerCharacter> players,List<Enemy>enemies,List<GameItem> items,ConcurrentMap<Position , List<GameEntity>> grid, GameSettings gameSettings) throws CloneNotSupportedException {
+    public GameWorldMemento(List<PlayerCharacter> players,List<Enemy>enemies,List<GameItem> items,ConcurrentMap<Position , List<GameEntity>> grid, GameSettings gameSettings, PlayerCharacter currentPlayer) throws CloneNotSupportedException {
     for(PlayerCharacter player : players) {
         savedPlayers.add((PlayerCharacter) player.callClone());
     }
@@ -50,6 +52,7 @@ public class GameWorldMemento implements Serializable {
     for (GameItem item: items) {
         savedItems.add((GameItem) item.callClone());
     }
+    this.currentPlayer = currentPlayer;
     this.gridCopy = deepCopyGrid(grid);
     this.gameSettings = new GameSettings(gameSettings);
     this.timestamp = LocalDateTime.now();
@@ -106,6 +109,8 @@ public class GameWorldMemento implements Serializable {
     public ConcurrentMap<Position, List<GameEntity>> getSavedMap() throws CloneNotSupportedException {
         return deepCopyGrid(gridCopy);
     }
+
+    public PlayerCharacter getCurrentPlayer() {return currentPlayer;}
 
     /**
      * Returns the saved game settings.

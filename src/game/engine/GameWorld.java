@@ -320,7 +320,7 @@ public class GameWorld {
      * @throws CloneNotSupportedException if cloning entities fails
      */
     public GameWorldMemento createMemento() throws CloneNotSupportedException {
-        return new GameWorldMemento(players,enemies,items,getMap().getGrid(), gameSettings);}
+        return new GameWorldMemento(players,enemies,items,getMap().getGrid(), gameSettings, currentPlayer);}
 
     /**
      * Loads the game world state from the provided memento.
@@ -332,7 +332,7 @@ public class GameWorld {
      */
     public void loadFromMemento(GameWorldMemento memento) throws CloneNotSupportedException {
         if(memento != null) {
-            UUID currentPlayerId = getCurrentPlayer().getId();
+            UUID currentPlayerId = memento.getCurrentPlayer().getId();
             clearGameWorld();
             players.addAll(memento.getSavedPlayers());
             enemies.addAll(memento.getSavedEnemies());
