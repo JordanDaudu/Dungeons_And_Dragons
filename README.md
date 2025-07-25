@@ -286,3 +286,13 @@ This project was developed as a **non-commercial, educational project** for the 
 Some of the sound effects and music tracks used in this project were sourced from popular games such as **Octopath Traveler** and **Persona 5**. These assets are used solely for educational purposes to enhance the learning experience and are **not intended for redistribution, resale, or commercial use**.
 
 If you are the copyright holder of any asset and wish for it to be removed from this repository, please contact me and I will promptly comply.
+
+## 👤 Author
+
+This project was created by **[Jordan Dudu]** – connect with me on [LinkedIn](https://www.linkedin.com/in/jordan-daudu-cpp-python-java/).
+
+---
+
+## 🤝 Special Thanks
+
+Special thanks to [Joe](https://github.com/joe140601) for helpful insights and contributions during development documenting the project, testing and revisioning.
